@@ -102,7 +102,7 @@ class GlobalFAB extends StatelessWidget {
               // section
               _buildOption(
                 icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedDollarSquare,
+                  icon: HugeIcons.strokeRoundedCells,
                   color: AppColors.primaryColor,
                   size: 30,
                 ),
@@ -117,7 +117,7 @@ class GlobalFAB extends StatelessWidget {
               //class
               _buildOption(
                 icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedDollarSquare,
+                  icon: HugeIcons.strokeRoundedBoardMath,
                   color: AppColors.primaryColor,
                   size: 30,
                 ),

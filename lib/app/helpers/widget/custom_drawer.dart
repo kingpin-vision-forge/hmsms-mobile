@@ -157,7 +157,7 @@ class CustomDrawerMenu extends StatelessWidget {
                   ),
                   _buildMenuItem(
                     icon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedBoardMath,
+                      icon: HugeIcons.strokeRoundedCells,
                       color: controller.selectedMenu.value == 'Sections'
                           ? AppColors.primaryColor
                           : AppColors.black,
