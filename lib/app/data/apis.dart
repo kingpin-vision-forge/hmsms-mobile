@@ -1,5 +1,5 @@
 import 'dart:io';
-// import 'package:student_management/app/data/api_authenticator.dart';
+import 'package:student_management/app/data/api_athenticator.dart';
 import 'package:student_management/app/data/header.interceptor.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:http/io_client.dart';
@@ -23,14 +23,20 @@ abstract class ApiService extends ChopperService {
   @POST(path: '/students')
   Future<Response> createStudent(@Body() Map<String, dynamic> body);
 
+  @POST(path: '/classes')
+  Future<Response> createClass(@Body() Map<String, dynamic> body);
+
+  @GET(path: '/classes')
+  Future<Response> fetchClasses();
+
   static ApiService create() {
-    // final authenticator = ApiAuthenticator(baseUrl: apiBaseUrl);
+    final authenticator = ApiAuthenticator(baseUrl: apiBaseUrl);
     final client = ChopperClient(
       baseUrl: Uri.parse(apiBaseUrl),
       services: [_$ApiService()],
       converter: const JsonConverter(),
-      // authenticator: authenticator,
-      // interceptors: [HeaderInterceptor(authenticator)],
+      authenticator: authenticator,
+      interceptors: [HeaderInterceptor(authenticator)],
       client: IOClient(
         HttpClient()
           ..connectionTimeout = Constants.CONFIG['CONNECTION_TIMEOUT'],

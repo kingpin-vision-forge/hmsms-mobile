@@ -7,6 +7,7 @@ class UserDetails {
   String? phone;
   String? email;
   String? role;
+  String? schoolId;
 
   UserDetails({
     this.userId,
@@ -17,6 +18,7 @@ class UserDetails {
     this.phone,
     this.email,
     this.role,
+    this.schoolId,
   });
 
   factory UserDetails.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class UserDetails {
       phone: json['phone'] ?? '',
       email: json['email'] ?? '',
       role: json['role'] ?? '',
+      schoolId: json['schoolId'] ?? '',
     );
   }
 

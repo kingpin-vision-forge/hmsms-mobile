@@ -248,7 +248,6 @@ Future<bool> isTokenExpired() async {
 
 serverError(c.Response res, Function() callback) {
   final dynamic error = res.error;
-  print('i am server error $error');
   if (error == null || error.toString().toLowerCase() == 'null') return;
   try {
     // Try to decode error string

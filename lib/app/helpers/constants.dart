@@ -489,6 +489,9 @@ class Constants {
     'QUANTITY_HIGH': 'Quantity is too high',
     'NOT_ADDRESS': 'Not a Proper destination address',
     'LAUNCH_ERROR': 'Could not launch',
+    'CLASS_CREATED': 'Class created successfully',
+    'FAILED_CREATE_CLASS': 'Failed to create class',
+    'FAILED_FETCH_CLASSES': 'Failed to fetch classes',
   };
 
   static Map<String, String> STATUS_CODE_MESSAGES = {

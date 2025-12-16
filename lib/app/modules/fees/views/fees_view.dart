@@ -289,7 +289,6 @@ class FeesView extends GetView<FeesController> {
                   onTap: () {
                     if (option.toLowerCase() == 'all') {
                       Navigator.pop(context);
-                      print('Showing all items');
                     } else {
                       Navigator.pop(context);
                       _showSubFilterBottomSheet(context, option);
@@ -370,7 +369,6 @@ class FeesView extends GetView<FeesController> {
                   ),
                   onTap: () {
                     Navigator.pop(context);
-                    print('Selected $category → $subOption');
                   },
                 ),
               ),

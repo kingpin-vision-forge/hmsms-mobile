@@ -310,7 +310,6 @@ class StudentListView extends GetView<StudentListController> {
                     if (option.toLowerCase() == 'all') {
                       Navigator.pop(context);
                       // Handle "All" filter action directly if needed
-                      print('Showing all items');
                     } else {
                       Navigator.pop(context);
                       _showSubFilterBottomSheet(context, option);
@@ -392,7 +391,6 @@ class StudentListView extends GetView<StudentListController> {
                   onTap: () {
                     Navigator.pop(context);
                     // TODO: handle selection (filter data, update UI, etc.)
-                    print('Selected $category → $subOption');
                   },
                 ),
               ),
