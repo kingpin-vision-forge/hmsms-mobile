@@ -127,12 +127,12 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CLASS_DETAIL,
-      page: () => const ClassDetailView(),
+      page: () => ClassDetailView(),
       binding: ClassDetailBinding(),
     ),
     GetPage(
       name: _Paths.CREATE_SECTION,
-      page: () => const CreateSectionView(),
+      page: () => CreateSectionView(),
       binding: CreateSectionBinding(),
     ),
     GetPage(
@@ -142,7 +142,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SECTION_DETAIL,
-      page: () => const SectionDetailView(),
+      page: () => SectionDetailView(),
       binding: SectionDetailBinding(),
     ),
   ];

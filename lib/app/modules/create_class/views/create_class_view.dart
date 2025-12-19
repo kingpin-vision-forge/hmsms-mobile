@@ -46,17 +46,19 @@ class CreateClassView extends GetView<CreateClassController> {
                     Get.back();
                   },
                 ),
-                Text(
-                      'New Class',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      textAlign: TextAlign.left,
-                    )
-                    .animate()
-                    .fadeIn(delay: 200.ms, duration: 800.ms)
-                    .slideY(begin: 0.1, end: 0),
+                Obx(
+                  () => Text(
+                        controller.isEditMode.value ? 'Edit Class' : 'New Class',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        textAlign: TextAlign.left,
+                      )
+                      .animate()
+                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                      .slideY(begin: 0.1, end: 0),
+                ),
               ],
             ),
             foregroundColor: AppColors.secondaryColor,
@@ -64,6 +66,7 @@ class CreateClassView extends GetView<CreateClassController> {
           ),
         ),
       ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -180,7 +183,7 @@ class CreateClassView extends GetView<CreateClassController> {
                 //     ),
                 //   ),
                 // ),
-                
+
                 // const SizedBox(height: 25),
                 Obx(
                   () => SizedBox(
@@ -190,7 +193,9 @@ class CreateClassView extends GetView<CreateClassController> {
                       onPressed:
                           controller.isFormValid.value &&
                               !controller.isLoading.value
-                          ? () => controller.createClass()
+                          ? () => controller.isEditMode.value
+                                ? controller.updateClass()
+                                : controller.createClass()
                           : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.callBtn,
@@ -203,9 +208,11 @@ class CreateClassView extends GetView<CreateClassController> {
                           ? const CircularProgressIndicator(
                               color: AppColors.black,
                             )
-                          : const Text(
-                              'Create Class',
-                              style: TextStyle(
+                          : Text(
+                              controller.isEditMode.value
+                                  ? 'Update Class'
+                                  : 'Create Class',
+                              style: const TextStyle(
                                 color: AppColors.secondaryColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

@@ -130,7 +130,6 @@ class LoginController extends GetxController with WidgetsBindingObserver {
           if (res.body != null &&
               res.body['data'] != null &&
               res.body['success'] == true) {
-
             final response = SignInResponse.fromJson(res.body);
             final accessToken = response.data?.accessToken ?? '';
             final refreshToken = response.data?.refreshToken ?? '';
@@ -158,10 +157,10 @@ class LoginController extends GetxController with WidgetsBindingObserver {
             isRememberMeChecked.value = false;
             isTermsChecked.value = false;
             Get.offAllNamed(Routes.HOME);
-          } else {
-            // Handle API error responses
-            serverError(res, () => signIn(formKey));
           }
+        } else {
+          // Handle API error responses
+          serverError(res, () => signIn(formKey));
         }
       } catch (e) {
         // Handle unexpected errors

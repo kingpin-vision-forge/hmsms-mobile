@@ -285,7 +285,10 @@ class ClassListView extends GetView<ClassListController> {
               borderRadius: BorderRadius.circular(16),
               onTap: () {
                 // Navigate to class details
-                // Get.toNamed(Routes.CLASS_DETAILS, arguments: classData);
+                Get.offAllNamed(
+                  Routes.CLASS_DETAIL,
+                  arguments: {'class_id': classData.id},
+                );
               },
               child: Padding(
                 padding: const EdgeInsets.all(16),

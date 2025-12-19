@@ -4,6 +4,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
+import 'package:student_management/app/modules/section_list/models/section_response.dart';
+import 'package:student_management/app/routes/app_pages.dart';
 
 import '../controllers/section_list_controller.dart';
 
@@ -61,7 +63,9 @@ class SectionListView extends GetView<SectionListController> {
                                       size: 36,
                                       color: AppColors.secondaryColor,
                                     ),
-                                    onPressed: () => Get.back(),
+                                    onPressed: () {
+                                      Get.offAllNamed(Routes.HOME);
+                                    },
                                   ),
                                   Text(
                                         'Sections',
@@ -172,30 +176,271 @@ class SectionListView extends GetView<SectionListController> {
             ),
           ),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              HugeIcon(
-                    icon: HugeIcons.strokeRoundedAlert01,
-                    size: 100,
-                    color: AppColors.primaryColor,
-                  )
-                  .animate()
-                  .fadeIn(delay: 200.ms, duration: 800.ms)
-                  .slideY(begin: 0.1, end: 0),
-              const SizedBox(height: 20),
-              Text(
-                    'Thank you! Work in Progress',
-                    style: const TextStyle(fontSize: 20),
-                  )
-                  .animate()
-                  .fadeIn(delay: 200.ms, duration: 800.ms)
-                  .slideY(begin: 0.1, end: 0),
+        body: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.primaryColor),
+            );
+          }
+
+          if (controller.filteredSectionList.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                        controller.searchQuery.value.isEmpty
+                            ? 'No sections available'
+                            : 'No sections available',
+                        style: const TextStyle(fontSize: 20),
+                      )
+                      .animate()
+                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                      .slideY(begin: 0.1, end: 0),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: controller.filteredSectionList.length,
+            itemBuilder: (context, index) {
+              final sectionData = controller.filteredSectionList[index];
+              if (index == 0) {
+                return Column(
+                  children: [
+                    // Items count and download button at the top
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${controller.filteredSectionList.length} Items',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            height: 1.3,
+                            color: AppColors.black,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const HugeIcon(
+                            icon: HugeIcons.strokeRoundedDownload04,
+                            size: 28,
+                            color: AppColors.black,
+                          ),
+                          onPressed: () {
+                            // TODO: Implement download functionality
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSectionCard(
+                      controller.filteredSectionList[index],
+                      index,
+                    ),
+                  ],
+                );
+              }
+              return _buildSectionCard(
+                controller.filteredSectionList[index],
+                index,
+              );
+            },
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildSectionCard(SectionData sectionData, int index) {
+    return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.primaryColor.withOpacity(0.8),
+                AppColors.callBtn.withOpacity(0.9),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primaryColor.withOpacity(0.3),
+                offset: const Offset(0, 4),
+                blurRadius: 12,
+                spreadRadius: 0,
+              ),
             ],
           ),
-        ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () {
+                // Navigate to section details
+                Get.offAllNamed(
+                  Routes.SECTION_DETAIL,
+                  arguments: {'section_id': sectionData.id},
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header with section name and icon
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'Section ',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.secondaryColor
+                                          .withOpacity(0.8),
+                                    ),
+                                  ),
+                                  Text(
+                                    sectionData.name,
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.secondaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.secondaryColor.withOpacity(
+                                    0.2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  sectionData.classInfo.name,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.secondaryColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.secondaryColor.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const HugeIcon(
+                            icon: HugeIcons.strokeRoundedUserMultiple,
+                            size: 32,
+                            color: AppColors.secondaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Divider
+                    Container(
+                      height: 1,
+                      color: AppColors.secondaryColor.withOpacity(0.3),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Class Info
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildInfoItem(
+                            icon: HugeIcons.strokeRoundedBookOpen01,
+                            label: 'Class Code',
+                            value: sectionData.classInfo.code,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildInfoItem(
+                            icon: HugeIcons.strokeRoundedSchool,
+                            label: 'Class',
+                            value: sectionData.classInfo.name,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        )
+        .animate()
+        .fadeIn(delay: (100 * index).ms, duration: 600.ms)
+        .slideX(begin: 0.2, end: 0);
+  }
+
+  Widget _buildInfoItem({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.secondaryColor.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          HugeIcon(icon: icon, size: 20, color: AppColors.secondaryColor),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: AppColors.secondaryColor.withOpacity(0.8),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.secondaryColor,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

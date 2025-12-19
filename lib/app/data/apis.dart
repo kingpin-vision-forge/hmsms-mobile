@@ -29,6 +29,33 @@ abstract class ApiService extends ChopperService {
   @GET(path: '/classes')
   Future<Response> fetchClasses();
 
+  @POST(path: '/sections')
+  Future<Response> createSection(@Body() Map<String, dynamic> body);
+
+  @GET(path: '/classes/by-school')
+  Future<Response> fetchClassesForSection();
+
+  @GET(path: '/sections')
+  Future<Response> fetchSections();
+
+  @GET(path: '/classes/{id}')
+  Future<Response> classDetails(@Path('id') String classId);
+
+  @GET(path: '/sections/{id}')
+  Future<Response> sectionDetails(@Path('id') String sectionId);
+
+  @PATCH(path: '/sections/{id}')
+  Future<Response> updateSection(
+    @Path('id') String sectionId,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @PATCH(path: '/classes/{id}')
+  Future<Response> updateClass(
+    @Path('id') String classId,
+    @Body() Map<String, dynamic> body,
+  );
+
   static ApiService create() {
     final authenticator = ApiAuthenticator(baseUrl: apiBaseUrl);
     final client = ChopperClient(

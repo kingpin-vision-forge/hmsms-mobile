@@ -492,6 +492,15 @@ class Constants {
     'CLASS_CREATED': 'Class created successfully',
     'FAILED_CREATE_CLASS': 'Failed to create class',
     'FAILED_FETCH_CLASSES': 'Failed to fetch classes',
+    'SECTION_CREATED': 'Section created successfully',
+    'FAILED_CREATE_SECTION': 'Failed to create section',
+    'FAILED_FETCH_SECTIONS': 'Failed to fetch sections',
+    'FAILED_FETCH_CLASS_DETAIL': 'Failed to fetch class detail',
+    'FAILED_FETCH_SECTION_DETAIL': 'Failed to fetch section detail',
+    'SECTION_UPDATED': 'Section updated successfully',
+    'FAILED_UPDATE_SECTION': 'Failed to update section',
+    'CLASS_UPDATED': 'Class updated successfully',
+    'FAILED_UPDATE_CLASS': 'Failed to update class',
   };
 
   static Map<String, String> STATUS_CODE_MESSAGES = {

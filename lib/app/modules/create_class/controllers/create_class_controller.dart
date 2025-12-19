@@ -20,8 +20,9 @@ class CreateClassController extends GetxController {
   var hasInteractedWithSchoolId = false.obs;
   var isFormValid = false.obs;
   var isLoading = false.obs;
-
+  var isEditMode = false.obs;
   final formKey = GlobalKey<FormState>();
+  var classId = ''.obs;
 
   @override
   void onInit() {
@@ -30,6 +31,14 @@ class CreateClassController extends GetxController {
     nameController.addListener(checkFormValidity);
     codeController.addListener(checkFormValidity);
     schoolIdController.addListener(checkFormValidity);
+
+    // Accept the argument coming from the class detail for edit
+    if (Get.arguments != null && Get.arguments['isEdit'] == true) {
+      isEditMode.value = true;
+      classId.value = Get.arguments['class_id'] ?? '';
+      nameController.text = Get.arguments['class_name'] ?? '';
+      codeController.text = Get.arguments['class_code'] ?? '';
+    }
   }
 
   @override
@@ -108,7 +117,6 @@ class CreateClassController extends GetxController {
         if (res.body != null &&
             res.body['data'] != null &&
             res.body['success'] == true) {
-
           // // Show success message and navigate to main app
           botToastSuccess(Constants.BOT_TOAST_MESSAGES['CLASS_CREATED']!);
           Get.offAllNamed(Routes.CLASS_LIST);
@@ -124,6 +132,52 @@ class CreateClassController extends GetxController {
         apiName: 'createClass',
         error: e,
         displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_CREATE_CLASS']!,
+      );
+    } finally {
+      // Reset loading state
+      isLoading.value = false;
+    }
+  }
+
+  updateClass() async {
+    // Similar implementation to createSection with necessary modifications
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+
+    try {
+      // Set loading state to indicate API call in progress
+      isLoading.value = true;
+      Map<String, dynamic> payload = {
+        'name': nameController.text,
+        'code': codeController.text,
+      };
+
+      c.Response? res = await NetworkUtils.safeApiCall(
+        () => _apiService.updateClass(classId.value, payload),
+      );
+
+      if (res == null) return;
+      if (res.isSuccessful) {
+        // Validate response body structure and success status
+        if (res.body != null &&
+            res.body['data'] != null &&
+            res.body['success'] == true) {
+          // // Show success message and navigate to main app
+          botToastSuccess(Constants.BOT_TOAST_MESSAGES['CLASS_UPDATED']!);
+          Get.offAllNamed(Routes.CLASS_LIST);
+        } else {
+          // Handle API error responses
+          serverError(res, () => updateClass());
+        }
+      }
+    } catch (e) {
+      // Handle unexpected errors
+
+      errorUtil.handleAppError(
+        apiName: 'updateSection',
+        error: e,
+        displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_UPDATE_SECTION']!,
       );
     } finally {
       // Reset loading state

@@ -1,43 +1,23 @@
 class ClassListResponse {
-  final bool success;
-  final int statusCode;
   final List<ClassData> data;
-  final String timestamp;
-  final String path;
-  final String requestId;
 
   ClassListResponse({
-    required this.success,
-    required this.statusCode,
     required this.data,
-    required this.timestamp,
-    required this.path,
-    required this.requestId,
   });
 
   factory ClassListResponse.fromJson(Map<String, dynamic> json) {
     return ClassListResponse(
-      success: json['success'] ?? false,
-      statusCode: json['statusCode'] ?? 0,
       data:
           (json['data'] as List<dynamic>?)
               ?.map((item) => ClassData.fromJson(item as Map<String, dynamic>))
               .toList() ??
           [],
-      timestamp: json['timestamp'] ?? '',
-      path: json['path'] ?? '',
-      requestId: json['requestId'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'success': success,
-      'statusCode': statusCode,
       'data': data.map((item) => item.toJson()).toList(),
-      'timestamp': timestamp,
-      'path': path,
-      'requestId': requestId,
     };
   }
 }
