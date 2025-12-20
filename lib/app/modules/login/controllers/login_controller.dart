@@ -114,7 +114,7 @@ class LoginController extends GetxController with WidgetsBindingObserver {
       Map<String, dynamic> payload = {
         'identifier': usernameController.text,
         'password': passwordController.text,
-        // 'fcm_token_mobile': await readFromStorage(Constants.STORAGE_KEYS['FCM_TOKEN']!),
+        'fcm_token_mobile': await readFromStorage(Constants.STORAGE_KEYS['FCM_TOKEN']!),
       };
       try {
         // Set loading state to indicate API call in progress

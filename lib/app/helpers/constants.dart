@@ -516,6 +516,7 @@ class Constants {
 
   static Map<String, String> STORAGE_KEYS = {
     'REMEMBER_ME': 'rememberMe',
+    'FCM_TOKEN': 'fCMToken',
     'USERNAME': 'username',
     'DEVICE_ID': 'device_id',
     'REFRESH_TOKEN': 'refreshToken',
