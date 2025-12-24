@@ -15,13 +15,10 @@ abstract class ApiService extends ChopperService {
   Future<Response> login(@Body() Map<String, dynamic> credentials);
 
   @POST(path: '/auth/refresh')
-  Future<Response> refreshToken(@Body() Map<String, dynamic> query);
+  Future<Response> refreshToken(@Body() Map<String, dynamic> body);
 
   @POST(path: '/auth/logout')
-  Future<Response> signOut(@Body() Map<String, dynamic> query);
-
-  @POST(path: '/students')
-  Future<Response> createStudent(@Body() Map<String, dynamic> body);
+  Future<Response> signOut(@Body() Map<String, dynamic> body);
 
   @POST(path: '/classes')
   Future<Response> createClass(@Body() Map<String, dynamic> body);
@@ -53,6 +50,30 @@ abstract class ApiService extends ChopperService {
   @PATCH(path: '/classes/{id}')
   Future<Response> updateClass(
     @Path('id') String classId,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @POST(path: '/students')
+  Future<Response> createStudent(@Body() Map<String, dynamic> body);
+
+  @GET(path: '/sections/by-class')
+  Future<Response> fetchSectionForClass({@Query('classId') String? classId});
+
+  @POST(path: '/parents')
+  Future<Response> createParent(@Body() Map<String, dynamic> body);
+
+  @GET(path: '/parents/by-school')
+  Future<Response> fetchParentForStudent({@Query('schoolId') String? schoolId});
+
+  @GET(path: '/students')
+  Future<Response> fetchStudentList();
+
+  @GET(path: '/students/{id}')
+  Future<Response> studentDetails(@Path('id') String studentId);
+
+  @PATCH(path: '/students/{id}')
+  Future<Response> updateStudent(
+    @Path('id') String studentId,
     @Body() Map<String, dynamic> body,
   );
 

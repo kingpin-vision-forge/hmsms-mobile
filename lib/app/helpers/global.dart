@@ -28,6 +28,7 @@ var isFetchingCountryCode = false.obs;
 var currency = '\$';
 var fseId = 17227;
 var userId = '';
+var schoolId = '';
 var userData = readFromStorage(Constants.STORAGE_KEYS['USER_DATA']!);
 var isLoading = false.obs;
 var isFetchingTemplate = false.obs;
@@ -65,6 +66,7 @@ ErrorUtil errorUtil = ErrorUtil();
 
 setUserData() async {
   userData = await readFromStorage(Constants.STORAGE_KEYS['USER_DATA']!);
+  schoolId = userData['schoolId'];
   userId = userData['id'];
 }
 

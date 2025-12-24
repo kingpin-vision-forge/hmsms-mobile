@@ -179,7 +179,7 @@ class SectionListView extends GetView<SectionListController> {
         body: Obx(() {
           if (controller.isLoading.value) {
             return const Center(
-              child: CircularProgressIndicator(color: AppColors.primaryColor),
+              child: CircularProgressIndicator(color: AppColors.callBtn),
             );
           }
 
@@ -237,6 +237,7 @@ class SectionListView extends GetView<SectionListController> {
                       ],
                     ),
                     const SizedBox(height: 16),
+                    
                     _buildSectionCard(
                       controller.filteredSectionList[index],
                       index,

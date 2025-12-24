@@ -51,7 +51,7 @@ class ClassDetailView extends GetView {
                         color: AppColors.secondaryColor,
                       ),
                       onPressed: () {
-                        Get.offAllNamed(Routes.SECTION_LIST);
+                        Get.offAllNamed(Routes.CLASS_LIST);
                       },
                     ),
                     Text(
@@ -401,7 +401,7 @@ class ClassDetailView extends GetView {
                     ),
                   ),
                 ),
-              ],
+              ].animate(interval: 100.ms).fade(duration: 500.ms),
             ),
           ),
         );

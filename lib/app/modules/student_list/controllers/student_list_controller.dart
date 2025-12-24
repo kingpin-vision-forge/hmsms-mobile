@@ -1,73 +1,76 @@
 import 'package:get/get.dart';
+import 'package:student_management/app/helpers/constants.dart';
+import 'package:student_management/app/helpers/global.dart';
+import 'package:student_management/app/helpers/utilities/network_util.dart';
+import 'package:chopper/chopper.dart' as c;
+import 'package:student_management/app/data/apis.dart';
+import 'package:student_management/app/modules/student_list/models/student_response.dart';
 
 class StudentListController extends GetxController {
+  final ApiService _apiService = ApiService.create();
   var students = [].obs;
   var isSearching = false.obs;
   var searchQuery = ''.obs;
+  var isLoading = false.obs;
+  var studentList = <Student>[].obs;
+  var filteredStudentList = <Student>[].obs;
   @override
   void onInit() {
     super.onInit();
+    // Listen to search query changes
+    ever(searchQuery, (_) => filterSections());
     fetchStudentList();
   }
 
   /// Dummy function to assign teacher data
-  void fetchStudentList() {
-    students.assignAll([
-      {
-        'id': 'STD001',
-        'name': 'Aarav Mehta',
-        'grade': '1',
-        'section': 'A',
-        'rollNumber': '01',
-        'attendance': '96%',
-        'status': 'Present',
-      },
-      {
-        'id': 'STD002',
-        'name': 'Priya Sharma',
-        'grade': '3',
-        'section': 'B',
-        'rollNumber': '07',
-        'attendance': '92%',
-        'status': 'Present',
-      },
-      {
-        'id': 'STD003',
-        'name': 'Rohan Patel',
-        'grade': '4',
-        'section': 'A',
-        'rollNumber': '04',
-        'attendance': '68%',
-        'status': 'Absent',
-      },
-      {
-        'id': 'STD004',
-        'name': 'Sara Khan',
-        'grade': '3',
-        'section': 'C',
-        'rollNumber': '10',
-        'attendance': '85%',
-        'status': 'On Leave',
-      },
-      {
-        'id': 'STD005',
-        'name': 'Vikram Iyer',
-        'grade': '2',
-        'section': 'B',
-        'rollNumber': '03',
-        'attendance': '98%',
-        'status': 'Present',
-      },
-      {
-        'id': 'STD006',
-        'name': 'Meera Das',
-        'grade': '5',
-        'section': 'A',
-        'rollNumber': '02',
-        'attendance': '74%',
-        'status': 'Inactive',
-      },
-    ]);
+  fetchStudentList() async {
+    try {
+      // Set loading state to indicate API call in progress
+      isLoading.value = true;
+
+      c.Response? res = await NetworkUtils.safeApiCall(
+        () => _apiService.fetchStudentList(),
+      );
+
+      if (res == null) return;
+      if (res.isSuccessful) {
+        if (res.body != null &&
+            res.body['data'] != null &&
+            res.body['success'] == true) {
+          final response = StudentListResponse.fromJson(res.body);
+          studentList.value = response.data;
+          filteredStudentList.value = response.data;
+        } else {
+          // Handle API error responses
+          serverError(res, () => fetchStudentList());
+        }
+      }
+    } catch (e) {
+      // Handle unexpected errors
+
+      errorUtil.handleAppError(
+        apiName: 'fetchStudents',
+        error: e,
+        displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_FETCH_STUDENTS']!,
+      );
+    } finally {
+      // Reset loading state
+      isLoading.value = false;
+    }
+  }
+
+  /*
+   * Filters sections based on search query
+   */
+  void filterSections() {
+    if (searchQuery.value.isEmpty) {
+      filteredStudentList.value = studentList;
+    } else {
+      filteredStudentList.value = studentList.where((student) {
+        final query = searchQuery.value.toLowerCase();
+        return student.firstName?.toLowerCase().contains(query) ?? false;
+      }).toList();
+    }
   }
 
   /* 

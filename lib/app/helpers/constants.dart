@@ -501,6 +501,14 @@ class Constants {
     'FAILED_UPDATE_SECTION': 'Failed to update section',
     'CLASS_UPDATED': 'Class updated successfully',
     'FAILED_UPDATE_CLASS': 'Failed to update class',
+    'STUDENT_CREATED': 'Student created successfully',
+    'FAILED_CREATE_STUDENT': 'Failed to create student',
+    'FAILED_FETCH_PARENT': 'Failed to fetch parents',
+    'FAILED_FETCH_STUDENTS': 'Failed to fetch students',
+    'FAILED_FETCH_STUDENT_DETAIL': 'Failed to fetch student detail',
+    'STUDENT_UPDATED': 'Student updated successfully',
+    'FAILED_UPDATE_STUDENT': 'Failed to update student',
+    
   };
 
   static Map<String, String> STATUS_CODE_MESSAGES = {

@@ -45,6 +45,7 @@ class UserDetails {
       'phone': phone,
       'email': email,
       'role': role,
+      'schoolId': schoolId,
     };
   }
 }

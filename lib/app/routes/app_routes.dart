@@ -24,6 +24,9 @@ abstract class Routes {
   static const CREATE_SECTION = _Paths.CREATE_SECTION;
   static const SECTION_LIST = _Paths.SECTION_LIST;
   static const SECTION_DETAIL = _Paths.SECTION_DETAIL;
+  static const CREATE_PARENT = _Paths.CREATE_PARENT;
+  static const PARENT_LIST = _Paths.PARENT_LIST;
+  static const PARENT_DETAIL = _Paths.PARENT_DETAIL;
 }
 
 abstract class _Paths {
@@ -49,4 +52,7 @@ abstract class _Paths {
   static const CREATE_SECTION = '/create-section';
   static const SECTION_LIST = '/section-list';
   static const SECTION_DETAIL = '/section-detail';
+  static const CREATE_PARENT = '/create-parent';
+  static const PARENT_LIST = '/parent-list';
+  static const PARENT_DETAIL = '/parent-detail';
 }

@@ -265,7 +265,7 @@ class CreateSectionView extends GetView<CreateSectionController> {
                     ),
                   ),
                 ),
-              ],
+              ].animate(interval: 100.ms).fade(duration: 500.ms),
             ),
           ),
         ),

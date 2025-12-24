@@ -221,7 +221,7 @@ class CreateClassView extends GetView<CreateClassController> {
                     ),
                   ),
                 ),
-              ],
+              ].animate(interval: 100.ms).fade(duration: 500.ms),
             ),
           ),
         ),

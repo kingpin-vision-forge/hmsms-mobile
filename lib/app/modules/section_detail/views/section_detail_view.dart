@@ -294,7 +294,7 @@ class SectionDetailView extends GetView {
                     return _buildStudentCard(student, index);
                   },
                 ),
-            ],
+            ].animate(interval: 100.ms).fade(duration: 500.ms),
           ),
         );
       }),

@@ -8,6 +8,8 @@ import '../modules/class_list/bindings/class_list_binding.dart';
 import '../modules/class_list/views/class_list_view.dart';
 import '../modules/create_class/bindings/create_class_binding.dart';
 import '../modules/create_class/views/create_class_view.dart';
+import '../modules/create_parent/bindings/create_parent_binding.dart';
+import '../modules/create_parent/views/create_parent_view.dart';
 import '../modules/create_section/bindings/create_section_binding.dart';
 import '../modules/create_section/views/create_section_view.dart';
 import '../modules/fees/bindings/fees_binding.dart';
@@ -22,6 +24,10 @@ import '../modules/menu/bindings/menu_binding.dart';
 import '../modules/menu/views/menu_view.dart';
 import '../modules/notifications/bindings/notifications_binding.dart';
 import '../modules/notifications/views/notifications_view.dart';
+import '../modules/parent_detail/bindings/parent_detail_binding.dart';
+import '../modules/parent_detail/views/parent_detail_view.dart';
+import '../modules/parent_list/bindings/parent_list_binding.dart';
+import '../modules/parent_list/views/parent_list_view.dart';
 import '../modules/section_detail/bindings/section_detail_binding.dart';
 import '../modules/section_detail/views/section_detail_view.dart';
 import '../modules/section_list/bindings/section_list_binding.dart';
@@ -97,7 +103,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.STUDENT_DETAIL,
-      page: () => const StudentDetailView(),
+      page: () => StudentDetailView(),
       binding: StudentDetailBinding(),
     ),
     GetPage(
@@ -144,6 +150,21 @@ class AppPages {
       name: _Paths.SECTION_DETAIL,
       page: () => SectionDetailView(),
       binding: SectionDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.CREATE_PARENT,
+      page: () => const CreateParentView(),
+      binding: CreateParentBinding(),
+    ),
+    GetPage(
+      name: _Paths.PARENT_LIST,
+      page: () => const ParentListView(),
+      binding: ParentListBinding(),
+    ),
+    GetPage(
+      name: _Paths.PARENT_DETAIL,
+      page: () => const ParentDetailView(),
+      binding: ParentDetailBinding(),
     ),
   ];
 }
