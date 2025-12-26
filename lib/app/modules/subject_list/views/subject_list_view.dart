@@ -4,13 +4,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
-import 'package:student_management/app/modules/parent_list/models/parent_response.dart';
 import 'package:student_management/app/routes/app_pages.dart';
+import 'package:student_management/app/modules/subject_list/models/subject_list_response.dart';
 
-import '../controllers/parent_list_controller.dart';
+import '../controllers/subject_list_controller.dart';
 
-class ParentListView extends GetView<ParentListController> {
-  const ParentListView({super.key});
+class SubjectListView extends GetView<SubjectListController> {
+  const SubjectListView({super.key});
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -41,7 +41,7 @@ class ParentListView extends GetView<ParentListController> {
                 curve: Curves.easeInOut,
                 child: AppBar(
                   toolbarHeight: controller.isSearching.value ? 140 : 60,
-                  elevation: 0,
+                  elevation: 0, // remove extra shadow from AppBar itself
                   backgroundColor: Colors.transparent,
                   leadingWidth: double.infinity,
                   leading: SizedBox(
@@ -68,7 +68,7 @@ class ParentListView extends GetView<ParentListController> {
                                     },
                                   ),
                                   Text(
-                                        'Parents',
+                                        'Subjects',
                                         style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w700,
@@ -183,7 +183,7 @@ class ParentListView extends GetView<ParentListController> {
             );
           }
 
-          if (controller.filteredParentList.isEmpty) {
+          if (controller.filteredSubjectList.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -191,8 +191,8 @@ class ParentListView extends GetView<ParentListController> {
                 children: [
                   Text(
                         controller.searchQuery.value.isEmpty
-                            ? 'No parents available'
-                            : 'No parents found for your search',
+                            ? 'No subjects available'
+                            : 'No subjects available',
                         style: const TextStyle(fontSize: 20),
                       )
                       .animate()
@@ -205,9 +205,8 @@ class ParentListView extends GetView<ParentListController> {
 
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: controller.filteredParentList.length,
+            itemCount: controller.filteredSubjectList.length,
             itemBuilder: (context, index) {
-              final parentData = controller.filteredParentList[index];
               if (index == 0) {
                 return Column(
                   children: [
@@ -215,7 +214,7 @@ class ParentListView extends GetView<ParentListController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${controller.filteredParentList.length} Items',
+                          '${controller.filteredSubjectList.length} Items',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -230,17 +229,23 @@ class ParentListView extends GetView<ParentListController> {
                             color: AppColors.black,
                           ),
                           onPressed: () {
-                            // TODO: Implement export functionality
+                            // TODO: Implement download functionality
                           },
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
-                    _buildParentCard(parentData, index),
+                    _buildSubjectCard(
+                      controller.filteredSubjectList[index],
+                      index,
+                    ),
                   ],
                 );
               }
-              return _buildParentCard(parentData, index);
+              return _buildSubjectCard(
+                controller.filteredSubjectList[index],
+                index,
+              );
             },
           );
         }),
@@ -248,34 +253,7 @@ class ParentListView extends GetView<ParentListController> {
     );
   }
 
-  Widget _buildParentCard(ParentModel parentData, int index) {
-    final nameParts = [
-      parentData.user.firstName.trim(),
-      if ((parentData.user.middleName ?? '').trim().isNotEmpty)
-        parentData.user.middleName!.trim(),
-      parentData.user.lastName.trim(),
-    ].where((part) => part.isNotEmpty).toList();
-
-    final fullName = nameParts.join(' ');
-    final primaryPhone =
-        (parentData.phone.isNotEmpty ? parentData.phone : parentData.user.phone)
-            .trim();
-    final whatsappNumber = (parentData.whatsappNumber ?? '').trim();
-    final address = parentData.address.trim();
-    final studentNames = parentData.students
-        .map(
-          (s) => [
-            s.user.firstName.trim(),
-            s.user.lastName.trim(),
-          ].where((part) => part.isNotEmpty).join(' '),
-        )
-        .where((name) => name.isNotEmpty)
-        .toList();
-
-    final studentsLabel = parentData.students.length == 1
-        ? '1 student'
-        : '${parentData.students.length} students';
-
+  Widget _buildSubjectCard(SubjectModel subject, int index) {
     return Container(
           margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
@@ -303,8 +281,8 @@ class ParentListView extends GetView<ParentListController> {
               borderRadius: BorderRadius.circular(16),
               onTap: () {
                 Get.offAllNamed(
-                  Routes.PARENT_DETAIL,
-                  arguments: {'parent_id': parentData.id},
+                  Routes.SUBJECT_DETAIL,
+                  arguments: {'subject_id': subject.id},
                 );
               },
               child: Padding(
@@ -322,7 +300,7 @@ class ParentListView extends GetView<ParentListController> {
                               Row(
                                 children: [
                                   Text(
-                                    'Parent ',
+                                    'Subject ',
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -332,46 +310,37 @@ class ParentListView extends GetView<ParentListController> {
                                   ),
                                   Flexible(
                                     child: Text(
-                                      fullName.isNotEmpty
-                                          ? fullName
-                                          : 'Unnamed',
+                                      subject.name,
                                       style: const TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,
                                         color: AppColors.secondaryColor,
                                       ),
-                                      maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 6),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: [
-                                  if (primaryPhone.isNotEmpty)
-                                    _buildTag(
-                                      icon: Icons.phone_outlined,
-                                      label: primaryPhone,
-                                    ),
-                                  if (parentData.user.email.isNotEmpty)
-                                    _buildTag(
-                                      icon: Icons.mail_outline,
-                                      label: parentData.user.email,
-                                    ),
-                                  if (whatsappNumber.isNotEmpty)
-                                    _buildTag(
-                                      icon: Icons.messenger_outline,
-                                      label: whatsappNumber,
-                                    ),
-                                  if (parentData.whatsappOptIn)
-                                    _buildTag(
-                                      icon: Icons.check_circle_outline,
-                                      label: 'WhatsApp opt-in',
-                                    ),
-                                ],
+                              const SizedBox(height: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.secondaryColor.withOpacity(
+                                    0.2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  subject.classInfo.name,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.secondaryColor,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -383,7 +352,7 @@ class ParentListView extends GetView<ParentListController> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const HugeIcon(
-                            icon: HugeIcons.strokeRoundedUserMultiple,
+                            icon: HugeIcons.strokeRoundedBookOpen01,
                             size: 32,
                             color: AppColors.secondaryColor,
                           ),
@@ -391,32 +360,26 @@ class ParentListView extends GetView<ParentListController> {
                       ],
                     ),
                     const SizedBox(height: 16),
-
-                    // Divider
                     Container(
                       height: 1,
                       color: AppColors.secondaryColor.withOpacity(0.3),
                     ),
                     const SizedBox(height: 16),
-
-                    // Info rows
                     Row(
                       children: [
                         Expanded(
                           child: _buildInfoItem(
-                            icon: HugeIcons.strokeRoundedUserMultiple,
-                            label: 'Students',
-                            value: studentsLabel,
+                            icon: HugeIcons.strokeRoundedBookOpen01,
+                            label: 'Subject Code',
+                            value: subject.code,
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: _buildInfoItem(
-                            icon: HugeIcons.strokeRoundedLocation04,
-                            label: 'Address',
-                            value: address.isNotEmpty
-                                ? address
-                                : 'Not provided',
+                            icon: HugeIcons.strokeRoundedUser,
+                            label: 'Class Code',
+                            value: subject.classInfo.code,
                           ),
                         ),
                       ],
@@ -466,38 +429,11 @@ class ParentListView extends GetView<ParentListController> {
                     fontWeight: FontWeight.bold,
                     color: AppColors.secondaryColor,
                   ),
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTag({required IconData icon, required String label}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: AppColors.secondaryColor),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.secondaryColor,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

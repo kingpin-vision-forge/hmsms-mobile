@@ -508,6 +508,22 @@ class Constants {
     'FAILED_FETCH_STUDENT_DETAIL': 'Failed to fetch student detail',
     'STUDENT_UPDATED': 'Student updated successfully',
     'FAILED_UPDATE_STUDENT': 'Failed to update student',
+    'PARENT_CREATED': 'Parent created successfully',
+    'FAILED_CREATE_PARENT': 'Failed to create parent',
+    'PARENT_UPDATED': 'Parent updated successfully',
+    'FAILED_UPDATE_PARENT': 'Failed to update parent',
+    'FAILED_FETCH_PARENTS': 'Failed to fetch parents',
+    'FAILED_FETCH_PARENT_DETAIL': 'Failed to fetch parent detail',
+    'PASSWORD_RESET_EMAIL_SENT':
+        'Password reset email sent successfully',
+    'FAILED_SEND_PASSWORD_RESET_EMAIL':
+        'Failed to send password reset email',
+    'SUBJECT_CREATED': 'Subject created successfully',
+    'FAILED_CREATE_SUBJECT': 'Failed to create subject',
+    'FAILED_FETCH_SUBJECTS': 'Failed to fetch subjects',
+    'FAILED_FETCH_SUBJECT_DETAIL': 'Failed to fetch subject detail',
+    'FAILED_UPDATE_SUBJECT': 'Failed to update subject',
+    'SUBJECT_UPDATED': 'Subject updated successfully',
     
   };
 

@@ -4,34 +4,35 @@ import 'package:student_management/app/data/apis.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/global.dart';
 import 'package:student_management/app/helpers/utilities/network_util.dart';
-import 'package:student_management/app/modules/parent_list/models/parent_response.dart';
+import 'package:student_management/app/modules/subject_list/models/subject_list_response.dart';
 
-class ParentListController extends GetxController {
+class SubjectListController extends GetxController {
   final ApiService _apiService = ApiService.create();
 
+  final count = 0.obs;
   var isSearching = false.obs;
   var searchQuery = ''.obs;
   var isLoading = false.obs;
-  var parentList = <ParentModel>[].obs;
-  var filteredParentList = <ParentModel>[].obs;
+  var subjectList = <SubjectModel>[].obs;
+  var filteredSubjectList = <SubjectModel>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-    fetchParents();
+    fetchSubjects();
     // Listen to search query changes
-    ever(searchQuery, (_) => filterParents());
+    ever(searchQuery, (_) => filterSubjects());
   }
 
-  //fetch parent
+  //fetch subjects
 
-  fetchParents() async {
+  fetchSubjects() async {
     try {
       // Set loading state to indicate API call in progress
       isLoading.value = true;
 
       c.Response? res = await NetworkUtils.safeApiCall(
-        () => _apiService.fetchParents(),
+        () => _apiService.fetchSubjects(),
       );
 
       if (res == null) return;
@@ -39,21 +40,21 @@ class ParentListController extends GetxController {
         if (res.body != null &&
             res.body['data'] != null &&
             res.body['success'] == true) {
-          final response = ParentResponseModel.fromJson(res.body);
-          parentList.value = response.data;
-          filteredParentList.value = response.data;
+          final response = SubjectListResponseModel.fromJson(res.body);
+          subjectList.value = response.data;
+          filteredSubjectList.value = response.data;
         } else {
           // Handle API error responses
-          serverError(res, () => fetchParents());
+          serverError(res, () => fetchSubjects());
         }
       }
     } catch (e) {
       // Handle unexpected errors
 
       errorUtil.handleAppError(
-        apiName: 'fetchParents',
+        apiName: 'fetchSubjects',
         error: e,
-        displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_FETCH_PARENTS']!,
+        displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_FETCH_SUBJECTS']!,
       );
     } finally {
       // Reset loading state
@@ -62,7 +63,7 @@ class ParentListController extends GetxController {
   }
 
   /* 
-   * Initiates search mode for parent filtering.
+   * Initiates search mode for invoice filtering.
    */
   void startSearch() {
     // Enable search mode
@@ -78,20 +79,20 @@ class ParentListController extends GetxController {
     isSearching.value = false;
     isSearching.refresh();
     searchQuery.value = '';
-    filteredParentList.value = parentList;
+    filteredSubjectList.value = subjectList;
   }
 
   /*
-   * Filters parents based on search query
+   * Filters subject based on search query
    */
-  void filterParents() {
+  void filterSubjects() {
     if (searchQuery.value.isEmpty) {
-      filteredParentList.value = parentList;
+      filteredSubjectList.value = subjectList;
     } else {
-      filteredParentList.value = parentList.where((parent) {
+      filteredSubjectList.value = subjectList.where((subject) {
         final query = searchQuery.value.toLowerCase();
-        return parent.user.firstName.toLowerCase().contains(query) ||
-            parent.user.lastName.toLowerCase().contains(query);
+        return subject.name.toLowerCase().contains(query) ||
+            subject.code.toLowerCase().contains(query);
       }).toList();
     }
   }
@@ -105,4 +106,6 @@ class ParentListController extends GetxController {
   void onClose() {
     super.onClose();
   }
+
+  void increment() => count.value++;
 }

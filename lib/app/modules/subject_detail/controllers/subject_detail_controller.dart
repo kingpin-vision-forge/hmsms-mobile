@@ -4,31 +4,31 @@ import 'package:student_management/app/data/apis.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/global.dart';
 import 'package:student_management/app/helpers/utilities/network_util.dart';
-import 'package:student_management/app/modules/parent_detail/models/parent_detail_response.dart';
+import 'package:student_management/app/modules/subject_detail/models/subject_detail_response.dart';
 import 'package:student_management/app/routes/app_pages.dart';
 
-class ParentDetailController extends GetxController {
+class SubjectDetailController extends GetxController {
   final ApiService _apiService = ApiService.create();
   var isLoading = false.obs;
-  var parentId;
-  Rx<ParentDetailResponseModel?> parentDetailData =
-      Rx<ParentDetailResponseModel?>(null);
-  final count = 0.obs;
+  var subjectId;
+  Rx<SubjectDetailResponseModel?> subjectDetailData =
+      Rx<SubjectDetailResponseModel?>(null);
 
+  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
-    parentId = Get.arguments['parent_id'];
-    fetchParentDetail();
+    subjectId = Get.arguments['subject_id'];
+    fetchSubjectDetail();
   }
 
-  // parent detail
-  fetchParentDetail() async {
+  //fetch subject detail
+  fetchSubjectDetail() async {
     try {
       // Set loading state
       isLoading(true);
       c.Response? res = await NetworkUtils.safeApiCall(
-        () => _apiService.parentDetail(parentId),
+        () => _apiService.subjectDetails(subjectId),
       );
       if (res == null) return;
       // Handle successful response
@@ -37,20 +37,20 @@ class ParentDetailController extends GetxController {
             res.body.runtimeType != String &&
             res.body['data'] != null &&
             res.body['success'] == true) {
-          final parsedData = ParentDetailResponseModel.fromJson(res.body);
-          parentDetailData.value = parsedData;
+          final parsedData = SubjectDetailResponseModel.fromJson(res.body);
+          subjectDetailData.value = parsedData;
         }
       } else {
         // Handle API errors
-        serverError(res, () => fetchParentDetail());
+        serverError(res, () => fetchSubjectDetail());
       }
     } catch (e) {
       // Handle unexpected errors
       errorUtil.handleAppError(
-        apiName: 'fetch parent detail',
+        apiName: 'fetch subject detail',
         error: e,
         displayMessage:
-            Constants.BOT_TOAST_MESSAGES['FAILED_FETCH_PARENT_DETAIL']!,
+            Constants.BOT_TOAST_MESSAGES['FAILED_FETCH_SUBJECT_DETAIL']!,
       );
     } finally {
       // Reset loading states
@@ -58,23 +58,17 @@ class ParentDetailController extends GetxController {
     }
   }
 
-  passEditParentArguments() async {
-    if (parentDetailData.value?.data != null) {
-      final parentData = parentDetailData.value!.data!;
+  void passEditSubjectArguments() {
+    final data = subjectDetailData.value?.data;
+    if (data != null) {
       Get.toNamed(
-        Routes.CREATE_PARENT,
+        Routes.CREATE_SUBJECT,
         arguments: {
           'isEdit': true,
-          'parentId': parentData.id,
-          'userId': parentData.userId,
-          'firstName': parentData.user.firstName,
-          'lastName': parentData.user.lastName,
-          'email': parentData.user.email,
-          'phone': parentData.phone,
-          'address': parentData.address,
-          'whatsappNumber': parentData.whatsappNumber ?? '',
-          'whatsappOptIn': parentData.whatsappOptIn,
-          'students': parentData.students.map((s) => s.id).toList(),
+          'subject_id': subjectId,
+          'subject_name': data.name,
+          'subject_code': data.code,
+          'class_id': data.classInfo.id,
         },
       );
     }

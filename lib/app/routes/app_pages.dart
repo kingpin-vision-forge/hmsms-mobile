@@ -12,6 +12,8 @@ import '../modules/create_parent/bindings/create_parent_binding.dart';
 import '../modules/create_parent/views/create_parent_view.dart';
 import '../modules/create_section/bindings/create_section_binding.dart';
 import '../modules/create_section/views/create_section_view.dart';
+import '../modules/create_subject/bindings/create_subject_binding.dart';
+import '../modules/create_subject/views/create_subject_view.dart';
 import '../modules/fees/bindings/fees_binding.dart';
 import '../modules/fees/views/fees_view.dart';
 import '../modules/fees_detail/bindings/fees_detail_binding.dart';
@@ -40,6 +42,10 @@ import '../modules/student_list/bindings/student_list_binding.dart';
 import '../modules/student_list/views/student_list_view.dart';
 import '../modules/students/bindings/students_binding.dart';
 import '../modules/students/views/students_view.dart';
+import '../modules/subject_detail/bindings/subject_detail_binding.dart';
+import '../modules/subject_detail/views/subject_detail_view.dart';
+import '../modules/subject_list/bindings/subject_list_binding.dart';
+import '../modules/subject_list/views/subject_list_view.dart';
 import '../modules/teacher_detail/bindings/teacher_detail_binding.dart';
 import '../modules/teacher_detail/views/teacher_detail_view.dart';
 import '../modules/teacher_list/bindings/teacher_list_binding.dart';
@@ -163,8 +169,23 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PARENT_DETAIL,
-      page: () => const ParentDetailView(),
+      page: () => ParentDetailView(),
       binding: ParentDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.CREATE_SUBJECT,
+      page: () => const CreateSubjectView(),
+      binding: CreateSubjectBinding(),
+    ),
+    GetPage(
+      name: _Paths.SUBJECT_LIST,
+      page: () => const SubjectListView(),
+      binding: SubjectListBinding(),
+    ),
+    GetPage(
+      name: _Paths.SUBJECT_DETAIL,
+      page: () => SubjectDetailView(),
+      binding: SubjectDetailBinding(),
     ),
   ];
 }

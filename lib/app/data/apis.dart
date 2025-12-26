@@ -77,6 +77,36 @@ abstract class ApiService extends ChopperService {
     @Body() Map<String, dynamic> body,
   );
 
+  @GET(path: '/students/by-school')
+  Future<Response> fetchStudentForParent({@Query('schoolId') String? schoolId});
+
+  @GET(path: '/parents')
+  Future<Response> fetchParents();
+
+  @GET(path: '/parents/{id}')
+  Future<Response> parentDetail(@Path('id') String parentId);
+
+  @PATCH(path: '/parents/{id}')
+  Future<Response> updateParent(
+    @Path('id') String parentId,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @POST(path: '/subjects')
+  Future<Response> createSubject(@Body() Map<String, dynamic> body);
+
+  @GET(path: '/subjects')
+  Future<Response> fetchSubjects();
+
+  @GET(path: '/subjects/{id}')
+  Future<Response> subjectDetails(@Path('id') String subjectId);
+
+  @PATCH(path: '/subjects/{id}')
+  Future<Response> updateSubject(
+    @Path('id') String subjectId,
+    @Body() Map<String, dynamic> body,
+  );
+
   static ApiService create() {
     final authenticator = ApiAuthenticator(baseUrl: apiBaseUrl);
     final client = ChopperClient(

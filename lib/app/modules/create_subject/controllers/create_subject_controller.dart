@@ -5,43 +5,42 @@ import 'package:student_management/app/data/apis.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/global.dart';
 import 'package:student_management/app/helpers/utilities/network_util.dart';
-import 'package:student_management/app/routes/app_pages.dart';
 import 'package:student_management/app/modules/create_section/models/fetch_classes_section.dart';
+import 'package:student_management/app/routes/app_pages.dart';
 
-class CreateSectionController extends GetxController {
+class CreateSubjectController extends GetxController {
   final ApiService _apiService = ApiService.create();
-  // Text editing controllers for form fields
   final nameController = TextEditingController();
-  final schoolIdController = TextEditingController();
-
-  // Observable variables for form validation
-  var hasInteractedWithName = false.obs;
-  var isFormValid = false.obs;
+  final codeController = TextEditingController();
+  final classIdController = TextEditingController();
   var isLoading = false.obs;
-  var selectClass = <String>[].obs;
-  var selectedSingleClass = ''.obs; // For edit mode - single class
+  var isEditMode = false.obs;
+  var subjectId = ''.obs;
+  var selectedClassId = ''.obs;
+  var isFormValid = false.obs;
+  final formKey = GlobalKey<FormState>();
   var classList = <ClassDropdownData>[].obs;
   var isClassLoading = false.obs;
-  final formKey = GlobalKey<FormState>();
-  var sectionId = ''.obs;
-  var isEditMode = false.obs;
+  var hasInteractedWithName = false.obs;
+  var hasInteractedWithCode = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     nameController.addListener(checkFormValidity);
+    codeController.addListener(checkFormValidity);
     fetchClasses();
 
     // Accept the argument coming from the section detail for edit
     if (Get.arguments != null && Get.arguments['isEdit'] == true) {
       isEditMode.value = true;
-      sectionId.value = Get.arguments['section_id'] ?? '';
-      nameController.text = Get.arguments['section_name'] ?? '';
+      subjectId.value = Get.arguments['subject_id'] ?? '';
+      nameController.text = Get.arguments['subject_name'] ?? '';
+      codeController.text = Get.arguments['subject_code'] ?? '';
 
-      // Set the selected class for edit mode (single selection)
       final classId = Get.arguments['class_id'];
       if (classId != null && classId.isNotEmpty) {
-        selectedSingleClass.value = classId;
+        selectedClassId.value = classId;
       }
     }
   }
@@ -51,71 +50,39 @@ class CreateSectionController extends GetxController {
     if (isEditMode.value) {
       isFormValid.value =
           nameController.text.isNotEmpty &&
-          selectedSingleClass.value.isNotEmpty;
+          selectedClassId.value.isNotEmpty &&
+          codeController.text.isNotEmpty;
     } else {
       isFormValid.value =
-          nameController.text.isNotEmpty && selectClass.isNotEmpty;
+          nameController.text.isNotEmpty &&
+          selectedClassId.value.isNotEmpty &&
+          codeController.text.isNotEmpty;
     }
   }
 
   // Validate class name
   String? validateName(String value) {
     if (value.isEmpty) {
-      return 'Section name cannot be empty';
+      return 'Subject name cannot be empty';
     }
-    if (value.length < 1) {
-      return 'Section name must be at least 1 character';
+    if (value.length < 3) {
+      return 'Subject name must be at least 3 characters';
     }
     return null;
   }
 
-  createSection() async {
-    if (!formKey.currentState!.validate()) {
-      return;
+  // Validate subject code
+  String? validateCode(String value) {
+    if (value.isEmpty) {
+      return 'Subject code cannot be empty';
     }
-
-    try {
-      // Set loading state to indicate API call in progress
-      isLoading.value = true;
-      Map<String, dynamic> payload = {
-        'name': nameController.text,
-        'classIds': selectClass.toList(),
-      };
-
-      c.Response? res = await NetworkUtils.safeApiCall(
-        () => _apiService.createSection(payload),
-      );
-
-      if (res == null) return;
-      if (res.isSuccessful) {
-        // Validate response body structure and success status
-        if (res.body != null &&
-            res.body['data'] != null &&
-            res.body['success'] == true) {
-          // // Show success message and navigate to main app
-          botToastSuccess(Constants.BOT_TOAST_MESSAGES['SECTION_CREATED']!);
-          Get.offAllNamed(Routes.SECTION_LIST);
-        } else {
-          // Handle API error responses
-          serverError(res, () => createSection());
-        }
-      }
-    } catch (e) {
-      // Handle unexpected errors
-
-      errorUtil.handleAppError(
-        apiName: 'createSection',
-        error: e,
-        displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_CREATE_SECTION']!,
-      );
-    } finally {
-      // Reset loading state
-      isLoading.value = false;
+    if (value.length < 2) {
+      return 'Subject code must be at least 2 characters';
     }
+    return null;
   }
 
-  updateSection() async {
-    // Similar implementation to createSection with necessary modifications
+  createSubject() async {
     if (!formKey.currentState!.validate()) {
       return;
     }
@@ -125,11 +92,12 @@ class CreateSectionController extends GetxController {
       isLoading.value = true;
       Map<String, dynamic> payload = {
         'name': nameController.text,
-        'classId': selectedSingleClass.value,
+        'code': codeController.text,
+        'classId': selectedClassId.value,
       };
 
       c.Response? res = await NetworkUtils.safeApiCall(
-        () => _apiService.updateSection(sectionId.value, payload),
+        () => _apiService.createSubject(payload),
       );
 
       if (res == null) return;
@@ -139,23 +107,20 @@ class CreateSectionController extends GetxController {
             res.body['data'] != null &&
             res.body['success'] == true) {
           // // Show success message and navigate to main app
-          botToastSuccess(Constants.BOT_TOAST_MESSAGES['SECTION_UPDATED']!);
-           Get.offAllNamed(Routes.SECTION_DETAIL, arguments: {'section_id': sectionId.value});
+          botToastSuccess(Constants.BOT_TOAST_MESSAGES['SUBJECT_CREATED']!);
+          Get.offAllNamed(Routes.SUBJECT_LIST);
         } else {
           // Handle API error responses
-          serverError(res, () => updateSection());
+          serverError(res, () => createSubject());
         }
-      } else {
-        // Handle API error responses
-        serverError(res, () => updateSection());
       }
     } catch (e) {
       // Handle unexpected errors
 
       errorUtil.handleAppError(
-        apiName: 'updateSection',
+        apiName: 'createSubject',
         error: e,
-        displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_UPDATE_SECTION']!,
+        displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_CREATE_SUBJECT']!,
       );
     } finally {
       // Reset loading state
@@ -199,6 +164,56 @@ class CreateSectionController extends GetxController {
     }
   }
 
+  //update subject
+  updateSubject() async {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+
+    try {
+      // Set loading state to indicate API call in progress
+      isLoading.value = true;
+      Map<String, dynamic> payload = {
+        'name': nameController.text,
+        'code': codeController.text,
+        'classId': selectedClassId.value,
+      };
+
+      c.Response? res = await NetworkUtils.safeApiCall(
+        () => _apiService.updateSubject(subjectId.value, payload),
+      );
+
+      if (res == null) return;
+      if (res.isSuccessful) {
+        // Validate response body structure and success status
+        if (res.body != null &&
+            res.body['data'] != null &&
+            res.body['success'] == true) {
+          // // Show success message and navigate to main app
+          botToastSuccess(Constants.BOT_TOAST_MESSAGES['SUBJECT_UPDATED']!);
+          Get.offAllNamed(Routes.SUBJECT_DETAIL, arguments: {'subject_id': subjectId.value});
+        } else {
+          // Handle API error responses
+          serverError(res, () => updateSubject());
+        }
+      } else {
+        // Handle API error responses
+        serverError(res, () => updateSubject());
+      }
+    } catch (e) {
+      // Handle unexpected errors
+
+      errorUtil.handleAppError(
+        apiName: 'updateSubject',
+        error: e,
+        displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_UPDATE_SUBJECT']!,
+      );
+    } finally {
+      // Reset loading state
+      isLoading.value = false;
+    }
+  }
+
   @override
   void onReady() {
     super.onReady();
@@ -206,6 +221,9 @@ class CreateSectionController extends GetxController {
 
   @override
   void onClose() {
+    nameController.dispose();
+    codeController.dispose();
+    classIdController.dispose();
     super.onClose();
   }
 }

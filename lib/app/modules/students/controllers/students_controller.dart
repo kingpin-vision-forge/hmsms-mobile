@@ -334,7 +334,7 @@ class StudentsController extends GetxController {
             res.body['success'] == true) {
           // // Show success message and navigate to main app
           botToastSuccess(Constants.BOT_TOAST_MESSAGES['STUDENT_UPDATED']!);
-          Get.toNamed(Routes.STUDENT_DETAIL);
+           Get.offAllNamed(Routes.STUDENT_DETAIL, arguments: {'student_id': studentId});
         } else {
           // Handle API error responses
           serverError(res, () => updateStudent());

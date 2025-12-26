@@ -165,7 +165,7 @@ class CreateClassController extends GetxController {
             res.body['success'] == true) {
           // // Show success message and navigate to main app
           botToastSuccess(Constants.BOT_TOAST_MESSAGES['CLASS_UPDATED']!);
-          Get.offAllNamed(Routes.CLASS_LIST);
+           Get.offAllNamed(Routes.CLASS_DETAIL, arguments: {'class_id': classId.value});
         } else {
           // Handle API error responses
           serverError(res, () => updateClass());
