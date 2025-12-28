@@ -4,12 +4,14 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/global.dart';
+import 'package:student_management/app/helpers/rbac/rbac.dart';
 import 'package:student_management/app/helpers/widget/custom_drawer.dart';
 import 'package:student_management/app/helpers/widget/global_fab.dart';
 import 'package:student_management/app/helpers/widget/notification_badge.dart';
-import 'package:student_management/app/helpers/widget/profile_image.dart';
-import 'package:student_management/app/modules/bottom_navbar/views/bottom_navbar_view.dart';
+import 'package:student_management/app/modules/home/views/parent_dashboard.dart';
 import 'package:student_management/app/modules/home/views/statistic_view.dart';
+import 'package:student_management/app/modules/home/views/student_dashboard.dart';
+import 'package:student_management/app/modules/home/views/teacher_dashboard.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -95,12 +97,12 @@ class HomeView extends GetView {
               ),
             ),
 
-            // Main content below curved header
+            // Main content below curved header - Role based dashboard
             Padding(
               padding: const EdgeInsets.only(top: 140),
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                child: DashboardStatistics()
+                child: _buildRoleBasedDashboard()
                     .animate()
                     .fadeIn(delay: 200.ms, duration: 800.ms)
                     .slideY(begin: 0.1, end: 0),
@@ -111,6 +113,21 @@ class HomeView extends GetView {
         floatingActionButton: GlobalFAB(),
       ),
     );
+  }
+
+  /// Returns the appropriate dashboard widget based on user role
+  Widget _buildRoleBasedDashboard() {
+    final rbac = Get.find<RbacService>();
+    
+    if (rbac.isRole(UserRole.PARENT)) {
+      return const ParentDashboard();
+    } else if (rbac.isRole(UserRole.TEACHER)) {
+      return const TeacherDashboard();
+    } else if (rbac.isRole(UserRole.STUDENT)) {
+      return const StudentDashboard();
+    }
+    // Default: Admin dashboard
+    return const DashboardStatistics();
   }
 }
 

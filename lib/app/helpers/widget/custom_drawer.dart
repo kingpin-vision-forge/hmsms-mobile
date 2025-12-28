@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/global.dart';
+import 'package:student_management/app/helpers/rbac/rbac.dart';
 import 'package:student_management/app/helpers/widget/profile_image.dart';
 import 'package:student_management/app/modules/home/controllers/home_controller.dart';
 import 'package:student_management/app/routes/app_pages.dart';
@@ -48,7 +49,7 @@ class CustomDrawerMenu extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'admin@school.edu',
+                        userData['email'] ?? '',
                         style: TextStyle(
                           fontSize: 13,
                           color: AppColors.gray500,
@@ -86,6 +87,7 @@ class CustomDrawerMenu extends StatelessWidget {
               () => ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  // Dashboard - All roles
                   _buildMenuItem(
                     icon: HugeIcon(
                       icon: HugeIcons.strokeRoundedMenu02,
@@ -101,133 +103,196 @@ class CustomDrawerMenu extends StatelessWidget {
                       Get.toNamed(Routes.HOME);
                     },
                   ),
-                  _buildMenuItem(
-                    icon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedStudent,
-                      color: controller.selectedMenu.value == 'Students'
-                          ? AppColors.primaryColor
-                          : AppColors.black,
+                  // My Children - Parent only
+                  RoleWidget(
+                    allowedRoles: [UserRole.PARENT],
+                    child: _buildMenuItem(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedUserGroup,
+                        color: controller.selectedMenu.value == 'My Children'
+                            ? AppColors.primaryColor
+                            : AppColors.black,
+                      ),
+                      title: 'My Children',
+                      isSelected: controller.selectedMenu.value == 'My Children',
+                      onTap: () {
+                        controller.selectMenu('My Children');
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.STUDENT_LIST)?.then((_) {
+                          controller.selectMenu('Dashboard');
+                        });
+                      },
                     ),
-                    title: 'Students',
-                    isSelected: controller.selectedMenu.value == 'Students',
-                    onTap: () {
-                      controller.selectMenu('Students');
-                      Navigator.pop(context);
-                      Get.toNamed(Routes.STUDENT_LIST)?.then((_) {
-                        // Reset after coming back
-                        controller.selectMenu('Dashboard');
-                      });
-                    },
                   ),
-                  _buildMenuItem(
-                    icon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedUserMultiple,
-                      color: controller.selectedMenu.value == 'Parents'
-                          ? AppColors.primaryColor
-                          : AppColors.black,
+                  // My Classes - Teacher only
+                  RoleWidget(
+                    allowedRoles: [UserRole.TEACHER],
+                    child: _buildMenuItem(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedBoardMath,
+                        color: controller.selectedMenu.value == 'My Classes'
+                            ? AppColors.primaryColor
+                            : AppColors.black,
+                      ),
+                      title: 'My Classes',
+                      isSelected: controller.selectedMenu.value == 'My Classes',
+                      onTap: () {
+                        controller.selectMenu('My Classes');
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.CLASS_LIST)?.then((_) {
+                          controller.selectMenu('Dashboard');
+                        });
+                      },
                     ),
-                    title: 'Parents',
-                    isSelected: controller.selectedMenu.value == 'Parents',
-                    onTap: () {
-                      controller.selectMenu('Parents');
-                      Navigator.pop(context);
-                      Get.toNamed(Routes.PARENT_LIST)?.then((_) {
-                        // Reset after coming back
-                        controller.selectMenu('Dashboard');
-                      });
-                    },
                   ),
-                  _buildMenuItem(
-                    icon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedTeaching,
-                      color: controller.selectedMenu.value == 'Staffs'
-                          ? AppColors.primaryColor
-                          : AppColors.black,
+                  // Students - Admin, Teacher only
+                  RoleWidget(
+                    allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+                    child: _buildMenuItem(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedStudent,
+                        color: controller.selectedMenu.value == 'Students'
+                            ? AppColors.primaryColor
+                            : AppColors.black,
+                      ),
+                      title: 'Students',
+                      isSelected: controller.selectedMenu.value == 'Students',
+                      onTap: () {
+                        controller.selectMenu('Students');
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.STUDENT_LIST)?.then((_) {
+                          controller.selectMenu('Dashboard');
+                        });
+                      },
                     ),
-                    title: 'Staffs',
-                    isSelected: controller.selectedMenu.value == 'Staffs',
-                    onTap: () {
-                      controller.selectMenu('Staffs');
-                      Navigator.pop(context);
-                      Get.toNamed(Routes.TEACHER_LIST)?.then((_) {
-                        // Reset after coming back
-                        controller.selectMenu('Dashboard');
-                      });
-                    },
                   ),
-                  _buildMenuItem(
-                    icon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedPencil,
-                      color: controller.selectedMenu.value == 'Subjects'
-                          ? AppColors.primaryColor
-                          : AppColors.black,
+                  // Parents - Admin only
+                  RoleWidget(
+                    allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN],
+                    child: _buildMenuItem(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedUserMultiple,
+                        color: controller.selectedMenu.value == 'Parents'
+                            ? AppColors.primaryColor
+                            : AppColors.black,
+                      ),
+                      title: 'Parents',
+                      isSelected: controller.selectedMenu.value == 'Parents',
+                      onTap: () {
+                        controller.selectMenu('Parents');
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.PARENT_LIST)?.then((_) {
+                          controller.selectMenu('Dashboard');
+                        });
+                      },
                     ),
-                    title: 'Subjects',
-                    isSelected: controller.selectedMenu.value == 'Subjects',
-                    onTap: () {
-                      controller.selectMenu('Subjects');
-                      Navigator.pop(context);
-                      Get.toNamed(Routes.SUBJECT_LIST)?.then((_) {
-                        // Reset after coming back
-                        controller.selectMenu('Dashboard');
-                      });
-                    },
                   ),
-                  _buildMenuItem(
-                    icon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedBoardMath,
-                      color: controller.selectedMenu.value == 'Classes'
-                          ? AppColors.primaryColor
-                          : AppColors.black,
+                  // Staffs/Teachers - Admin only
+                  RoleWidget(
+                    allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN],
+                    child: _buildMenuItem(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedTeaching,
+                        color: controller.selectedMenu.value == 'Staffs'
+                            ? AppColors.primaryColor
+                            : AppColors.black,
+                      ),
+                      title: 'Staffs',
+                      isSelected: controller.selectedMenu.value == 'Staffs',
+                      onTap: () {
+                        controller.selectMenu('Staffs');
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.TEACHER_LIST)?.then((_) {
+                          controller.selectMenu('Dashboard');
+                        });
+                      },
                     ),
-                    title: 'Classes',
-                    isSelected: controller.selectedMenu.value == 'Classes',
-                    onTap: () {
-                      controller.selectMenu('Classes');
-                      Navigator.pop(context);
-                      Get.toNamed(Routes.CLASS_LIST)?.then((_) {
-                        // Reset after coming back
-                        controller.selectMenu('Dashboard');
-                      });
-                    },
                   ),
-                  _buildMenuItem(
-                    icon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedCells,
-                      color: controller.selectedMenu.value == 'Sections'
-                          ? AppColors.primaryColor
-                          : AppColors.black,
+                  // Subjects - Admin, Teacher
+                  RoleWidget(
+                    allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+                    child: _buildMenuItem(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedPencil,
+                        color: controller.selectedMenu.value == 'Subjects'
+                            ? AppColors.primaryColor
+                            : AppColors.black,
+                      ),
+                      title: 'Subjects',
+                      isSelected: controller.selectedMenu.value == 'Subjects',
+                      onTap: () {
+                        controller.selectMenu('Subjects');
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.SUBJECT_LIST)?.then((_) {
+                          controller.selectMenu('Dashboard');
+                        });
+                      },
                     ),
-                    title: 'Sections',
-                    isSelected: controller.selectedMenu.value == 'Sections',
-                    onTap: () {
-                      controller.selectMenu('Sections');
-                      Navigator.pop(context);
-                      Get.toNamed(Routes.SECTION_LIST)?.then((_) {
-                        // Reset after coming back
-                        controller.selectMenu('Dashboard');
-                      });
-                    },
                   ),
-
-                  _buildMenuItem(
-                    icon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedDollarSquare,
-                      color: controller.selectedMenu.value == 'Fees'
-                          ? AppColors.primaryColor
-                          : AppColors.black,
+                  // Classes - Admin, Teacher
+                  RoleWidget(
+                    allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+                    child: _buildMenuItem(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedBoardMath,
+                        color: controller.selectedMenu.value == 'Classes'
+                            ? AppColors.primaryColor
+                            : AppColors.black,
+                      ),
+                      title: 'Classes',
+                      isSelected: controller.selectedMenu.value == 'Classes',
+                      onTap: () {
+                        controller.selectMenu('Classes');
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.CLASS_LIST)?.then((_) {
+                          controller.selectMenu('Dashboard');
+                        });
+                      },
                     ),
-                    title: 'Fees',
-                    isSelected: controller.selectedMenu.value == 'Fees',
-                    onTap: () {
-                      controller.selectMenu('Fees');
-                      Navigator.pop(context);
-                      Get.toNamed(Routes.FEES)?.then((_) {
-                        // Reset after coming back
-                        controller.selectMenu('Dashboard');
-                      });
-                    },
                   ),
+                  // Sections - Admin, Teacher
+                  RoleWidget(
+                    allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+                    child: _buildMenuItem(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedCells,
+                        color: controller.selectedMenu.value == 'Sections'
+                            ? AppColors.primaryColor
+                            : AppColors.black,
+                      ),
+                      title: 'Sections',
+                      isSelected: controller.selectedMenu.value == 'Sections',
+                      onTap: () {
+                        controller.selectMenu('Sections');
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.SECTION_LIST)?.then((_) {
+                          controller.selectMenu('Dashboard');
+                        });
+                      },
+                    ),
+                  ),
+                  // Fees - Admin, Student, Parent
+                  RoleWidget(
+                    allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.STUDENT, UserRole.PARENT],
+                    child: _buildMenuItem(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedDollarSquare,
+                        color: controller.selectedMenu.value == 'Fees'
+                            ? AppColors.primaryColor
+                            : AppColors.black,
+                      ),
+                      title: 'Fees',
+                      isSelected: controller.selectedMenu.value == 'Fees',
+                      onTap: () {
+                        controller.selectMenu('Fees');
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.FEES)?.then((_) {
+                          controller.selectMenu('Dashboard');
+                        });
+                      },
+                    ),
+                  ),
+                  // Timetable - All roles
                   _buildMenuItem(
                     icon: HugeIcon(
                       icon: HugeIcons.strokeRoundedDateTime,
@@ -242,6 +307,7 @@ class CustomDrawerMenu extends StatelessWidget {
                       Navigator.pop(context);
                     },
                   ),
+                  // Sign Out - All roles
                   _buildMenuItem(
                     icon: HugeIcon(
                       icon: HugeIcons.strokeRoundedLogout01,
@@ -250,7 +316,6 @@ class CustomDrawerMenu extends StatelessWidget {
                     title: 'Sign Out',
                     isSelected: controller.selectedMenu.value == 'Sign Out',
                     onTap: () async {
-                      // controller.selectMenu('Sign Out');
                       await signOut();
                     },
                   ),
