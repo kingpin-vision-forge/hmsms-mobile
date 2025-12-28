@@ -307,6 +307,24 @@ class CustomDrawerMenu extends StatelessWidget {
                       Navigator.pop(context);
                     },
                   ),
+                  // Settings - All roles
+                  _buildMenuItem(
+                    icon: HugeIcon(
+                      icon: HugeIcons.strokeRoundedSettings02,
+                      color: controller.selectedMenu.value == 'Settings'
+                          ? AppColors.primaryColor
+                          : AppColors.black,
+                    ),
+                    title: 'Settings',
+                    isSelected: controller.selectedMenu.value == 'Settings',
+                    onTap: () {
+                      controller.selectMenu('Settings');
+                      Navigator.pop(context);
+                      Get.toNamed(Routes.PROFILE)?.then((_) {
+                        controller.selectMenu('Dashboard');
+                      });
+                    },
+                  ),
                   // Sign Out - All roles
                   _buildMenuItem(
                     icon: HugeIcon(

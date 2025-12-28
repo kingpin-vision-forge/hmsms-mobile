@@ -55,6 +55,8 @@ import '../modules/teachers/bindings/teachers_binding.dart';
 import '../modules/teachers/views/teachers_view.dart';
 import '../modules/create_teacher/bindings/create_teacher_binding.dart';
 import '../modules/create_teacher/views/create_teacher_view.dart';
+import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/profile_view.dart';
 
 part 'app_routes.dart';
 
@@ -212,6 +214,11 @@ class AppPages {
       page: () => const CreateTeacherView(),
       binding: CreateTeacherBinding(),
       middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
     ),
   ];
 }

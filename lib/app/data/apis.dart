@@ -126,6 +126,13 @@ abstract class ApiService extends ChopperService {
   @DELETE(path: '/teachers/{id}')
   Future<Response> deleteTeacher(@Path('id') String teacherId);
 
+  // Profile endpoints
+  @GET(path: '/profile')
+  Future<Response> fetchProfile();
+
+  @PATCH(path: '/profile')
+  Future<Response> updateProfile(@Body() Map<String, dynamic> body);
+
   static ApiService create() {
     final authenticator = ApiAuthenticator(baseUrl: apiBaseUrl);
     final client = ChopperClient(
