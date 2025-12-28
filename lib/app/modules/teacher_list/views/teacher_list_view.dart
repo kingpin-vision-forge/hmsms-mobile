@@ -307,7 +307,6 @@ class TeacherListView extends GetView<TeacherListController> {
                     if (option.toLowerCase() == 'all') {
                       Navigator.pop(context);
                       // Handle "All" filter action directly if needed
-                      print('Showing all items');
                     } else {
                       Navigator.pop(context);
                       _showSubFilterBottomSheet(context, option);

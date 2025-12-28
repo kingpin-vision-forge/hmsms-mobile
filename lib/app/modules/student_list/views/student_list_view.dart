@@ -9,6 +9,7 @@ import 'package:student_management/app/helpers/widget/global_fab.dart';
 import 'package:student_management/app/modules/student_list/controllers/student_list_controller.dart';
 import 'package:student_management/app/modules/student_list/views/student_card_view.dart';
 import 'package:student_management/app/modules/teacher_list/views/teacher_card_view.dart';
+import 'package:student_management/app/routes/app_pages.dart';
 
 class StudentListView extends GetView<StudentListController> {
   const StudentListView({super.key});
@@ -36,7 +37,6 @@ class StudentListView extends GetView<StudentListController> {
                 ),
               ],
             ),
-
             child: Obx(
               () => AnimatedSize(
                 duration: const Duration(milliseconds: 300),
@@ -53,6 +53,7 @@ class StudentListView extends GetView<StudentListController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Top bar with back and search icons
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -64,7 +65,9 @@ class StudentListView extends GetView<StudentListController> {
                                       size: 36,
                                       color: AppColors.secondaryColor,
                                     ),
-                                    onPressed: () => Get.back(),
+                                    onPressed: () {
+                                      Get.offAllNamed(Routes.HOME);
+                                    },
                                   ),
                                   Text(
                                         'Students',
@@ -94,17 +97,14 @@ class StudentListView extends GetView<StudentListController> {
                               ),
                             ],
                           ),
-
+                          // Animated search field
                           Obx(() {
                             return AnimatedSwitcher(
-                              duration: const Duration(
-                                milliseconds: 200,
-                              ), // Duration of the animation
+                              duration: const Duration(milliseconds: 200),
                               transitionBuilder:
                                   (Widget child, Animation<double> animation) {
                                     return SizeTransition(
-                                      sizeFactor:
-                                          animation, // Slide the text field smoothly
+                                      sizeFactor: animation,
                                       axis: Axis.vertical,
                                       child: child,
                                     );
@@ -117,9 +117,7 @@ class StudentListView extends GetView<StudentListController> {
                                         left: 16,
                                       ),
                                       child: TextField(
-                                        key: const ValueKey(
-                                          'searchField',
-                                        ), // Unique key for AnimatedSwitcher
+                                        key: const ValueKey('searchField'),
                                         autofocus: true,
                                         decoration: InputDecoration(
                                           hintText: 'Search',
@@ -155,7 +153,6 @@ class StudentListView extends GetView<StudentListController> {
                                         ),
                                         onChanged: (query) {
                                           controller.searchQuery.value = query;
-                                          // controller.onSearchChanged(query);
                                         },
                                       ),
                                     )
@@ -166,7 +163,6 @@ class StudentListView extends GetView<StudentListController> {
                       ),
                     ),
                   ),
-
                   foregroundColor: AppColors.secondaryColor,
                   automaticallyImplyLeading: false,
                 ),
@@ -174,19 +170,47 @@ class StudentListView extends GetView<StudentListController> {
             ),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-          child: Container(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.callBtn),
+            );
+          }
+
+          if (controller.filteredStudentList.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                        controller.searchQuery.value.isEmpty
+                            ? 'No students available'
+                            : 'No students found',
+                        style: const TextStyle(fontSize: 20),
+                      )
+                      .animate()
+                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                      .slideY(begin: 0.1, end: 0),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: controller.filteredStudentList.length,
+            itemBuilder: (context, index) {
+              final student = controller.filteredStudentList[index];
+              if (index == 0) {
+                return Column(
                   children: [
+                    // Items count and download button at the top
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // download icon
                         Text(
-                          '6 Items',
+                          '${controller.filteredStudentList.length} Items',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -195,7 +219,7 @@ class StudentListView extends GetView<StudentListController> {
                           ),
                         ),
                         IconButton(
-                          icon: HugeIcon(
+                          icon: const HugeIcon(
                             icon: HugeIcons.strokeRoundedDownload04,
                             size: 28,
                             color: AppColors.black,
@@ -206,59 +230,225 @@ class StudentListView extends GetView<StudentListController> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 16),
+                    _buildStudentCard(student, index),
+                  ],
+                );
+              }
+              return _buildStudentCard(student, index);
+            },
+          );
+        }),
+        floatingActionButton: GlobalFAB(),
+      ),
+    );
+  }
 
-                    // filter dropdown
+  Widget _buildStudentCard(student, int index) {
+    return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.primaryColor.withOpacity(0.8),
+                AppColors.callBtn.withOpacity(0.9),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primaryColor.withOpacity(0.3),
+                offset: const Offset(0, 4),
+                blurRadius: 12,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () {
+                // Navigate to student details (implement as needed)
+                Get.offAllNamed(
+                  Routes.STUDENT_DETAIL,
+                  arguments: {'student_id': student.id},
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header with student name and icon
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    student.firstName ?? '',
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.secondaryColor,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    student.lastName ?? '',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.secondaryColor
+                                          .withOpacity(0.8),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.secondaryColor.withOpacity(
+                                    0.2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  student.className ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.secondaryColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.secondaryColor.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const HugeIcon(
+                            icon: HugeIcons.strokeRoundedUser,
+                            size: 32,
+                            color: AppColors.secondaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Divider
+                    Container(
+                      height: 1,
+                      color: AppColors.secondaryColor.withOpacity(0.3),
+                    ),
+                    const SizedBox(height: 16),
+                    // Student Info
                     Row(
                       children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.tune,
-                            size: 28,
-                            color: AppColors.black,
+                        Expanded(
+                          child: _buildInfoItem(
+                            icon: HugeIcons.strokeRoundedBookOpen01,
+                            label: 'Admission No.',
+                            value: student.admissionNumber ?? '-',
                           ),
-                          onPressed: () {
-                            _showSortBottomSheet(context);
-                          },
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildInfoItem(
+                            icon: HugeIcons.strokeRoundedSchool,
+                            label: 'Section',
+                            value: student.sectionName ?? '-',
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildInfoItem(
+                            icon: HugeIcons.strokeRoundedUser,
+                            label: 'Gender',
+                            value: student.gender ?? '-',
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildInfoItem(
+                            icon: HugeIcons.strokeRoundedCalendar04,
+                            label: 'DOB',
+                            value: student.dateOfBirth ?? '-',
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                // teacher card
-                Expanded(
-                  child: Obx(() {
-                    if (controller.students.isEmpty) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
+              ),
+            ),
+          ),
+        )
+        .animate()
+        .fadeIn(delay: (100 * index).ms, duration: 600.ms)
+        .slideX(begin: 0.2, end: 0);
+  }
 
-                    return ListView.builder(
-                      itemCount: controller.students.length,
-                      itemBuilder: (context, index) {
-                        final student = controller.students[index];
-                        return Column(
-                          children: [
-                            StudentCardView(
-                              studentName: student['name'],
-                              studentId: student['id'],
-                              grade: student['grade'],
-                              section: student['section'] ?? 'A',
-                              rollNumber: student['rollNumber'] ?? '01',
-                              attendance: student['attendance'] ?? '95%',
-                              status: student['status'],
-                            ),
-                            SizedBox(height: 12),
-                          ],
-                        );
-                      },
-                    );
-                  }),
+  Widget _buildInfoItem({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.secondaryColor.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          HugeIcon(icon: icon, size: 20, color: AppColors.secondaryColor),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: AppColors.secondaryColor.withOpacity(0.8),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.secondaryColor,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
-          ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0),
-        ),
-
-        floatingActionButton: GlobalFAB(),
+          ),
+        ],
       ),
     );
   }
@@ -310,7 +500,6 @@ class StudentListView extends GetView<StudentListController> {
                     if (option.toLowerCase() == 'all') {
                       Navigator.pop(context);
                       // Handle "All" filter action directly if needed
-                      print('Showing all items');
                     } else {
                       Navigator.pop(context);
                       _showSubFilterBottomSheet(context, option);
@@ -392,7 +581,6 @@ class StudentListView extends GetView<StudentListController> {
                   onTap: () {
                     Navigator.pop(context);
                     // TODO: handle selection (filter data, update UI, etc.)
-                    print('Selected $category → $subOption');
                   },
                 ),
               ),

@@ -3,13 +3,13 @@ import 'package:student_management/app/data/apis.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/global.dart';
 import 'package:student_management/app/helpers/utilities/network_util.dart';
+import 'package:student_management/app/helpers/rbac/rbac_service.dart';
 import 'package:student_management/app/modules/login/models/sign_response.dart';
 import 'package:student_management/app/modules/login/models/user_response.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:chopper/chopper.dart' as c;
-import 'package:student_management/app/data/apis.dart';
 import 'package:student_management/app/routes/app_pages.dart';
 import 'package:uuid/uuid.dart';
 
@@ -116,7 +116,6 @@ class LoginController extends GetxController with WidgetsBindingObserver {
         'password': passwordController.text,
         // 'fcm_token_mobile': await readFromStorage(Constants.STORAGE_KEYS['FCM_TOKEN']!),
       };
-      print('i am payload $payload');
       try {
         // Set loading state to indicate API call in progress
         isLoading.value = true;
@@ -124,7 +123,6 @@ class LoginController extends GetxController with WidgetsBindingObserver {
         c.Response? res = await NetworkUtils.safeApiCall(
           () => _apiService.login(payload),
         );
-        print('i am RES ${res}');
 
         if (res == null) return;
         if (res.isSuccessful) {
@@ -132,8 +130,6 @@ class LoginController extends GetxController with WidgetsBindingObserver {
           if (res.body != null &&
               res.body['data'] != null &&
               res.body['success'] == true) {
-            print('i am RES ${res.body['data']}');
-
             final response = SignInResponse.fromJson(res.body);
             final accessToken = response.data?.accessToken ?? '';
             final refreshToken = response.data?.refreshToken ?? '';
@@ -142,33 +138,39 @@ class LoginController extends GetxController with WidgetsBindingObserver {
             useDetail.value = response.data?.user;
             final rememberMe = isRememberMeChecked.value;
             // storeTokenExpiry(expiresIn);
-            // // 1️⃣ Generate UUID
-            // var uuid = Uuid();
-            // String deviceUUID = uuid.v4(); // random UUID
+            // 1️⃣ Generate UUID
+            var uuid = Uuid();
+            String deviceUUID = uuid.v4(); // random UUID
 
             await writeToStorage({
               Constants.STORAGE_KEYS['ACCESS_TOKEN']!: accessToken,
               Constants.STORAGE_KEYS['REFRESH_TOKEN']!: refreshToken,
               Constants.STORAGE_KEYS['REMEMBER_ME']!: rememberMe,
               Constants.STORAGE_KEYS['USERNAME']!: usernameController.text,
+              Constants.STORAGE_KEYS['DEVICE_ID']!: deviceUUID,
               Constants.STORAGE_KEYS['USER_DATA']!: useDetail.value?.toJson(),
             });
             await setUserData();
-            // // Show success message and navigate to main app
+            
+            // Set the user role in RBAC service
+            final rbacService = Get.find<RbacService>();
+            if (useDetail.value?.role != null) {
+              rbacService.setRole(useDetail.value!.role!);
+            }
+            
+            // Show success message and navigate to main app
             botToastSuccess(Constants.BOT_TOAST_MESSAGES['SUCCESS_SIGN_IN']!);
             clear();
             isRememberMeChecked.value = false;
             isTermsChecked.value = false;
             Get.offAllNamed(Routes.HOME);
-          } else {
-            // Handle API error responses
-            print('i am error ${res.body}');
-            serverError(res, () => signIn(formKey));
           }
+        } else {
+          // Handle API error responses
+          serverError(res, () => signIn(formKey));
         }
       } catch (e) {
         // Handle unexpected errors
-        print('i am catch $e');
 
         errorUtil.handleAppError(
           apiName: 'signIn',

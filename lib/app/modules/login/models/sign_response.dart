@@ -27,6 +27,7 @@ class SignInData {
   final String? refreshToken;
   final UserDetails? user;
 
+
   SignInData({this.accessToken, this.refreshToken, this.user});
 
   factory SignInData.fromJson(Map<String, dynamic> json) {

@@ -81,7 +81,7 @@ class HomeView extends GetView {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Welcome, Annie',
+                        'Hello, ${userData['username'] ?? 'User'}',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,

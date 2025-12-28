@@ -121,6 +121,24 @@ class CustomDrawerMenu extends StatelessWidget {
                   ),
                   _buildMenuItem(
                     icon: HugeIcon(
+                      icon: HugeIcons.strokeRoundedUserMultiple,
+                      color: controller.selectedMenu.value == 'Parents'
+                          ? AppColors.primaryColor
+                          : AppColors.black,
+                    ),
+                    title: 'Parents',
+                    isSelected: controller.selectedMenu.value == 'Parents',
+                    onTap: () {
+                      controller.selectMenu('Parents');
+                      Navigator.pop(context);
+                      Get.toNamed(Routes.PARENT_LIST)?.then((_) {
+                        // Reset after coming back
+                        controller.selectMenu('Dashboard');
+                      });
+                    },
+                  ),
+                  _buildMenuItem(
+                    icon: HugeIcon(
                       icon: HugeIcons.strokeRoundedTeaching,
                       color: controller.selectedMenu.value == 'Staffs'
                           ? AppColors.primaryColor
@@ -139,6 +157,24 @@ class CustomDrawerMenu extends StatelessWidget {
                   ),
                   _buildMenuItem(
                     icon: HugeIcon(
+                      icon: HugeIcons.strokeRoundedPencil,
+                      color: controller.selectedMenu.value == 'Subjects'
+                          ? AppColors.primaryColor
+                          : AppColors.black,
+                    ),
+                    title: 'Subjects',
+                    isSelected: controller.selectedMenu.value == 'Subjects',
+                    onTap: () {
+                      controller.selectMenu('Subjects');
+                      Navigator.pop(context);
+                      Get.toNamed(Routes.SUBJECT_LIST)?.then((_) {
+                        // Reset after coming back
+                        controller.selectMenu('Dashboard');
+                      });
+                    },
+                  ),
+                  _buildMenuItem(
+                    icon: HugeIcon(
                       icon: HugeIcons.strokeRoundedBoardMath,
                       color: controller.selectedMenu.value == 'Classes'
                           ? AppColors.primaryColor
@@ -146,7 +182,7 @@ class CustomDrawerMenu extends StatelessWidget {
                     ),
                     title: 'Classes',
                     isSelected: controller.selectedMenu.value == 'Classes',
-                   onTap: () {
+                    onTap: () {
                       controller.selectMenu('Classes');
                       Navigator.pop(context);
                       Get.toNamed(Routes.CLASS_LIST)?.then((_) {
@@ -157,14 +193,14 @@ class CustomDrawerMenu extends StatelessWidget {
                   ),
                   _buildMenuItem(
                     icon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedBoardMath,
+                      icon: HugeIcons.strokeRoundedCells,
                       color: controller.selectedMenu.value == 'Sections'
                           ? AppColors.primaryColor
                           : AppColors.black,
                     ),
                     title: 'Sections',
                     isSelected: controller.selectedMenu.value == 'Sections',
-                     onTap: () {
+                    onTap: () {
                       controller.selectMenu('Sections');
                       Navigator.pop(context);
                       Get.toNamed(Routes.SECTION_LIST)?.then((_) {

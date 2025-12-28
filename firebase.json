@@ -1,0 +1,21 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "school-management-system-a24e3",
+                    "appId": "1:366849926028:android:88960cfb69ec6b450beca9",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "school-management-system-a24e3",
+                    "configurations": {
+                        "android": "1:366849926028:android:88960cfb69ec6b450beca9"
+                    }
+                }
+            }
+        }
+    }
+}

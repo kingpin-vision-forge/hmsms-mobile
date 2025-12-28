@@ -69,21 +69,6 @@ class GlobalFAB extends StatelessWidget {
               ),
               const SizedBox(height: 10),
 
-              // Teacher
-              _buildOption(
-                icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedTeaching,
-                  color: AppColors.primaryColor,
-                  size: 30,
-                ),
-                title: "Staff",
-                subtitle: "You can add new staff here",
-                onTap: () {
-                  Get.back();
-                  Get.toNamed(Routes.TEACHERS);
-                },
-              ),
-
               // Student
               _buildOption(
                 icon: HugeIcon(
@@ -98,11 +83,52 @@ class GlobalFAB extends StatelessWidget {
                   Get.toNamed(Routes.STUDENTS);
                 },
               ),
-
+              // parent
+              _buildOption(
+                icon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedUserMultiple,
+                  color: AppColors.primaryColor,
+                  size: 30,
+                ),
+                title: "Parent",
+                subtitle: "You can add new parent here",
+                onTap: () {
+                  Get.back();
+                  Get.toNamed(Routes.CREATE_PARENT);
+                },
+              ),
+              // Teacher
+              _buildOption(
+                icon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedTeaching,
+                  color: AppColors.primaryColor,
+                  size: 30,
+                ),
+                title: "Staff",
+                subtitle: "You can add new staff here",
+                onTap: () {
+                  Get.back();
+                  Get.toNamed(Routes.TEACHERS);
+                },
+              ),
+              //subject
+              _buildOption(
+                icon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedPencil,
+                  color: AppColors.primaryColor,
+                  size: 30,
+                ),
+                title: "Subject",
+                subtitle: "You can add new subject here",
+                onTap: () {
+                  Get.back();
+                  Get.toNamed(Routes.CREATE_SUBJECT);
+                },
+              ),
               // section
               _buildOption(
                 icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedDollarSquare,
+                  icon: HugeIcons.strokeRoundedCells,
                   color: AppColors.primaryColor,
                   size: 30,
                 ),
@@ -117,7 +143,7 @@ class GlobalFAB extends StatelessWidget {
               //class
               _buildOption(
                 icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedDollarSquare,
+                  icon: HugeIcons.strokeRoundedBoardMath,
                   color: AppColors.primaryColor,
                   size: 30,
                 ),

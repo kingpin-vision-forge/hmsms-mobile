@@ -601,47 +601,48 @@ class LoginView extends GetView<LoginController> {
                                 ),
 
                                 SizedBox(height: 10),
-                                Center(
-                                  child: RichText(
-                                    textAlign: TextAlign.start,
-                                    text: TextSpan(
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: 'Montserrat',
-                                        color: AppColors.normalTextColor,
-                                      ),
-                                      children: [
-                                        const TextSpan(
-                                          text: 'Don\'t have an account? ',
-                                        ),
-                                        TextSpan(
-                                          text: 'Signup',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 14,
-                                            color: AppColors.primaryColor,
-                                            decoration:
-                                                TextDecoration.underline,
-                                          ),
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              // LauncherUtil.launchURL(
-                                              //   Constants
-                                              //       .LINKS['TERMS_CONDITION']!,
-                                              // );
-                                            },
-                                        ),
-                                      ],
-                                    ),
-                                    textScaler: MediaQuery.textScalerOf(context)
-                                        .clamp(
-                                          minScaleFactor: Constants
-                                              .CONFIG['TEXT_MIN_SCALE_FACTOR']!,
-                                          maxScaleFactor: Constants
-                                              .CONFIG['TEXT_MAX_SCALE_FACTOR']!,
-                                        ),
-                                  ),
-                                ),
+                                // Center(
+                                //   child: RichText(
+                                //     textAlign: TextAlign.start,
+                                //     text: TextSpan(
+                                //       style: const TextStyle(
+                                //         fontSize: 12,
+                                //         fontFamily: 'Montserrat',
+                                //         color: AppColors.normalTextColor,
+                                //       ),
+                                //       children: [
+                                //         const TextSpan(
+                                //           text: 'Don\'t have an account? ',
+                                //         ),
+                                //         TextSpan(
+                                //           text: 'Signup',
+                                //           style: const TextStyle(
+                                //             fontWeight: FontWeight.w700,
+                                //             fontSize: 14,
+                                //             color: AppColors.primaryColor,
+                                //             decoration:
+                                //                 TextDecoration.underline,
+                                //           ),
+                                //           recognizer: TapGestureRecognizer()
+                                //             ..onTap = () {
+                                //               // LauncherUtil.launchURL(
+                                //               //   Constants
+                                //               //       .LINKS['TERMS_CONDITION']!,
+                                //               // );
+                                //             },
+                                //         ),
+                                //       ],
+                                //     ),
+                                //     textScaler: MediaQuery.textScalerOf(context)
+                                //         .clamp(
+                                //           minScaleFactor: Constants
+                                //               .CONFIG['TEXT_MIN_SCALE_FACTOR']!,
+                                //           maxScaleFactor: Constants
+                                //               .CONFIG['TEXT_MAX_SCALE_FACTOR']!,
+                                //         ),
+                                //   ),
+                                // ),
+                              
                               ],
                             ),
                           ),

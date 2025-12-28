@@ -46,41 +46,25 @@ class SplashController extends GetxController {
         return;
       }
 
-      // If all permissions granted, proceed with session check
-      final rememberMe =
-          await readFromStorage(Constants.STORAGE_KEYS['REMEMBER_ME']!) ??
-          false;
+      // Session check should rely on tokens, not only "Remember Me"
+      final accessToken = await readFromStorage(
+        Constants.STORAGE_KEYS['ACCESS_TOKEN']!,
+      );
+      final refreshToken = await readFromStorage(
+        Constants.STORAGE_KEYS['REFRESH_TOKEN']!,
+      );
 
-      if (rememberMe) {
-        final accessToken = await readFromStorage(
-          Constants.STORAGE_KEYS['ACCESS_TOKEN']!,
-        );
-        final refreshToken = await readFromStorage(
-          Constants.STORAGE_KEYS['REFRESH_TOKEN']!,
-        );
-
-        if (accessToken != null &&
-            accessToken.toString().isNotEmpty &&
-            refreshToken != null &&
-            refreshToken.toString().isNotEmpty) {
-          // Valid session exists
-          await setUserData();
-          // if (await Geolocator.isLocationServiceEnabled() &&
-          //     (await Geolocator.checkPermission() ==
-          //             LocationPermission.always ||
-          //         await Geolocator.checkPermission() ==
-          //             LocationPermission.whileInUse)) {
-          //   storage.delete(Constants.STORAGE_KEYS['LATITUDE']!);
-          //   storage.delete(Constants.STORAGE_KEYS['LONGITUDE']!);
-          //   // weatherUtil.fetchWeatherData();
-          // }
-          Get.offAllNamed('/home');
-          return;
-        }
+      if (accessToken != null &&
+          accessToken.toString().isNotEmpty &&
+          refreshToken != null &&
+          refreshToken.toString().isNotEmpty) {
+        // Valid session exists
+        await setUserData();
+        Get.offAllNamed('/home');
+        return;
       }
 
-      // No valid session
-      await eraseStorage();
+      // No valid session; don't erase storage on app restarts
       Get.offAllNamed('/login');
     } catch (e) {
       // Handle any errors during the splash/permission check process

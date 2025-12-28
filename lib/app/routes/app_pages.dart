@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:student_management/app/helpers/rbac/rbac.dart';
 
 import '../modules/bottom_navbar/bindings/bottom_navbar_binding.dart';
 import '../modules/bottom_navbar/views/bottom_navbar_view.dart';
@@ -8,8 +9,12 @@ import '../modules/class_list/bindings/class_list_binding.dart';
 import '../modules/class_list/views/class_list_view.dart';
 import '../modules/create_class/bindings/create_class_binding.dart';
 import '../modules/create_class/views/create_class_view.dart';
+import '../modules/create_parent/bindings/create_parent_binding.dart';
+import '../modules/create_parent/views/create_parent_view.dart';
 import '../modules/create_section/bindings/create_section_binding.dart';
 import '../modules/create_section/views/create_section_view.dart';
+import '../modules/create_subject/bindings/create_subject_binding.dart';
+import '../modules/create_subject/views/create_subject_view.dart';
 import '../modules/fees/bindings/fees_binding.dart';
 import '../modules/fees/views/fees_view.dart';
 import '../modules/fees_detail/bindings/fees_detail_binding.dart';
@@ -22,6 +27,10 @@ import '../modules/menu/bindings/menu_binding.dart';
 import '../modules/menu/views/menu_view.dart';
 import '../modules/notifications/bindings/notifications_binding.dart';
 import '../modules/notifications/views/notifications_view.dart';
+import '../modules/parent_detail/bindings/parent_detail_binding.dart';
+import '../modules/parent_detail/views/parent_detail_view.dart';
+import '../modules/parent_list/bindings/parent_list_binding.dart';
+import '../modules/parent_list/views/parent_list_view.dart';
 import '../modules/section_detail/bindings/section_detail_binding.dart';
 import '../modules/section_detail/views/section_detail_view.dart';
 import '../modules/section_list/bindings/section_list_binding.dart';
@@ -34,6 +43,10 @@ import '../modules/student_list/bindings/student_list_binding.dart';
 import '../modules/student_list/views/student_list_view.dart';
 import '../modules/students/bindings/students_binding.dart';
 import '../modules/students/views/students_view.dart';
+import '../modules/subject_detail/bindings/subject_detail_binding.dart';
+import '../modules/subject_detail/views/subject_detail_view.dart';
+import '../modules/subject_list/bindings/subject_list_binding.dart';
+import '../modules/subject_list/views/subject_list_view.dart';
 import '../modules/teacher_detail/bindings/teacher_detail_binding.dart';
 import '../modules/teacher_detail/views/teacher_detail_view.dart';
 import '../modules/teacher_list/bindings/teacher_list_binding.dart';
@@ -97,7 +110,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.STUDENT_DETAIL,
-      page: () => const StudentDetailView(),
+      page: () => StudentDetailView(),
       binding: StudentDetailBinding(),
     ),
     GetPage(
@@ -115,10 +128,12 @@ class AppPages {
       page: () => const FeesDetailView(),
       binding: FeesDetailBinding(),
     ),
+    // Admin-only routes for creating resources
     GetPage(
       name: _Paths.CREATE_CLASS,
       page: () => const CreateClassView(),
       binding: CreateClassBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
     GetPage(
       name: _Paths.CLASS_LIST,
@@ -127,13 +142,14 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CLASS_DETAIL,
-      page: () => const ClassDetailView(),
+      page: () => ClassDetailView(),
       binding: ClassDetailBinding(),
     ),
     GetPage(
       name: _Paths.CREATE_SECTION,
-      page: () => const CreateSectionView(),
+      page: () => CreateSectionView(),
       binding: CreateSectionBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
     GetPage(
       name: _Paths.SECTION_LIST,
@@ -142,8 +158,42 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SECTION_DETAIL,
-      page: () => const SectionDetailView(),
+      page: () => SectionDetailView(),
       binding: SectionDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.CREATE_PARENT,
+      page: () => const CreateParentView(),
+      binding: CreateParentBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
+    ),
+    GetPage(
+      name: _Paths.PARENT_LIST,
+      page: () => const ParentListView(),
+      binding: ParentListBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
+    ),
+    GetPage(
+      name: _Paths.PARENT_DETAIL,
+      page: () => ParentDetailView(),
+      binding: ParentDetailBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
+    ),
+    GetPage(
+      name: _Paths.CREATE_SUBJECT,
+      page: () => const CreateSubjectView(),
+      binding: CreateSubjectBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
+    ),
+    GetPage(
+      name: _Paths.SUBJECT_LIST,
+      page: () => const SubjectListView(),
+      binding: SubjectListBinding(),
+    ),
+    GetPage(
+      name: _Paths.SUBJECT_DETAIL,
+      page: () => SubjectDetailView(),
+      binding: SubjectDetailBinding(),
     ),
   ];
 }
