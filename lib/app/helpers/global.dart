@@ -9,6 +9,7 @@ import 'package:student_management/app/helpers/utilities/error_util.dart';
 import 'package:student_management/app/helpers/utilities/network_util.dart';
 import 'package:student_management/app/helpers/utilities/secure_storage.dart';
 import 'package:student_management/app/helpers/widget/errorScreen.dart';
+import 'package:student_management/app/helpers/rbac/rbac_service.dart';
 import 'package:student_management/services/internet_connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -535,6 +536,10 @@ signOut() async {
     );
     if (res == null) return;
     if (res.isSuccessful) {
+      // Clear RBAC role
+      if (Get.isRegistered<RbacService>()) {
+        Get.find<RbacService>().clearRole();
+      }
       await eraseStorage();
       botToastSuccess(Constants.BOT_TOAST_MESSAGES['SIGNED_OUT']!);
       Get.offAllNamed('/login');
@@ -546,6 +551,10 @@ signOut() async {
   } catch (e) {
     var result = await checkInternetConnection();
     if (result) {
+      // Clear RBAC role
+      if (Get.isRegistered<RbacService>()) {
+        Get.find<RbacService>().clearRole();
+      }
       await eraseStorage();
       Get.offAllNamed('/login');
       botToastSuccess(Constants.BOT_TOAST_MESSAGES['SIGNED_OUT']!);
