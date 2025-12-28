@@ -166,9 +166,9 @@ class CustomDrawerMenu extends StatelessWidget {
                       },
                     ),
                   ),
-                  // Parents - Admin only
+                  // Parents - Admin, Teacher
                   RoleWidget(
-                    allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN],
+                    allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
                     child: _buildMenuItem(
                       icon: HugeIcon(
                         icon: HugeIcons.strokeRoundedUserMultiple,

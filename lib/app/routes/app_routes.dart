@@ -30,6 +30,7 @@ abstract class Routes {
   static const CREATE_SUBJECT = _Paths.CREATE_SUBJECT;
   static const SUBJECT_LIST = _Paths.SUBJECT_LIST;
   static const SUBJECT_DETAIL = _Paths.SUBJECT_DETAIL;
+  static const CREATE_TEACHER = _Paths.CREATE_TEACHER;
 }
 
 abstract class _Paths {
@@ -61,4 +62,5 @@ abstract class _Paths {
   static const CREATE_SUBJECT = '/create-subject';
   static const SUBJECT_LIST = '/subject-list';
   static const SUBJECT_DETAIL = '/subject-detail';
+  static const CREATE_TEACHER = '/create-teacher';
 }

@@ -179,14 +179,14 @@ class TeacherListView extends GetView<TeacherListController> {
           child: Container(
             child: Column(
               children: [
-                Row(
+                Obx(() => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         // download icon
                         Text(
-                          '4 Items',
+                          '${controller.filteredTeacherList.length} Items',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -223,25 +223,41 @@ class TeacherListView extends GetView<TeacherListController> {
                       ],
                     ),
                   ],
-                ),
+                )),
                 // teacher card
                 Expanded(
                   child: Obx(() {
-                    if (controller.teachers.isEmpty) {
+                    if (controller.isLoading.value) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
+                    if (controller.filteredTeacherList.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.person_off, size: 64, color: AppColors.gray500),
+                            const SizedBox(height: 16),
+                            Text(
+                              'No teachers found',
+                              style: TextStyle(color: AppColors.gray500, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
                     return ListView.builder(
-                      itemCount: controller.teachers.length,
+                      itemCount: controller.filteredTeacherList.length,
                       itemBuilder: (context, index) {
-                        final teacher = controller.teachers[index];
+                        final teacher = controller.filteredTeacherList[index];
                         return Column(
                           children: [
                             TeacherCardView(
-                              teacherName: teacher['name'],
-                              teacherId: teacher['id'],
-                              subject: teacher['subject'],
-                              status: teacher['status'],
+                              teacherName: teacher.fullName,
+                              teacherId: teacher.employeeCode ?? teacher.id ?? '',
+                              subject: '', // TODO: Add subject from teacher assignments
+                              status: 'Active',
                             ),
                             SizedBox(height: 12),
                           ],

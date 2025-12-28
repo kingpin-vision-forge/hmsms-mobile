@@ -281,4 +281,49 @@ final class _$ApiService extends ApiService {
     );
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> fetchTeachers() {
+    final Uri $url = Uri.parse('api/teachers');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> teacherDetails(String teacherId) {
+    final Uri $url = Uri.parse('api/teachers/${teacherId}');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> createTeacher(Map<String, dynamic> body) {
+    final Uri $url = Uri.parse('api/teachers');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> updateTeacher(
+    String teacherId,
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('api/teachers/${teacherId}');
+    final $body = body;
+    final Request $request = Request(
+      'PATCH',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> deleteTeacher(String teacherId) {
+    final Uri $url = Uri.parse('api/teachers/${teacherId}');
+    final Request $request = Request('DELETE', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
 }

@@ -53,6 +53,8 @@ import '../modules/teacher_list/bindings/teacher_list_binding.dart';
 import '../modules/teacher_list/views/teacher_list_view.dart';
 import '../modules/teachers/bindings/teachers_binding.dart';
 import '../modules/teachers/views/teachers_view.dart';
+import '../modules/create_teacher/bindings/create_teacher_binding.dart';
+import '../modules/create_teacher/views/create_teacher_view.dart';
 
 part 'app_routes.dart';
 
@@ -179,13 +181,13 @@ class AppPages {
       name: _Paths.PARENT_LIST,
       page: () => const ParentListView(),
       binding: ParentListBinding(),
-      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.PARENT_DETAIL,
       page: () => ParentDetailView(),
       binding: ParentDetailBinding(),
-      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.CREATE_SUBJECT,
@@ -204,6 +206,12 @@ class AppPages {
       page: () => SubjectDetailView(),
       binding: SubjectDetailBinding(),
       middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
+    ),
+    GetPage(
+      name: _Paths.CREATE_TEACHER,
+      page: () => const CreateTeacherView(),
+      binding: CreateTeacherBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
   ];
 }
