@@ -39,21 +39,11 @@ class SplashView extends StatelessWidget {
             children: <Widget>[
               const Spacer(),
               Image.asset(
-                    Constants.ASSETS['LOGIN_LOGO']!,
-                    width: 150,
-                    height: 150,
-                    fit: BoxFit.cover,
-                  )
-                  .animate(
-                    onPlay: (controller) =>
-                        controller.repeat(reverse: true),
-                  )
-                  .flipH(
-                    begin: 0,
-                    end: 1,
-                    duration: 1900.ms,
-                    curve: Curves.easeInOut,
-                  ),
+                Constants.ASSETS['LOGIN_LOGO']!,
+                width: 150,
+                height: 150,
+                fit: BoxFit.cover,
+              ),
 
               const SizedBox(height: 24),
 
