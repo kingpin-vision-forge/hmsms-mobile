@@ -3,13 +3,13 @@ import 'package:student_management/app/data/apis.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/global.dart';
 import 'package:student_management/app/helpers/utilities/network_util.dart';
+import 'package:student_management/app/helpers/rbac/rbac_service.dart';
 import 'package:student_management/app/modules/login/models/sign_response.dart';
 import 'package:student_management/app/modules/login/models/user_response.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:chopper/chopper.dart' as c;
-import 'package:student_management/app/data/apis.dart';
 import 'package:student_management/app/routes/app_pages.dart';
 import 'package:uuid/uuid.dart';
 
@@ -151,7 +151,14 @@ class LoginController extends GetxController with WidgetsBindingObserver {
               Constants.STORAGE_KEYS['USER_DATA']!: useDetail.value?.toJson(),
             });
             await setUserData();
-            // // Show success message and navigate to main app
+            
+            // Set the user role in RBAC service
+            final rbacService = Get.find<RbacService>();
+            if (useDetail.value?.role != null) {
+              rbacService.setRole(useDetail.value!.role!);
+            }
+            
+            // Show success message and navigate to main app
             botToastSuccess(Constants.BOT_TOAST_MESSAGES['SUCCESS_SIGN_IN']!);
             clear();
             isRememberMeChecked.value = false;

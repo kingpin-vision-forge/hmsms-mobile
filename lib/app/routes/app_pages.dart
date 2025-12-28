@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:student_management/app/helpers/rbac/rbac.dart';
 
 import '../modules/bottom_navbar/bindings/bottom_navbar_binding.dart';
 import '../modules/bottom_navbar/views/bottom_navbar_view.dart';
@@ -127,10 +128,12 @@ class AppPages {
       page: () => const FeesDetailView(),
       binding: FeesDetailBinding(),
     ),
+    // Admin-only routes for creating resources
     GetPage(
       name: _Paths.CREATE_CLASS,
       page: () => const CreateClassView(),
       binding: CreateClassBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
     GetPage(
       name: _Paths.CLASS_LIST,
@@ -146,6 +149,7 @@ class AppPages {
       name: _Paths.CREATE_SECTION,
       page: () => CreateSectionView(),
       binding: CreateSectionBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
     GetPage(
       name: _Paths.SECTION_LIST,
@@ -161,21 +165,25 @@ class AppPages {
       name: _Paths.CREATE_PARENT,
       page: () => const CreateParentView(),
       binding: CreateParentBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
     GetPage(
       name: _Paths.PARENT_LIST,
       page: () => const ParentListView(),
       binding: ParentListBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
     GetPage(
       name: _Paths.PARENT_DETAIL,
       page: () => ParentDetailView(),
       binding: ParentDetailBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
     GetPage(
       name: _Paths.CREATE_SUBJECT,
       page: () => const CreateSubjectView(),
       binding: CreateSubjectBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
     GetPage(
       name: _Paths.SUBJECT_LIST,

@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/utilities/notification_util.dart';
+import 'package:student_management/app/helpers/rbac/rbac_service.dart';
 import 'package:student_management/app/modules/home/controllers/firebase_controller.dart';
 import 'package:student_management/firebase_options.dart';
 import 'app/routes/app_pages.dart';
@@ -33,6 +34,13 @@ void main() async {
   FirebaseController().initNotifications();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  // Initialize RBAC Service
+  await Get.putAsync<RbacService>(() async {
+    final rbacService = RbacService();
+    await rbacService.init();
+    return rbacService;
+  }, permanent: true);
 
   runApp(
     DevicePreview(

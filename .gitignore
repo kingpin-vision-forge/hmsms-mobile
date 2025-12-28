@@ -18,10 +18,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# VS Code
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -32,6 +30,16 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+*.dart.js
+*.js.deps
+*.js.map
+.packages
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols
@@ -43,3 +51,69 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/.gradle/
+/android/app/build/
+/android/build/
+/android/local.properties
+*.apk
+*.aab
+
+# iOS/macOS
+/ios/Pods/
+/ios/.symlinks/
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/app.flx
+/ios/Flutter/flutter_assets/
+/ios/ServiceDefinitions.json
+/ios/Runner/GeneratedPluginRegistrant.*
+/macos/Pods/
+/macos/.symlinks/
+/macos/Flutter/GeneratedPluginRegistrant.swift
+/macos/Flutter/Flutter-Debug.xcconfig
+/macos/Flutter/Flutter-Release.xcconfig
+/macos/Flutter/ephemeral/
+*.xcworkspace
+!default.xcworkspace
+xcuserdata/
+
+# Web
+/web/.dart_tool/
+
+# Windows
+/windows/flutter/generated_plugin_registrant.cc
+/windows/flutter/generated_plugin_registrant.h
+/windows/flutter/generated_plugins.cmake
+
+# Linux
+/linux/flutter/generated_plugin_registrant.cc
+/linux/flutter/generated_plugin_registrant.h
+/linux/flutter/generated_plugins.cmake
+
+# Coverage
+coverage/
+*.lcov
+
+# Test
+.test_coverage.dart
+
+# Environment files (IMPORTANT - don't commit secrets!)
+.env
+.env.*
+*.env
+!.env.example
+
+# Firebase
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+
+# FVM (Flutter Version Management)
+.fvm/flutter_sdk
+.fvm/fvm_config.json
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
