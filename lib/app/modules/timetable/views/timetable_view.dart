@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/widget/custom_drawer.dart';
+import 'package:student_management/app/helpers/widget/global_fab.dart';
 import 'package:student_management/app/modules/timetable/controllers/timetable_controller.dart';
 import 'package:student_management/app/modules/timetable/models/timetable_response.dart';
 
@@ -15,6 +16,7 @@ class TimetableView extends GetView<TimetableController> {
     return Scaffold(
       backgroundColor: AppColors.gray50,
       drawer: CustomDrawerMenu(),
+      floatingActionButton: GlobalFAB(),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Container(

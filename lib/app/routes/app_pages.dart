@@ -59,6 +59,8 @@ import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/timetable/bindings/timetable_binding.dart';
 import '../modules/timetable/views/timetable_view.dart';
+import '../modules/attendance/bindings/attendance_binding.dart';
+import '../modules/attendance/views/attendance_view.dart';
 
 part 'app_routes.dart';
 
@@ -226,6 +228,12 @@ class AppPages {
       name: _Paths.TIMETABLE,
       page: () => const TimetableView(),
       binding: TimetableBinding(),
+    ),
+    GetPage(
+      name: _Paths.ATTENDANCE,
+      page: () => const AttendanceView(),
+      binding: AttendanceBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
   ];
 }

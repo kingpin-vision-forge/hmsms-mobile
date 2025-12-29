@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:chopper/chopper.dart' as c;
@@ -151,6 +152,7 @@ class NotificationsController extends GetxController {
     }
 
     try {
+      debugPrint('📢 Fetching announcements with schoolId: $schoolId');
       c.Response? res = await NetworkUtils.safeApiCall(
         () => _apiService.fetchAnnouncements(
           schoolId: schoolId,
@@ -159,7 +161,13 @@ class NotificationsController extends GetxController {
         ),
       );
 
-      if (res == null) return;
+      if (res == null) {
+        debugPrint('❌ Announcements response is null');
+        return;
+      }
+      
+      debugPrint('📢 Announcements response: ${res.body}');
+      
       if (res.isSuccessful && res.body != null && res.body['success'] == true) {
         final response = AnnouncementResponse.fromJson(res.body);
 
@@ -178,8 +186,13 @@ class NotificationsController extends GetxController {
 
         // Check for new announcements
         _checkNewAnnouncements();
+        debugPrint('✅ Loaded ${response.data.length} announcements');
+      } else {
+        debugPrint('❌ Announcements response not successful or malformed');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('❌ Error fetching announcements: $e');
+      debugPrint('Stack trace: $stackTrace');
       errorUtil.handleAppError(
         apiName: 'fetchAnnouncements',
         error: e,

@@ -516,4 +516,52 @@ final class _$ApiService extends ApiService {
     final Request $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> markAttendance(Map<String, dynamic> body) {
+    final Uri $url = Uri.parse('api/attendance/mark');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchStudentAttendance(
+    String studentId, {
+    String? from,
+    String? to,
+  }) {
+    final Uri $url = Uri.parse('api/attendance/student/${studentId}');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'from': from,
+      'to': to,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchClassAttendance(
+    String classId, {
+    String? sectionId,
+    String? date,
+  }) {
+    final Uri $url = Uri.parse('api/attendance/class/${classId}');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'sectionId': sectionId,
+      'date': date,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
 }

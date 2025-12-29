@@ -135,13 +135,18 @@ class AnnouncementResponse {
   });
 
   factory AnnouncementResponse.fromJson(Map<String, dynamic> json) {
+    // API returns nested structure: { data: { data: [], meta: {} } }
+    final wrapper = json['data'];
+    final dataList = wrapper is Map ? wrapper['data'] : json['data'];
+    final metaMap = wrapper is Map ? wrapper['meta'] : json['meta'];
+    
     return AnnouncementResponse(
       success: json['success'] ?? false,
-      data: (json['data'] as List<dynamic>?)
+      data: (dataList as List<dynamic>?)
               ?.map((item) => NotificationData.fromJson(item))
               .toList() ??
           [],
-      meta: PaginationMeta.fromJson(json['meta'] ?? {}),
+      meta: PaginationMeta.fromJson(metaMap ?? {}),
     );
   }
 }

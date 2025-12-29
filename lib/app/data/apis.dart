@@ -202,6 +202,24 @@ abstract class ApiService extends ChopperService {
   @DELETE(path: '/timetable/{id}')
   Future<Response> deleteTimetableSlot(@Path('id') String slotId);
 
+  // Attendance endpoints
+  @POST(path: '/attendance/mark')
+  Future<Response> markAttendance(@Body() Map<String, dynamic> body);
+
+  @GET(path: '/attendance/student/{studentId}')
+  Future<Response> fetchStudentAttendance(
+    @Path('studentId') String studentId, {
+    @Query('from') String? from,
+    @Query('to') String? to,
+  });
+
+  @GET(path: '/attendance/class/{classId}')
+  Future<Response> fetchClassAttendance(
+    @Path('classId') String classId, {
+    @Query('sectionId') String? sectionId,
+    @Query('date') String? date,
+  });
+
   static ApiService create() {
     final authenticator = ApiAuthenticator(baseUrl: apiBaseUrl);
     final client = ChopperClient(

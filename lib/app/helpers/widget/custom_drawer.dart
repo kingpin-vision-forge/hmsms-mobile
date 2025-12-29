@@ -310,6 +310,27 @@ class CustomDrawerMenu extends StatelessWidget {
                       });
                     },
                   ),
+                  // Attendance - Admin, Teacher
+                  RoleWidget(
+                    allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+                    child: _buildMenuItem(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedCheckList,
+                        color: controller.selectedMenu.value == 'Attendance'
+                            ? AppColors.primaryColor
+                            : AppColors.black,
+                      ),
+                      title: 'Attendance',
+                      isSelected: controller.selectedMenu.value == 'Attendance',
+                      onTap: () {
+                        controller.selectMenu('Attendance');
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.ATTENDANCE)?.then((_) {
+                          controller.selectMenu('Dashboard');
+                        });
+                      },
+                    ),
+                  ),
                   // Settings - All roles
                   _buildMenuItem(
                     icon: HugeIcon(
