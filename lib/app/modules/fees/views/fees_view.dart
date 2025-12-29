@@ -8,6 +8,7 @@ import 'package:student_management/app/helpers/widget/download_bottom.dart';
 import 'package:student_management/app/helpers/widget/global_fab.dart';
 import 'package:student_management/app/modules/fees/controllers/fees_controller.dart';
 import 'package:student_management/app/modules/fees/views/fees_card_view.dart';
+import 'package:student_management/app/helpers/widget/custom_drawer.dart';
 
 class FeesView extends GetView<FeesController> {
   const FeesView({super.key});
@@ -16,6 +17,7 @@ class FeesView extends GetView<FeesController> {
     return Obx(
       () => Scaffold(
         backgroundColor: AppColors.gray50,
+        drawer: CustomDrawerMenu(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             controller.isSearching.value ? 140 : 60,
@@ -57,13 +59,17 @@ class FeesView extends GetView<FeesController> {
                             children: [
                               Row(
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.chevron_left,
-                                      size: 36,
-                                      color: AppColors.secondaryColor,
+                                  Builder(
+                                    builder: (context) => IconButton(
+                                      icon: const Icon(
+                                        Icons.menu,
+                                        size: 28,
+                                        color: AppColors.secondaryColor,
+                                      ),
+                                      onPressed: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
                                     ),
-                                    onPressed: () => Get.back(),
                                   ),
                                   Text(
                                         'Fees Overview',

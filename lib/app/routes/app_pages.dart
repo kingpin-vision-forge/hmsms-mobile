@@ -53,6 +53,12 @@ import '../modules/teacher_list/bindings/teacher_list_binding.dart';
 import '../modules/teacher_list/views/teacher_list_view.dart';
 import '../modules/teachers/bindings/teachers_binding.dart';
 import '../modules/teachers/views/teachers_view.dart';
+import '../modules/create_teacher/bindings/create_teacher_binding.dart';
+import '../modules/create_teacher/views/create_teacher_view.dart';
+import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/profile_view.dart';
+import '../modules/timetable/bindings/timetable_binding.dart';
+import '../modules/timetable/views/timetable_view.dart';
 
 part 'app_routes.dart';
 
@@ -107,21 +113,25 @@ class AppPages {
       name: _Paths.STUDENT_LIST,
       page: () => const StudentListView(),
       binding: StudentListBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.STUDENT_DETAIL,
       page: () => StudentDetailView(),
       binding: StudentDetailBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.TEACHER_LIST,
       page: () => const TeacherListView(),
       binding: TeacherListBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
     GetPage(
       name: _Paths.TEACHER_DETAIL,
       page: () => const TeacherDetailView(),
       binding: TeacherDetailBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
     ),
     GetPage(
       name: _Paths.FEES_DETAIL,
@@ -139,11 +149,13 @@ class AppPages {
       name: _Paths.CLASS_LIST,
       page: () => const ClassListView(),
       binding: ClassListBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.CLASS_DETAIL,
       page: () => ClassDetailView(),
       binding: ClassDetailBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.CREATE_SECTION,
@@ -155,11 +167,13 @@ class AppPages {
       name: _Paths.SECTION_LIST,
       page: () => const SectionListView(),
       binding: SectionListBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.SECTION_DETAIL,
       page: () => SectionDetailView(),
       binding: SectionDetailBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.CREATE_PARENT,
@@ -171,13 +185,13 @@ class AppPages {
       name: _Paths.PARENT_LIST,
       page: () => const ParentListView(),
       binding: ParentListBinding(),
-      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.PARENT_DETAIL,
       page: () => ParentDetailView(),
       binding: ParentDetailBinding(),
-      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.CREATE_SUBJECT,
@@ -189,11 +203,29 @@ class AppPages {
       name: _Paths.SUBJECT_LIST,
       page: () => const SubjectListView(),
       binding: SubjectListBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
     ),
     GetPage(
       name: _Paths.SUBJECT_DETAIL,
       page: () => SubjectDetailView(),
       binding: SubjectDetailBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER])],
+    ),
+    GetPage(
+      name: _Paths.CREATE_TEACHER,
+      page: () => const CreateTeacherView(),
+      binding: CreateTeacherBinding(),
+      middlewares: [RoleMiddleware(allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN])],
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.TIMETABLE,
+      page: () => const TimetableView(),
+      binding: TimetableBinding(),
     ),
   ];
 }

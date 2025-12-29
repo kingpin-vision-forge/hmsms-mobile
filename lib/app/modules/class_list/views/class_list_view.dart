@@ -7,6 +7,8 @@ import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/modules/class_list/controllers/class_list_controller.dart';
 import 'package:student_management/app/modules/class_list/models/class_list_response.dart';
 import 'package:student_management/app/routes/app_pages.dart';
+import 'package:student_management/app/helpers/widget/custom_drawer.dart';
+import 'package:student_management/app/helpers/widget/global_fab.dart';
 
 class ClassListView extends GetView<ClassListController> {
   const ClassListView({super.key});
@@ -15,6 +17,8 @@ class ClassListView extends GetView<ClassListController> {
     return Obx(
       () => Scaffold(
         backgroundColor: AppColors.gray50,
+        drawer: CustomDrawerMenu(),
+        floatingActionButton: GlobalFAB(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             controller.isSearching.value ? 140 : 60,
@@ -50,21 +54,23 @@ class ClassListView extends GetView<ClassListController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 🔹 Top bar with back and search icons
+                          // Top bar with menu and search icons
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.chevron_left,
-                                      size: 36,
-                                      color: AppColors.secondaryColor,
+                                  Builder(
+                                    builder: (context) => IconButton(
+                                      icon: const Icon(
+                                        Icons.menu,
+                                        size: 28,
+                                        color: AppColors.secondaryColor,
+                                      ),
+                                      onPressed: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
                                     ),
-                                    onPressed: () {
-                                      Get.offAllNamed(Routes.HOME);
-                                    },
                                   ),
                                   Text(
                                         'Classes',

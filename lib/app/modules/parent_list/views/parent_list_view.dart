@@ -6,6 +6,8 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/modules/parent_list/models/parent_response.dart';
 import 'package:student_management/app/routes/app_pages.dart';
+import 'package:student_management/app/helpers/widget/custom_drawer.dart';
+import 'package:student_management/app/helpers/widget/global_fab.dart';
 
 import '../controllers/parent_list_controller.dart';
 
@@ -16,6 +18,8 @@ class ParentListView extends GetView<ParentListController> {
     return Obx(
       () => Scaffold(
         backgroundColor: AppColors.gray50,
+        drawer: CustomDrawerMenu(),
+        floatingActionButton: GlobalFAB(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             controller.isSearching.value ? 140 : 60,
@@ -51,21 +55,23 @@ class ParentListView extends GetView<ParentListController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 🔹 Top bar with back and search icons
+                          // Top bar with menu and search icons
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.chevron_left,
-                                      size: 36,
-                                      color: AppColors.secondaryColor,
+                                  Builder(
+                                    builder: (context) => IconButton(
+                                      icon: const Icon(
+                                        Icons.menu,
+                                        size: 28,
+                                        color: AppColors.secondaryColor,
+                                      ),
+                                      onPressed: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
                                     ),
-                                    onPressed: () {
-                                      Get.offAllNamed(Routes.HOME);
-                                    },
                                   ),
                                   Text(
                                         'Parents',

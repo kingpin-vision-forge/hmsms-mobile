@@ -215,6 +215,13 @@ final class _$ApiService extends ApiService {
   }
 
   @override
+  Future<Response<dynamic>> fetchStudentsByParent(String parentId) {
+    final Uri $url = Uri.parse('api/students/by-parent/${parentId}');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<dynamic>> fetchParents() {
     final Uri $url = Uri.parse('api/parents');
     final Request $request = Request('GET', $url, client.baseUrl);
@@ -279,6 +286,234 @@ final class _$ApiService extends ApiService {
       client.baseUrl,
       body: $body,
     );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchTeachers() {
+    final Uri $url = Uri.parse('api/teachers');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> teacherDetails(String teacherId) {
+    final Uri $url = Uri.parse('api/teachers/${teacherId}');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> createTeacher(Map<String, dynamic> body) {
+    final Uri $url = Uri.parse('api/teachers');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> updateTeacher(
+    String teacherId,
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('api/teachers/${teacherId}');
+    final $body = body;
+    final Request $request = Request(
+      'PATCH',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> deleteTeacher(String teacherId) {
+    final Uri $url = Uri.parse('api/teachers/${teacherId}');
+    final Request $request = Request('DELETE', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchProfile() {
+    final Uri $url = Uri.parse('api/profile');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> updateProfile(Map<String, dynamic> body) {
+    final Uri $url = Uri.parse('api/profile');
+    final $body = body;
+    final Request $request = Request(
+      'PATCH',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchNotifications({
+    int? page,
+    int? limit,
+    bool? unreadOnly,
+  }) {
+    final Uri $url = Uri.parse('api/notifications');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'page': page,
+      'limit': limit,
+      'unreadOnly': unreadOnly,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> getUnreadCount() {
+    final Uri $url = Uri.parse('api/notifications/unread-count');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> markNotificationAsRead(String notificationId) {
+    final Uri $url = Uri.parse('api/notifications/${notificationId}/read');
+    final Request $request = Request('PATCH', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> markAllNotificationsAsRead() {
+    final Uri $url = Uri.parse('api/notifications/mark-all-read');
+    final Request $request = Request('POST', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchFeeNotifications() {
+    final Uri $url = Uri.parse('api/notifications/fee');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> createAnnouncement(Map<String, dynamic> body) {
+    final Uri $url = Uri.parse('api/notifications/announcement');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchAnnouncements({
+    String? schoolId,
+    int? page,
+    int? limit,
+  }) {
+    final Uri $url = Uri.parse('api/notifications/announcements');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'schoolId': schoolId,
+      'page': page,
+      'limit': limit,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> registerDevice(Map<String, dynamic> body) {
+    final Uri $url = Uri.parse('api/devices/register');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> unregisterDevice(String token) {
+    final Uri $url = Uri.parse('api/devices/${token}');
+    final Request $request = Request('DELETE', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> createTimetableSlot(Map<String, dynamic> body) {
+    final Uri $url = Uri.parse('api/timetable');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchTimetable() {
+    final Uri $url = Uri.parse('api/timetable');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchTimetableByClass(
+    String classId, {
+    String? sectionId,
+  }) {
+    final Uri $url = Uri.parse('api/timetable/by-class/${classId}');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'sectionId': sectionId,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchTimetableByTeacher(String teacherId) {
+    final Uri $url = Uri.parse('api/timetable/by-teacher/${teacherId}');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> getTimetableSlot(String slotId) {
+    final Uri $url = Uri.parse('api/timetable/${slotId}');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> updateTimetableSlot(
+    String slotId,
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('api/timetable/${slotId}');
+    final $body = body;
+    final Request $request = Request(
+      'PATCH',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> deleteTimetableSlot(String slotId) {
+    final Uri $url = Uri.parse('api/timetable/${slotId}');
+    final Request $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 }

@@ -10,6 +10,7 @@ import 'package:student_management/app/modules/student_list/controllers/student_
 import 'package:student_management/app/modules/student_list/views/student_card_view.dart';
 import 'package:student_management/app/modules/teacher_list/views/teacher_card_view.dart';
 import 'package:student_management/app/routes/app_pages.dart';
+import 'package:student_management/app/helpers/widget/custom_drawer.dart';
 
 class StudentListView extends GetView<StudentListController> {
   const StudentListView({super.key});
@@ -18,6 +19,7 @@ class StudentListView extends GetView<StudentListController> {
     return Obx(
       () => Scaffold(
         backgroundColor: AppColors.gray50,
+        drawer: CustomDrawerMenu(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             controller.isSearching.value ? 140 : 60,
@@ -53,21 +55,23 @@ class StudentListView extends GetView<StudentListController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Top bar with back and search icons
+                          // Top bar with menu and search icons
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.chevron_left,
-                                      size: 36,
-                                      color: AppColors.secondaryColor,
+                                  Builder(
+                                    builder: (context) => IconButton(
+                                      icon: const Icon(
+                                        Icons.menu,
+                                        size: 28,
+                                        color: AppColors.secondaryColor,
+                                      ),
+                                      onPressed: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
                                     ),
-                                    onPressed: () {
-                                      Get.offAllNamed(Routes.HOME);
-                                    },
                                   ),
                                   Text(
                                         'Students',
