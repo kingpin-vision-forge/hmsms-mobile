@@ -80,6 +80,9 @@ abstract class ApiService extends ChopperService {
   @GET(path: '/students/by-school')
   Future<Response> fetchStudentForParent({@Query('schoolId') String? schoolId});
 
+  @GET(path: '/students/by-parent/{parentId}')
+  Future<Response> fetchStudentsByParent(@Path('parentId') String parentId);
+
   @GET(path: '/parents')
   Future<Response> fetchParents();
 
@@ -132,6 +135,72 @@ abstract class ApiService extends ChopperService {
 
   @PATCH(path: '/profile')
   Future<Response> updateProfile(@Body() Map<String, dynamic> body);
+
+  // Notification endpoints
+  @GET(path: '/notifications')
+  Future<Response> fetchNotifications({
+    @Query('page') int? page,
+    @Query('limit') int? limit,
+    @Query('unreadOnly') bool? unreadOnly,
+  });
+
+  @GET(path: '/notifications/unread-count')
+  Future<Response> getUnreadCount();
+
+  @PATCH(path: '/notifications/{id}/read')
+  Future<Response> markNotificationAsRead(@Path('id') String notificationId);
+
+  @POST(path: '/notifications/mark-all-read')
+  Future<Response> markAllNotificationsAsRead();
+
+  @GET(path: '/notifications/fee')
+  Future<Response> fetchFeeNotifications();
+
+  // Announcement endpoints
+  @POST(path: '/notifications/announcement')
+  Future<Response> createAnnouncement(@Body() Map<String, dynamic> body);
+
+  @GET(path: '/notifications/announcements')
+  Future<Response> fetchAnnouncements({
+    @Query('schoolId') String? schoolId,
+    @Query('page') int? page,
+    @Query('limit') int? limit,
+  });
+
+  // Device registration endpoints
+  @POST(path: '/devices/register')
+  Future<Response> registerDevice(@Body() Map<String, dynamic> body);
+
+  @DELETE(path: '/devices/{token}')
+  Future<Response> unregisterDevice(@Path('token') String token);
+
+  // Timetable endpoints
+  @POST(path: '/timetable')
+  Future<Response> createTimetableSlot(@Body() Map<String, dynamic> body);
+
+  @GET(path: '/timetable')
+  Future<Response> fetchTimetable();
+
+  @GET(path: '/timetable/by-class/{classId}')
+  Future<Response> fetchTimetableByClass(
+    @Path('classId') String classId, {
+    @Query('sectionId') String? sectionId,
+  });
+
+  @GET(path: '/timetable/by-teacher/{teacherId}')
+  Future<Response> fetchTimetableByTeacher(@Path('teacherId') String teacherId);
+
+  @GET(path: '/timetable/{id}')
+  Future<Response> getTimetableSlot(@Path('id') String slotId);
+
+  @PATCH(path: '/timetable/{id}')
+  Future<Response> updateTimetableSlot(
+    @Path('id') String slotId,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @DELETE(path: '/timetable/{id}')
+  Future<Response> deleteTimetableSlot(@Path('id') String slotId);
 
   static ApiService create() {
     final authenticator = ApiAuthenticator(baseUrl: apiBaseUrl);

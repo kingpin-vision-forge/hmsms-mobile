@@ -516,19 +516,11 @@ Future<void> fetchNotification({bool isLoadMore = false}) async {
 
 // SignOut function
 signOut() async {
-  // if (Platform.isIOS) {
-  //   device = 'ios';
-  // } else if (Platform.isAndroid) {
-  //   device = 'android';
-  // } else {
-  //   device = '';
-  // }
+  // Unregister device for push notifications first
+  await _unregisterDeviceForPush();
 
   Map<String, dynamic> payload = {
-    // 'accessToken':
-    //     await readFromStorage(Constants.STORAGE_KEYS['ACCESS_TOKEN']!),
     'identifier': await readFromStorage(Constants.STORAGE_KEYS['USERNAME']!),
-    // 'deviceId': await readFromStorage(Constants.STORAGE_KEYS['DEVICE_ID']!),
   };
   try {
     c.Response? res = await NetworkUtils.safeApiCall(
@@ -561,5 +553,19 @@ signOut() async {
     } else {
       botToastError(Constants.BOT_TOAST_MESSAGES['NO_INTERNET']!);
     }
+  }
+}
+
+/// Unregisters device from push notifications
+Future<void> _unregisterDeviceForPush() async {
+  try {
+    final fcmToken = await readFromStorage(Constants.STORAGE_KEYS['FCM_TOKEN']!);
+    if (fcmToken == null || fcmToken.toString().isEmpty) return;
+
+    await NetworkUtils.safeApiCall(
+      () => _apiService.unregisterDevice(fcmToken.toString()),
+    );
+  } catch (e) {
+    // Silently fail - don't block logout for push notification unregistration
   }
 }

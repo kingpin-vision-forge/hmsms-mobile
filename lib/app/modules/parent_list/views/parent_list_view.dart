@@ -7,6 +7,7 @@ import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/modules/parent_list/models/parent_response.dart';
 import 'package:student_management/app/routes/app_pages.dart';
 import 'package:student_management/app/helpers/widget/custom_drawer.dart';
+import 'package:student_management/app/helpers/widget/global_fab.dart';
 
 import '../controllers/parent_list_controller.dart';
 
@@ -18,6 +19,7 @@ class ParentListView extends GetView<ParentListController> {
       () => Scaffold(
         backgroundColor: AppColors.gray50,
         drawer: CustomDrawerMenu(),
+        floatingActionButton: GlobalFAB(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             controller.isSearching.value ? 140 : 60,

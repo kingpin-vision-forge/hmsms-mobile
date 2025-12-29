@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:student_management/app/data/apis.dart';
 import 'package:student_management/app/helpers/constants.dart';
+import 'package:student_management/app/helpers/global.dart';
+import 'package:student_management/app/helpers/rbac/roles.dart';
+import 'package:student_management/app/helpers/rbac/role_widgets.dart';
 import 'package:student_management/app/routes/app_pages.dart';
 
 class GlobalFAB extends StatelessWidget {
@@ -170,6 +174,24 @@ class GlobalFAB extends StatelessWidget {
                 },
               ),
 
+              // Announcement - Admin only
+              RoleWidget(
+                allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN],
+                child: _buildOption(
+                  icon: HugeIcon(
+                    icon: HugeIcons.strokeRoundedMegaphone01,
+                    color: AppColors.primaryColor,
+                    size: 30,
+                  ),
+                  title: "Announcement",
+                  subtitle: "Send announcement to all users",
+                  onTap: () {
+                    Get.back();
+                    _showAnnouncementDialog();
+                  },
+                ),
+              ),
+
               const SizedBox(height: 20),
             ],
           ),
@@ -226,6 +248,184 @@ class GlobalFAB extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showAnnouncementDialog() {
+    final titleController = TextEditingController();
+    final messageController = TextEditingController();
+    final selectedType = 'GENERAL'.obs;
+    final isLoading = false.obs;
+    final ApiService apiService = ApiService.create();
+
+    Get.dialog(
+      Obx(() => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedMegaphone01,
+              color: AppColors.callBtn,
+              size: 28,
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'New Announcement',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Notification Type Dropdown
+              const Text(
+                'Type',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.grayBorder),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: DropdownButton<String>(
+                  value: selectedType.value,
+                  isExpanded: true,
+                  underline: const SizedBox(),
+                  items: ['HOLIDAY', 'EXAM', 'EVENT', 'GENERAL']
+                      .map((type) => DropdownMenuItem(
+                            value: type,
+                            child: Text(type),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    if (value != null) selectedType.value = value;
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: titleController,
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  hintText: 'Enter announcement title',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: AppColors.callBtn),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: messageController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  labelText: 'Message',
+                  hintText: 'Enter announcement message',
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: AppColors.callBtn),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: isLoading.value ? null : () => Get.back(),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.gray500),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: isLoading.value
+                ? null
+                : () async {
+                    if (titleController.text.isEmpty ||
+                        messageController.text.isEmpty) {
+                      Get.snackbar(
+                        'Error',
+                        'Please fill in all fields',
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                      return;
+                    }
+
+                    isLoading.value = true;
+                    try {
+                      final res = await apiService.createAnnouncement({
+                        'type': selectedType.value,
+                        'title': titleController.text,
+                        'message': messageController.text,
+                        'schoolId': schoolId,
+                      });
+
+                      if (res.isSuccessful && res.body['success'] == true) {
+                        Get.back();
+                        Get.snackbar(
+                          'Success',
+                          'Announcement sent successfully',
+                          backgroundColor: AppColors.callBtn,
+                          colorText: AppColors.secondaryColor,
+                        );
+                      } else {
+                        Get.snackbar(
+                          'Error',
+                          res.body['message'] ?? 'Failed to send announcement',
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                      }
+                    } catch (e) {
+                      Get.snackbar(
+                        'Error',
+                        'Failed to send announcement',
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                    } finally {
+                      isLoading.value = false;
+                    }
+                  },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.callBtn,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: isLoading.value
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.secondaryColor,
+                    ),
+                  )
+                : const Text(
+                    'Send',
+                    style: TextStyle(color: AppColors.secondaryColor),
+                  ),
+          ),
+        ],
+      )),
     );
   }
 }

@@ -57,6 +57,8 @@ import '../modules/create_teacher/bindings/create_teacher_binding.dart';
 import '../modules/create_teacher/views/create_teacher_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/timetable/bindings/timetable_binding.dart';
+import '../modules/timetable/views/timetable_view.dart';
 
 part 'app_routes.dart';
 
@@ -219,6 +221,11 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.TIMETABLE,
+      page: () => const TimetableView(),
+      binding: TimetableBinding(),
     ),
   ];
 }

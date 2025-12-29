@@ -7,6 +7,7 @@ import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/routes/app_pages.dart';
 import 'package:student_management/app/modules/subject_list/models/subject_list_response.dart';
 import 'package:student_management/app/helpers/widget/custom_drawer.dart';
+import 'package:student_management/app/helpers/widget/global_fab.dart';
 
 import '../controllers/subject_list_controller.dart';
 
@@ -18,6 +19,7 @@ class SubjectListView extends GetView<SubjectListController> {
       () => Scaffold(
         backgroundColor: AppColors.gray50,
         drawer: CustomDrawerMenu(),
+        floatingActionButton: GlobalFAB(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             controller.isSearching.value ? 140 : 60,

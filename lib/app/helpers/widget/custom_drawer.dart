@@ -305,6 +305,9 @@ class CustomDrawerMenu extends StatelessWidget {
                     onTap: () {
                       controller.selectMenu('Timetable');
                       Navigator.pop(context);
+                      Get.toNamed(Routes.TIMETABLE)?.then((_) {
+                        controller.selectMenu('Dashboard');
+                      });
                     },
                   ),
                   // Settings - All roles
