@@ -98,7 +98,7 @@ class StudentDashboard extends StatelessWidget {
               ],
             ),
           ),
-        ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.1, end: 0),
+        ).animate().fadeIn(duration: 250.ms).slideY(begin: 0.1, end: 0),
 
         // Stats Row
         Padding(
@@ -301,7 +301,7 @@ class StudentDashboard extends StatelessWidget {
           ),
         ],
       ),
-    ).animate().fadeIn(delay: (80 * index).ms, duration: 500.ms).slideX(begin: 0.1, end: 0);
+    ).animate().fadeIn(delay: (80 * index).ms, duration: 200.ms).slideX(begin: 0.1, end: 0);
   }
 
   Widget _buildActionCard({

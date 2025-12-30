@@ -239,7 +239,7 @@ class ParentDashboard extends StatelessWidget {
           ),
         ),
       ),
-    ).animate().fadeIn(delay: (100 * index).ms, duration: 600.ms).slideX(begin: 0.2, end: 0);
+    ).animate().fadeIn(delay: (100 * index).ms, duration: 250.ms).slideX(begin: 0.2, end: 0);
   }
 
   Widget _buildTag(String label) {

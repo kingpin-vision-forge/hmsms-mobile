@@ -56,7 +56,7 @@ class ProfileView extends GetView<ProfileController> {
                   textAlign: TextAlign.left,
                 )
                     .animate()
-                    .fadeIn(delay: 200.ms, duration: 800.ms)
+                    .fadeIn(delay: 50.ms, duration: 300.ms)
                     .slideY(begin: 0.1, end: 0),
               ],
             ),
@@ -165,7 +165,7 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                     ],
                   ),
-                ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.1, end: 0),
+                ).animate().fadeIn(duration: 250.ms).slideY(begin: 0.1, end: 0),
 
                 const SizedBox(height: 24),
 

@@ -56,7 +56,7 @@ class CreateClassView extends GetView<CreateClassController> {
                         textAlign: TextAlign.left,
                       )
                       .animate()
-                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                      .fadeIn(delay: 50.ms, duration: 300.ms)
                       .slideY(begin: 0.1, end: 0),
                 ),
               ],
@@ -221,7 +221,7 @@ class CreateClassView extends GetView<CreateClassController> {
                     ),
                   ),
                 ),
-              ].animate(interval: 100.ms).fade(duration: 500.ms),
+              ].animate(interval: 30.ms).fade(duration: 200.ms),
             ),
           ),
         ),

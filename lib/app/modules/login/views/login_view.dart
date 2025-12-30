@@ -15,30 +15,29 @@ class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.gray50, AppColors.callBtn],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background image
+          Image.asset(
+            'assets/images/login_background.png',
+            fit: BoxFit.cover,
           ),
-        ),
-        child: SafeArea(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              SingleChildScrollView(
+          // Content
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(
-                      height: 0.4 * (MediaQuery.of(context).size.height) / 10,
-                    ),
-                    Image.asset(
-                      Constants.ASSETS['LOGIN_LOGO']!,
-                      width: 200,
-                      height: 100,
-                      fit: BoxFit.contain,
+                    Center(
+                      child: Image.asset(
+                        Constants.ASSETS['LOGIN_LOGO']!,
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                     SizedBox(height: 20),
                     Center(
@@ -311,57 +310,40 @@ class LoginView extends GetView<LoginController> {
                                 // sign in button
                                 const SizedBox(height: 10),
                                 Obx(
-                                  () => Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          AppColors.callBtn,
-                                          AppColors.callBtn,
-                                        ],
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                      ),
-                                      borderRadius: BorderRadius.circular(30),
-                                      // Apply opacity to the entire container when terms not checked
-                                      color: controller.isTermsChecked.value
+                                  () => Material(
+                                    color: AppColors.callBtn,
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: InkWell(
+                                      onTap: controller.isLoading.value
                                           ? null
-                                          : Colors.grey,
-                                    ),
-                                    child: ElevatedButton(
-                                      onPressed: (!controller.isLoading.value)
-                                          ? () {
-                                              controller.signIn(formKey);
-                                            }
-                                          : null, // Button disabled when isTermsChecked is false or while loading
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors
-                                            .transparent, // Make the button background transparent
-                                        shadowColor: Colors
-                                            .transparent, // Remove shadow to avoid overlap
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                        ),
-                                        minimumSize: const Size(
-                                          double.infinity,
-                                          50,
-                                        ),
-                                      ),
-                                      child: controller.isLoading.value
-                                          ? const CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
+                                          : () => controller.signIn(formKey),
+                                      borderRadius: BorderRadius.circular(10),
+                                      splashColor: Colors.white.withOpacity(0.2),
+                                      highlightColor: Colors.white.withOpacity(0.1),
+                                      child: Container(
+                                        height: 50,
+                                        alignment: Alignment.center,
+                                        child: controller.isLoading.value
+                                            ? const SizedBox(
+                                                width: 24,
+                                                height: 24,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2.5,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<Color>(
                                                     Colors.white,
-                                                  ), // Loader color
-                                            )
-                                          : const Text(
-                                              'Sign in',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
+                                                  ),
+                                                ),
+                                              )
+                                            : const Text(
+                                                'Sign in',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
-                                            ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -415,12 +397,12 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ),
                     ),
-                  ].animate(interval: 500.ms).fade(duration: 1000.ms),
+                  ].animate(interval: 30.ms).fade(duration: 300.ms),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

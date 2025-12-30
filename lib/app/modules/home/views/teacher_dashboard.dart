@@ -289,7 +289,7 @@ class TeacherDashboard extends StatelessWidget {
           ),
         ],
       ),
-    ).animate().fadeIn(delay: (100 * index).ms, duration: 600.ms).slideX(begin: 0.1, end: 0);
+    ).animate().fadeIn(delay: (100 * index).ms, duration: 250.ms).slideX(begin: 0.1, end: 0);
   }
 
   Widget _buildActionCard({

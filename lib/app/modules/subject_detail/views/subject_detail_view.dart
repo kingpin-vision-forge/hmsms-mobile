@@ -63,7 +63,7 @@ class SubjectDetailView extends GetView {
                           textAlign: TextAlign.left,
                         )
                         .animate()
-                        .fadeIn(delay: 200.ms, duration: 800.ms)
+                        .fadeIn(delay: 50.ms, duration: 300.ms)
                         .slideY(begin: 0.1, end: 0),
                   ],
                 ),
@@ -219,7 +219,7 @@ class SubjectDetailView extends GetView {
                     ),
                   )
                   .animate()
-                  .fadeIn(delay: 100.ms, duration: 600.ms)
+                  .fadeIn(delay: 100.ms, duration: 250.ms)
                   .slideY(begin: 0.2, end: 0),
 
               Padding(
@@ -262,8 +262,8 @@ class SubjectDetailView extends GetView {
                     ),
                   ],
                 ),
-              ).animate().fadeIn(delay: 200.ms, duration: 600.ms),
-            ].animate(interval: 100.ms).fade(duration: 500.ms),
+              ).animate().fadeIn(delay: 50.ms, duration: 250.ms),
+            ].animate(interval: 30.ms).fade(duration: 200.ms),
           ),
         );
       }),

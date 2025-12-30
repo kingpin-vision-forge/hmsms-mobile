@@ -60,8 +60,8 @@ class TimetableView extends GetView<TimetableController> {
                   ),
                 )
                     .animate()
-                    .fadeIn(delay: 200.ms, duration: 800.ms)
-                    .slideY(begin: 0.1, end: 0),
+                    .fadeIn(delay: 50.ms, duration: 300.ms)
+                    .slideY(begin: 0.05, end: 0),
               ],
             ),
             foregroundColor: AppColors.secondaryColor,
@@ -162,8 +162,8 @@ class TimetableView extends GetView<TimetableController> {
             color: AppColors.gray500,
           )
               .animate()
-              .fadeIn(delay: 200.ms, duration: 800.ms)
-              .slideY(begin: 0.1, end: 0),
+              .fadeIn(delay: 50.ms, duration: 300.ms)
+              .slideY(begin: 0.05, end: 0),
           const SizedBox(height: 16),
           Text(
             'No classes scheduled',
@@ -174,8 +174,8 @@ class TimetableView extends GetView<TimetableController> {
             ),
           )
               .animate()
-              .fadeIn(delay: 300.ms, duration: 800.ms)
-              .slideY(begin: 0.1, end: 0),
+              .fadeIn(delay: 100.ms, duration: 300.ms)
+              .slideY(begin: 0.05, end: 0),
           const SizedBox(height: 8),
           Text(
             'Enjoy your free day!',
@@ -185,8 +185,8 @@ class TimetableView extends GetView<TimetableController> {
             ),
           )
               .animate()
-              .fadeIn(delay: 400.ms, duration: 800.ms)
-              .slideY(begin: 0.1, end: 0),
+              .fadeIn(delay: 150.ms, duration: 300.ms)
+              .slideY(begin: 0.05, end: 0),
         ],
       ),
     );
@@ -336,7 +336,7 @@ class TimetableView extends GetView<TimetableController> {
       ),
     )
         .animate()
-        .fadeIn(delay: (50 * index).ms, duration: 400.ms)
-        .slideX(begin: 0.1, end: 0);
+        .fadeIn(delay: (25 * index).ms, duration: 200.ms)
+        .slideX(begin: 0.05, end: 0);
   }
 }

@@ -104,7 +104,7 @@ class HomeView extends GetView {
                 physics: const BouncingScrollPhysics(),
                 child: _buildRoleBasedDashboard()
                     .animate()
-                    .fadeIn(delay: 200.ms, duration: 800.ms)
+                    .fadeIn(delay: 50.ms, duration: 300.ms)
                     .slideY(begin: 0.1, end: 0),
               ),
             ),
