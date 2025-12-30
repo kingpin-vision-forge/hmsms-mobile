@@ -191,15 +191,15 @@ class FeesView extends GetView<FeesController> {
                   Row(
                     children: [
                       // download icon
-                      Text(
-                        '6 Items',
+                      Obx(() => Text(
+                        '${controller.feesList.length} Items',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                           height: 1.3,
                           color: AppColors.black,
                         ),
-                      ),
+                      )),
                       IconButton(
                         icon: HugeIcon(
                           icon: HugeIcons.strokeRoundedDownload04,

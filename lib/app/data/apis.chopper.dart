@@ -564,4 +564,87 @@ final class _$ApiService extends ApiService {
     );
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> fetchFees() {
+    final Uri $url = Uri.parse('api/fees');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchFeesByStudent(String studentId) {
+    final Uri $url = Uri.parse('api/fees/by-student/${studentId}');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchFeesByParent(String parentId) {
+    final Uri $url = Uri.parse('api/fees/by-parent/${parentId}');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchTeacherDashboard() {
+    final Uri $url = Uri.parse('api/dashboard/teacher');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchStudentDashboard() {
+    final Uri $url = Uri.parse('api/dashboard/student');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchParentDashboard() {
+    final Uri $url = Uri.parse('api/dashboard/parent');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchTimetableByStudent(
+    String studentId, {
+    String? dayOfWeek,
+  }) {
+    final Uri $url = Uri.parse('api/timetable/by-student/${studentId}');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'dayOfWeek': dayOfWeek,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchAttendanceSummary(
+    String studentId, {
+    String? period,
+  }) {
+    final Uri $url = Uri.parse('api/attendance/summary/${studentId}');
+    final Map<String, dynamic> $params = <String, dynamic>{'period': period};
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchFeesSummary() {
+    final Uri $url = Uri.parse('api/fees/summary');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
 }

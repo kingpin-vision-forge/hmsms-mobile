@@ -23,7 +23,7 @@ class FeesController extends GetxController {
   /// Load fees data with role-based access control
   /// - PARENT: See only fees for their associated students
   /// - STUDENT: See only their own fees
-  /// - ADMIN/TEACHER: See all fees
+  /// - ADMIN: See all fees
   Future<void> _loadFeesData() async {
     try {
       isLoading.value = true;
@@ -31,14 +31,14 @@ class FeesController extends GetxController {
       
       // Role-based fees data loading
       if (rbac.isParent) {
-        // Parent: Fetch fees for their associated students only
         await _loadParentStudentsFees();
       } else if (rbac.isStudent) {
-        // Student: Fetch only their own fees
         await _loadStudentFees();
+      } else if (rbac.isAdmin) {
+        await _loadAllFees();
       } else {
-        // Admin/Teacher: Load all fees (using dummy data for now as API not implemented)
-        _loadDummyFeesData();
+        // Teacher or other roles - no fees access
+        feesList.clear();
       }
     } catch (e) {
       errorUtil.handleAppError(
@@ -51,6 +51,20 @@ class FeesController extends GetxController {
     }
   }
 
+  /// Load all fees (for Admin)
+  Future<void> _loadAllFees() async {
+    c.Response? res = await NetworkUtils.safeApiCall(
+      () => _apiService.fetchFees(),
+    );
+    
+    if (res != null && res.isSuccessful && res.body?['data'] != null) {
+      final feesData = res.body['data'] as List;
+      feesList.value = feesData.map((fee) => _mapFeeToDisplay(fee)).toList();
+    } else {
+      feesList.clear();
+    }
+  }
+
   /// Load fees for parent's associated students
   Future<void> _loadParentStudentsFees() async {
     final storedUserData = await readFromStorage(
@@ -59,33 +73,18 @@ class FeesController extends GetxController {
     final parentId = storedUserData?['roleId'];
     
     if (parentId != null) {
-      // Fetch students by parent
       c.Response? res = await NetworkUtils.safeApiCall(
-        () => _apiService.fetchStudentsByParent(parentId),
+        () => _apiService.fetchFeesByParent(parentId),
       );
       
       if (res != null && res.isSuccessful && res.body?['data'] != null) {
-        final students = res.body['data'] as List;
-        // Create fees list from associated students
-        // Note: This uses placeholder fees data until a fees API is implemented
-        feesList.value = students.map((student) {
-          final user = student['user'] ?? {};
-          return {
-            'name': '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}'.trim(),
-            'id': student['id'] ?? '',
-            'grade': student['class']?['name'] ?? '-',
-            'feeType': 'Monthly Tuition',
-            'amount': 1500,
-            'dueDate': '2024-12-30',
-            'paymentDate': '',
-            'paymentMethod': '',
-            'txnId': '',
-            'status': 'Pending',
-          };
-        }).toList();
+        final feesData = res.body['data'] as List;
+        feesList.value = feesData.map((fee) => _mapFeeToDisplay(fee)).toList();
       } else {
         feesList.clear();
       }
+    } else {
+      feesList.clear();
     }
   }
 
@@ -95,87 +94,45 @@ class FeesController extends GetxController {
       Constants.STORAGE_KEYS['USER_DATA']!,
     );
     final studentId = storedUserData?['roleId'];
-    final firstName = storedUserData?['firstName'] ?? '';
-    final lastName = storedUserData?['lastName'] ?? '';
     
     if (studentId != null) {
-      // For now, create a single fee entry for the student
-      // This will be replaced with actual fees API when available
-      feesList.value = [
-        {
-          'name': '$firstName $lastName'.trim(),
-          'id': studentId,
-          'grade': '-',
-          'feeType': 'Monthly Tuition',
-          'amount': 1500,
-          'dueDate': '2024-12-30',
-          'paymentDate': '',
-          'paymentMethod': '',
-          'txnId': '',
-          'status': 'Pending',
-        },
-      ];
+      c.Response? res = await NetworkUtils.safeApiCall(
+        () => _apiService.fetchFeesByStudent(studentId),
+      );
+      
+      if (res != null && res.isSuccessful && res.body?['data'] != null) {
+        final feesData = res.body['data'] as List;
+        feesList.value = feesData.map((fee) => _mapFeeToDisplay(fee)).toList();
+      } else {
+        feesList.clear();
+      }
+    } else {
+      feesList.clear();
     }
   }
 
-  void _loadDummyFeesData() {
-    feesList.value = [
-      {
-        'name': 'Emma Johnson',
-        'id': 'STD001',
-        'grade': '2nd Grade',
-        'feeType': 'Monthly Tuition',
-        'amount': 1500,
-        'dueDate': '2024-09-30',
-        'paymentDate': '2024-09-25',
-        'paymentMethod': 'Credit Card',
-        'txnId': 'TXN123456789',
-        'status': 'Paid',
-      },
-      {
-        'name': 'Liam Wilson',
-        'id': 'STD002',
-        'grade': '1st Grade',
-        'feeType': 'Monthly Tuition',
-        'amount': 1500,
-        'dueDate': '2024-09-30',
-        'paymentDate': '',
-        'paymentMethod': '',
-        'txnId': '',
-        'status': 'Pending',
-      },
-      {
-        'name': 'Sophia Davis',
-        'id': 'STD003',
-        'grade': '4th Grade',
-        'feeType': 'Lab Fee',
-        'amount': 200,
-        'dueDate': '2024-10-15',
-        'paymentDate': '',
-        'paymentMethod': '',
-        'txnId': '',
-        'status': 'Pending',
-      },
-      {
-        'name': 'Noah Brown',
-        'id': 'STD004',
-        'grade': '5th Grade',
-        'feeType': 'Monthly Tuition',
-        'amount': 1200,
-        'dueDate': '2024-09-15',
-        'paymentDate': '',
-        'paymentMethod': '',
-        'txnId': '',
-        'status': 'Overdue',
-      },
-    ];
+  /// Map API response to display format
+  Map<String, dynamic> _mapFeeToDisplay(Map<String, dynamic> fee) {
+    return {
+      'id': fee['id'] ?? '',
+      'name': fee['studentName'] ?? '',
+      'studentEmail': fee['studentEmail'] ?? '',
+      'grade': fee['className'] ?? '-',
+      'section': fee['sectionName'] ?? '-',
+      'feeType': 'Tuition Fee', // Default fee type since API doesn't provide it
+      'amount': fee['totalAmount'] ?? 0,
+      'totalPaid': fee['totalPaid'] ?? 0,
+      'balanceAmount': fee['balanceAmount'] ?? 0,
+      'dueDate': fee['dueDate'] ?? '',
+      'status': fee['status'] ?? 'PENDING',
+      'payments': fee['payments'] ?? [],
+    };
   }
 
   /* 
    * Initiates search mode for invoice filtering.
    */
   void startSearch() {
-    // Enable search mode
     isSearching.value = true;
     isSearching.refresh();
   }
@@ -184,13 +141,14 @@ class FeesController extends GetxController {
    * Stops search mode and resets search state.
    */
   void stopSearch() {
-    // Disable search mode and clear query
     isSearching.value = false;
     isSearching.refresh();
     searchQuery.value = '';
+  }
 
-    // Refresh invoices list
-    // fetchTeacherList();
+  /// Refresh fees data
+  Future<void> refreshFees() async {
+    await _loadFeesData();
   }
 
   @override

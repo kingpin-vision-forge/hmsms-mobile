@@ -13,10 +13,12 @@ class GlobalFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      backgroundColor: AppColors.callBtn,
-      onPressed: () => _showAddNewSheet(context),
-      child: const Icon(Icons.add, color: AppColors.secondaryColor, size: 35),
+    return AdminOnlyWidget(
+      child: FloatingActionButton(
+        backgroundColor: AppColors.callBtn,
+        onPressed: () => _showAddNewSheet(context),
+        child: const Icon(Icons.add, color: AppColors.secondaryColor, size: 35),
+      ),
     );
   }
 
