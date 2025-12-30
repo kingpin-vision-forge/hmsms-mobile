@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/global.dart';
 import 'package:student_management/app/helpers/utilities/network_util.dart';
+import 'package:student_management/app/helpers/rbac/rbac.dart';
+import 'package:student_management/app/routes/app_pages.dart';
 import 'package:chopper/chopper.dart' as c;
 import 'package:student_management/app/data/apis.dart';
 import 'package:student_management/app/modules/student_list/models/student_response.dart';
@@ -22,15 +24,49 @@ class StudentListController extends GetxController {
     fetchStudentList();
   }
 
-  /// Dummy function to assign teacher data
+  /// Fetch student list with role-based access control
+  /// - STUDENT: Redirected to their own student detail page
+  /// - PARENT: See only their associated children
+  /// - ADMIN/TEACHER: See all students
   fetchStudentList() async {
     try {
+      // Check user role for access control
+      final rbac = Get.find<RbacService>();
+      
+      // If user is a STUDENT, redirect to their own detail page
+      if (rbac.isStudent) {
+        final storedUserData = await readFromStorage(
+          Constants.STORAGE_KEYS['USER_DATA']!,
+        );
+        final studentId = storedUserData?['roleId'];
+        if (studentId != null) {
+          Get.offAllNamed(Routes.STUDENT_DETAIL, arguments: {'student_id': studentId});
+          return;
+        }
+      }
+      
       // Set loading state to indicate API call in progress
       isLoading.value = true;
 
-      c.Response? res = await NetworkUtils.safeApiCall(
-        () => _apiService.fetchStudentList(),
-      );
+      c.Response? res;
+      
+      // If user is a PARENT, fetch only their associated children
+      if (rbac.isParent) {
+        final storedUserData = await readFromStorage(
+          Constants.STORAGE_KEYS['USER_DATA']!,
+        );
+        final parentId = storedUserData?['roleId'];
+        if (parentId != null) {
+          res = await NetworkUtils.safeApiCall(
+            () => _apiService.fetchStudentsByParent(parentId),
+          );
+        }
+      } else {
+        // Admin/Teacher: Fetch all students
+        res = await NetworkUtils.safeApiCall(
+          () => _apiService.fetchStudentList(),
+        );
+      }
 
       if (res == null) return;
       if (res.isSuccessful) {

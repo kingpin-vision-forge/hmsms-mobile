@@ -6,6 +6,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/widget/download_bottom.dart';
 import 'package:student_management/app/helpers/widget/global_fab.dart';
+import 'package:student_management/app/helpers/rbac/rbac.dart';
 import 'package:student_management/app/modules/fees/controllers/fees_controller.dart';
 import 'package:student_management/app/modules/fees/views/fees_card_view.dart';
 import 'package:student_management/app/helpers/widget/custom_drawer.dart';
@@ -244,7 +245,10 @@ class FeesView extends GetView<FeesController> {
             ],
           ),
         ),
-        floatingActionButton: GlobalFAB(),
+        floatingActionButton: RoleWidget(
+          allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+          child: GlobalFAB(),
+        ),
       ),
     );
   }

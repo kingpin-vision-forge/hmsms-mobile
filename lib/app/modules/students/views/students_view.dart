@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/widget/global_fab.dart';
+import 'package:student_management/app/helpers/rbac/rbac.dart';
 import 'package:student_management/app/modules/students/controllers/students_controller.dart';
 
 class StudentsView extends GetView<StudentsController> {
@@ -401,7 +402,10 @@ class StudentsView extends GetView<StudentsController> {
           ),
         ),
       ),
-      floatingActionButton: GlobalFAB(),
+      floatingActionButton: RoleWidget(
+        allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+        child: GlobalFAB(),
+      ),
     );
   }
 
