@@ -111,25 +111,27 @@ class LoginController extends GetxController with WidgetsBindingObserver {
     // await writeToStorage({Constants.STORAGE_KEYS['FCM_TOKEN']!: fcmToken});
     // Validate form state before proceeding
     if (formKey.currentState?.validate() ?? false) {
-      // Generate UUID for device tracking
-      var uuid = Uuid();
-      String deviceUUID = uuid.v4();
-      
-      // Collect device information for audit logging
-      final deviceInfo = await DeviceInfoUtil.getDeviceInfo();
-      
-      // Prepare login credentials payload with audit metadata
-      Map<String, dynamic> payload = {
-        'identifier': usernameController.text,
-        'password': passwordController.text,
-        'deviceId': deviceUUID,
-        'deviceName': deviceInfo['deviceName'],
-        'userAgent': deviceInfo['userAgent'],
-        'ipAddress': deviceInfo['ipAddress'],
-      };
       try {
-        // Set loading state to indicate API call in progress
+        // Set loading state immediately to show feedback
         isLoading.value = true;
+        
+        // Generate UUID for device tracking
+        var uuid = Uuid();
+        String deviceUUID = uuid.v4();
+        
+        // Collect device information for audit logging (runs while loading shows)
+        final deviceInfo = await DeviceInfoUtil.getDeviceInfo();
+        
+        // Prepare login credentials payload with audit metadata
+        Map<String, dynamic> payload = {
+          'identifier': usernameController.text,
+          'password': passwordController.text,
+          'deviceId': deviceUUID,
+          'deviceName': deviceInfo['deviceName'],
+          'userAgent': deviceInfo['userAgent'],
+          'ipAddress': deviceInfo['ipAddress'],
+        };
+        
         // Attempt login with provided credentials
         c.Response? res = await NetworkUtils.safeApiCall(
           () => _apiService.login(payload),

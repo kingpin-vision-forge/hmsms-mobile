@@ -75,9 +75,10 @@ class DeviceInfoUtil {
   /// Returns 'Unknown' if unable to fetch
   static Future<String> getIpAddress() async {
     try {
+      // Reduced timeout for faster login experience
       final response = await http.get(
         Uri.parse('https://api.ipify.org?format=json'),
-      ).timeout(const Duration(seconds: 5));
+      ).timeout(const Duration(seconds: 2));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -85,7 +86,7 @@ class DeviceInfoUtil {
       }
       return 'Unknown';
     } catch (e) {
-      // Silently fail and return Unknown if IP fetch fails
+      // Silently fail and return Unknown if IP fetch fails or times out
       return 'Unknown';
     }
   }
