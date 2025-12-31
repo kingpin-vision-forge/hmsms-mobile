@@ -48,11 +48,14 @@ class CustomDrawerMenu extends StatelessWidget {
                   // User Email
                   Row(
                     children: [
-                      Text(
-                        userData['email'] ?? '',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: AppColors.gray500,
+                      Flexible(
+                        child: Text(
+                          userData['email'] ?? '',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppColors.gray500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -80,6 +83,18 @@ class CustomDrawerMenu extends StatelessWidget {
               ),
             ),
           ),
+
+          // Divider between profile and menu
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(
+              color: AppColors.gray500.withOpacity(0.3),
+              thickness: 1,
+              height: 1,
+            ),
+          ),
+          
+          const SizedBox(height: 8),
 
           // Menu Items
           Expanded(

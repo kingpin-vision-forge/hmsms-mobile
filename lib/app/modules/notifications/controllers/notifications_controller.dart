@@ -140,6 +140,12 @@ class NotificationsController extends GetxController {
 
   /// Fetch announcements (All users)
   Future<void> fetchAnnouncements({bool refresh = false}) async {
+    // Skip if schoolId is not set yet
+    if (schoolId.isEmpty) {
+      debugPrint('⚠️ Skipping announcements fetch - schoolId is empty');
+      return;
+    }
+    
     if (refresh) {
       _announcementPage = 1;
       hasMoreAnnouncements.value = true;
@@ -189,15 +195,22 @@ class NotificationsController extends GetxController {
         debugPrint('✅ Loaded ${response.data.length} announcements');
       } else {
         debugPrint('❌ Announcements response not successful or malformed');
+        // Only show error toast if there was an actual error response
+        if (res.body != null && res.body['message'] != null) {
+          botToastError(res.body['message'].toString());
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ Error fetching announcements: $e');
       debugPrint('Stack trace: $stackTrace');
-      errorUtil.handleAppError(
-        apiName: 'fetchAnnouncements',
-        error: e,
-        displayMessage: 'Failed to load announcements',
-      );
+      // Only show error toast for actual exceptions, not for empty data
+      if (announcements.isEmpty) {
+        errorUtil.handleAppError(
+          apiName: 'fetchAnnouncements',
+          error: e,
+          displayMessage: 'Failed to load announcements',
+        );
+      }
     } finally {
       isLoadingAnnouncements.value = false;
       isLoadingMoreAnnouncements.value = false;

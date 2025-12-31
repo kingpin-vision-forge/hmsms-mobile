@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
+import 'package:student_management/app/helpers/widget/dashboard_calendar.dart';
 import 'package:student_management/app/modules/home/controllers/teacher_dashboard_controller.dart';
 
 /// Dashboard view for TEACHER role
@@ -35,6 +36,11 @@ class TeacherDashboard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Calendar Widget
+              const DashboardCalendar(),
+              
+              const SizedBox(height: 8),
+              
               // Stats Row
               Padding(
                 padding: const EdgeInsets.all(16),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:student_management/app/helpers/constants.dart';
+import 'package:student_management/app/helpers/widget/dashboard_calendar.dart';
 
 class DashboardStatistics extends StatefulWidget {
   const DashboardStatistics({super.key});
@@ -47,6 +48,11 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Calendar Widget
+        const DashboardCalendar(),
+        
+        const SizedBox(height: 8),
+        
         // Quick Stats Cards
         Padding(
           padding: const EdgeInsets.all(16),
