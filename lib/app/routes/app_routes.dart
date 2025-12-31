@@ -33,6 +33,7 @@ abstract class Routes {
   static const CREATE_TEACHER = _Paths.CREATE_TEACHER;
   static const PROFILE = _Paths.PROFILE;
   static const TIMETABLE = _Paths.TIMETABLE;
+  static const ATTENDANCE = _Paths.ATTENDANCE;
 }
 
 abstract class _Paths {
@@ -67,4 +68,5 @@ abstract class _Paths {
   static const CREATE_TEACHER = '/create-teacher';
   static const PROFILE = '/profile';
   static const TIMETABLE = '/timetable';
+  static const ATTENDANCE = '/attendance';
 }

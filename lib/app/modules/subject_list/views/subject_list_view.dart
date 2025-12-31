@@ -81,7 +81,7 @@ class SubjectListView extends GetView<SubjectListController> {
                                         ),
                                       )
                                       .animate()
-                                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                                      .fadeIn(delay: 50.ms, duration: 300.ms)
                                       .slideY(begin: 0.1, end: 0),
                                 ],
                               ),
@@ -202,7 +202,7 @@ class SubjectListView extends GetView<SubjectListController> {
                         style: const TextStyle(fontSize: 20),
                       )
                       .animate()
-                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                      .fadeIn(delay: 50.ms, duration: 300.ms)
                       .slideY(begin: 0.1, end: 0),
                 ],
               ),
@@ -397,7 +397,7 @@ class SubjectListView extends GetView<SubjectListController> {
           ),
         )
         .animate()
-        .fadeIn(delay: (100 * index).ms, duration: 600.ms)
+        .fadeIn(delay: (100 * index).ms, duration: 250.ms)
         .slideX(begin: 0.2, end: 0);
   }
 

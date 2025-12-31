@@ -202,6 +202,62 @@ abstract class ApiService extends ChopperService {
   @DELETE(path: '/timetable/{id}')
   Future<Response> deleteTimetableSlot(@Path('id') String slotId);
 
+  // Attendance endpoints
+  @POST(path: '/attendance/mark')
+  Future<Response> markAttendance(@Body() Map<String, dynamic> body);
+
+  @GET(path: '/attendance/student/{studentId}')
+  Future<Response> fetchStudentAttendance(
+    @Path('studentId') String studentId, {
+    @Query('from') String? from,
+    @Query('to') String? to,
+  });
+
+  @GET(path: '/attendance/class/{classId}')
+  Future<Response> fetchClassAttendance(
+    @Path('classId') String classId, {
+    @Query('sectionId') String? sectionId,
+    @Query('date') String? date,
+  });
+
+  // Fees endpoints
+  @GET(path: '/fees')
+  Future<Response> fetchFees();
+
+  @GET(path: '/fees/by-student/{studentId}')
+  Future<Response> fetchFeesByStudent(@Path('studentId') String studentId);
+
+  @GET(path: '/fees/by-parent/{parentId}')
+  Future<Response> fetchFeesByParent(@Path('parentId') String parentId);
+
+  // Role-specific Dashboard endpoints
+  @GET(path: '/dashboard/teacher')
+  Future<Response> fetchTeacherDashboard();
+
+  @GET(path: '/dashboard/student')
+  Future<Response> fetchStudentDashboard();
+
+  @GET(path: '/dashboard/parent')
+  Future<Response> fetchParentDashboard();
+
+  // Student Timetable endpoint
+  @GET(path: '/timetable/by-student/{studentId}')
+  Future<Response> fetchTimetableByStudent(
+    @Path('studentId') String studentId, {
+    @Query('dayOfWeek') String? dayOfWeek,
+  });
+
+  // Attendance Summary endpoint
+  @GET(path: '/attendance/summary/{studentId}')
+  Future<Response> fetchAttendanceSummary(
+    @Path('studentId') String studentId, {
+    @Query('period') String? period,
+  });
+
+  // Fees Summary endpoint
+  @GET(path: '/fees/summary')
+  Future<Response> fetchFeesSummary();
+
   static ApiService create() {
     final authenticator = ApiAuthenticator(baseUrl: apiBaseUrl);
     final client = ChopperClient(

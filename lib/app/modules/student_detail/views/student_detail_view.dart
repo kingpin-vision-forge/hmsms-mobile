@@ -63,7 +63,7 @@ class StudentDetailView extends GetView {
                           textAlign: TextAlign.left,
                         )
                         .animate()
-                        .fadeIn(delay: 200.ms, duration: 800.ms)
+                        .fadeIn(delay: 50.ms, duration: 300.ms)
                         .slideY(begin: 0.1, end: 0),
                   ],
                 ),
@@ -219,7 +219,7 @@ class StudentDetailView extends GetView {
                     ),
                   )
                   .animate()
-                  .fadeIn(delay: 100.ms, duration: 600.ms)
+                  .fadeIn(delay: 100.ms, duration: 250.ms)
                   .slideY(begin: 0.2, end: 0),
 
               // Student Information Section
@@ -233,7 +233,7 @@ class StudentDetailView extends GetView {
                     color: AppColors.black,
                   ),
                 ),
-              ).animate().fadeIn(delay: 200.ms, duration: 600.ms),
+              ).animate().fadeIn(delay: 50.ms, duration: 250.ms),
 
               // Student Details
               Padding(
@@ -268,7 +268,7 @@ class StudentDetailView extends GetView {
                             ),
                           ]
                           .animate(interval: 50.ms)
-                          .fadeIn(delay: 250.ms, duration: 500.ms),
+                          .fadeIn(delay: 250.ms, duration: 200.ms),
                 ),
               ),
 
@@ -285,7 +285,7 @@ class StudentDetailView extends GetView {
                       color: AppColors.black,
                     ),
                   ),
-                ).animate().fadeIn(delay: 300.ms, duration: 600.ms),
+                ).animate().fadeIn(delay: 75.ms, duration: 250.ms),
 
               if (studentData.parentName != null &&
                   studentData.parentName!.isNotEmpty)
@@ -306,7 +306,7 @@ class StudentDetailView extends GetView {
                               ),
                             ]
                             .animate(interval: 50.ms)
-                            .fadeIn(delay: 350.ms, duration: 500.ms),
+                            .fadeIn(delay: 350.ms, duration: 200.ms),
                   ),
                 ),
 
@@ -344,7 +344,7 @@ class StudentDetailView extends GetView {
                     ),
                   ],
                 ),
-              ).animate().fadeIn(delay: 400.ms, duration: 600.ms),
+              ).animate().fadeIn(delay: 100.ms, duration: 250.ms),
 
               // Attendance Records
               if (attendance.isEmpty)
@@ -381,7 +381,7 @@ class StudentDetailView extends GetView {
                     return _buildAttendanceCard(record, index);
                   },
                 ),
-            ].animate(interval: 100.ms).fade(duration: 500.ms),
+            ].animate(interval: 30.ms).fade(duration: 200.ms),
           ),
         );
       }),
@@ -555,7 +555,7 @@ class StudentDetailView extends GetView {
           ),
         )
         .animate()
-        .fadeIn(delay: (400 + (index * 50)).ms, duration: 500.ms)
+        .fadeIn(delay: (400 + (index * 50)).ms, duration: 200.ms)
         .slideX(begin: 0.2, end: 0);
   }
 

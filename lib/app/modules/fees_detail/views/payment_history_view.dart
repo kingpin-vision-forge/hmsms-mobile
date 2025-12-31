@@ -50,7 +50,7 @@ class PaymentHistoryView extends StatelessWidget {
           ),
         ),
       ],
-    ).animate().fadeIn(duration: 400.ms, delay: 300.ms);
+    ).animate().fadeIn(duration: 400.ms, delay: 75.ms);
   }
 
   Widget _buildPaymentHistoryCard(Map<String, dynamic> payment, int index) {

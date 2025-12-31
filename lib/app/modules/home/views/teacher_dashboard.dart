@@ -3,7 +3,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
-import 'package:student_management/app/helpers/global.dart';
+import 'package:student_management/app/helpers/widget/dashboard_calendar.dart';
+import 'package:student_management/app/modules/home/controllers/teacher_dashboard_controller.dart';
 
 /// Dashboard view for TEACHER role
 /// Shows assigned classes, attendance stats, and schedule
@@ -12,121 +13,205 @@ class TeacherDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Stats Row
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Expanded(
-                child: _buildStatCard(
-                  'My Classes',
-                  '5',
-                  HugeIcons.strokeRoundedBoardMath,
-                  const Color(0xFF6C5CE7),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildStatCard(
-                  'My Students',
-                  '156',
-                  HugeIcons.strokeRoundedStudent,
-                  const Color(0xFF00B894),
-                ),
-              ),
-            ],
-          ),
-        ),
+    final controller = Get.put(TeacherDashboardController());
 
-        // Today's Classes Section
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.all(50),
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+
+      if (controller.hasError.value) {
+        return _buildErrorState(controller);
+      }
+
+      return RefreshIndicator(
+        onRefresh: () async => controller.refresh(),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Today's Schedule",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black,
+              // Calendar Widget
+              const DashboardCalendar(),
+              
+              const SizedBox(height: 8),
+              
+              // Stats Row
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildStatCard(
+                        'My Classes',
+                        controller.totalClasses.value.toString(),
+                        HugeIcons.strokeRoundedBoardMath,
+                        const Color(0xFF6C5CE7),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildStatCard(
+                        'My Students',
+                        controller.totalStudents.value.toString(),
+                        HugeIcons.strokeRoundedStudent,
+                        const Color(0xFF00B894),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 12),
-              _buildClassCard(
-                subject: 'Mathematics',
-                className: 'Class 10A',
-                time: '9:00 AM - 10:00 AM',
-                status: 'Upcoming',
-                index: 0,
+
+              // Today's Classes Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Today's Schedule",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    if (controller.todaySchedule.isEmpty)
+                      _buildEmptySchedule()
+                    else
+                      ...controller.todaySchedule.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final slot = entry.value;
+                        return _buildClassCard(
+                          subject: slot['subject'] ?? 'Unknown',
+                          className: '${slot['className'] ?? ''} ${slot['sectionName'] ?? ''}'.trim(),
+                          time: '${slot['startTime'] ?? ''} - ${slot['endTime'] ?? ''}',
+                          status: slot['status'] ?? 'pending',
+                          index: index,
+                        );
+                      }),
+                  ],
+                ),
               ),
-              _buildClassCard(
-                subject: 'Mathematics',
-                className: 'Class 9B',
-                time: '10:30 AM - 11:30 AM',
-                status: 'Completed',
-                index: 1,
+
+              const SizedBox(height: 20),
+
+              // Quick Actions
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Quick Actions',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildActionCard(
+                            icon: HugeIcons.strokeRoundedUserCheck01,
+                            label: 'Take Attendance',
+                            color: const Color(0xFF6C5CE7),
+                            onTap: () {
+                              Get.toNamed('/attendance');
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildActionCard(
+                            icon: HugeIcons.strokeRoundedStudent,
+                            label: 'View Students',
+                            color: const Color(0xFF00B894),
+                            onTap: () {
+                              Get.toNamed('/student-list');
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              _buildClassCard(
-                subject: 'Mathematics',
-                className: 'Class 8A',
-                time: '12:00 PM - 1:00 PM',
-                status: 'Pending',
-                index: 2,
-              ),
+
+              const SizedBox(height: 100),
             ],
           ),
         ),
+      );
+    });
+  }
 
-        const SizedBox(height: 20),
-
-        // Quick Actions
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Quick Actions',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildActionCard(
-                      icon: HugeIcons.strokeRoundedUserCheck01,
-                      label: 'Take Attendance',
-                      color: const Color(0xFF6C5CE7),
-                      onTap: () {},
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildActionCard(
-                      icon: HugeIcons.strokeRoundedStudent,
-                      label: 'View Students',
-                      color: const Color(0xFF00B894),
-                      onTap: () {
-                        Get.toNamed('/student-list');
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+  Widget _buildErrorState(TeacherDashboardController controller) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const HugeIcon(
+              icon: HugeIcons.strokeRoundedAlertCircle,
+              size: 48,
+              color: Colors.red,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Failed to load dashboard',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              controller.errorMessage.value,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppColors.gray500),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: controller.refresh,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+            ),
+          ],
         ),
+      ),
+    );
+  }
 
-        const SizedBox(height: 100),
-      ],
+  Widget _buildEmptySchedule() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: AppColors.gray50,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Center(
+        child: Column(
+          children: [
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedCalendar01,
+              size: 40,
+              color: AppColors.gray500,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'No classes scheduled for today',
+              style: TextStyle(color: AppColors.gray500),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -195,6 +280,9 @@ class TeacherDashboard extends StatelessWidget {
         break;
       case 'completed':
         statusColor = const Color(0xFF00B894);
+        break;
+      case 'ongoing':
+        statusColor = const Color(0xFFE17055);
         break;
       default:
         statusColor = AppColors.gray500;
@@ -279,7 +367,7 @@ class TeacherDashboard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              status,
+              status.capitalize ?? status,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -289,7 +377,7 @@ class TeacherDashboard extends StatelessWidget {
           ),
         ],
       ),
-    ).animate().fadeIn(delay: (100 * index).ms, duration: 600.ms).slideX(begin: 0.1, end: 0);
+    ).animate().fadeIn(delay: (100 * index).ms, duration: 250.ms).slideX(begin: 0.1, end: 0);
   }
 
   Widget _buildActionCard({

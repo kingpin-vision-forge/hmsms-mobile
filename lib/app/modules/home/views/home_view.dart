@@ -21,7 +21,9 @@ class HomeView extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    final firstName = userData['username'] ?? '';
+    final firstName = userData['firstName'] ?? '';
+    final lastName = userData['lastName'] ?? '';
+    final fullName = '$firstName $lastName'.trim();
     final initial = (firstName.toString().isNotEmpty ? firstName[0] : '');
     return SafeArea(
       child: Scaffold(
@@ -83,7 +85,7 @@ class HomeView extends GetView {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Hello, ${userData['username'] ?? 'User'}',
+                        'Hello, ${fullName.isNotEmpty ? fullName : 'User'}',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
@@ -104,7 +106,7 @@ class HomeView extends GetView {
                 physics: const BouncingScrollPhysics(),
                 child: _buildRoleBasedDashboard()
                     .animate()
-                    .fadeIn(delay: 200.ms, duration: 800.ms)
+                    .fadeIn(delay: 50.ms, duration: 300.ms)
                     .slideY(begin: 0.1, end: 0),
               ),
             ),

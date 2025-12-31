@@ -6,6 +6,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/widget/download_bottom.dart';
 import 'package:student_management/app/helpers/widget/global_fab.dart';
+import 'package:student_management/app/helpers/rbac/rbac.dart';
 import 'package:student_management/app/modules/student_list/controllers/student_list_controller.dart';
 import 'package:student_management/app/modules/student_list/views/student_card_view.dart';
 import 'package:student_management/app/modules/teacher_list/views/teacher_card_view.dart';
@@ -81,7 +82,7 @@ class StudentListView extends GetView<StudentListController> {
                                         ),
                                       )
                                       .animate()
-                                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                                      .fadeIn(delay: 50.ms, duration: 300.ms)
                                       .slideY(begin: 0.1, end: 0),
                                 ],
                               ),
@@ -194,7 +195,7 @@ class StudentListView extends GetView<StudentListController> {
                         style: const TextStyle(fontSize: 20),
                       )
                       .animate()
-                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                      .fadeIn(delay: 50.ms, duration: 300.ms)
                       .slideY(begin: 0.1, end: 0),
                 ],
               ),
@@ -243,7 +244,10 @@ class StudentListView extends GetView<StudentListController> {
             },
           );
         }),
-        floatingActionButton: GlobalFAB(),
+        floatingActionButton: RoleWidget(
+          allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+          child: GlobalFAB(),
+        ),
       ),
     );
   }
@@ -408,7 +412,7 @@ class StudentListView extends GetView<StudentListController> {
           ),
         )
         .animate()
-        .fadeIn(delay: (100 * index).ms, duration: 600.ms)
+        .fadeIn(delay: (100 * index).ms, duration: 250.ms)
         .slideX(begin: 0.2, end: 0);
   }
 

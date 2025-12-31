@@ -86,6 +86,16 @@ class Constants {
 
   static ThemeData theme = ThemeData(
     fontFamily: "Montserrat",
+    // Faster page transitions using Cupertino style for smoother animations
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+      },
+    ),
     datePickerTheme: DatePickerThemeData(
       todayForegroundColor: WidgetStateProperty.resolveWith<Color?>((
         Set<WidgetState> states,
@@ -559,7 +569,7 @@ class Constants {
 
   static Map<String, String> ASSETS = {
     'EZIYO_SPLASH_LOGO': 'assets/gifs/Book_gif.gif',
-    'LOGIN_LOGO': 'assets/images/logo.jpg',
+    'LOGIN_LOGO': 'assets/images/logo.png',
     'ERROR_SCREEN': 'assets/images/error_screen.svg',
     'BACKGROUND_IMAGE': 'assets/images/login_background.jpg',
   };

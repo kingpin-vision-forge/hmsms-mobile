@@ -80,7 +80,7 @@ class ClassListView extends GetView<ClassListController> {
                                         ),
                                       )
                                       .animate()
-                                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                                      .fadeIn(delay: 50.ms, duration: 300.ms)
                                       .slideY(begin: 0.1, end: 0),
                                 ],
                               ),
@@ -200,7 +200,7 @@ class ClassListView extends GetView<ClassListController> {
                         color: AppColors.primaryColor,
                       )
                       .animate()
-                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                      .fadeIn(delay: 50.ms, duration: 300.ms)
                       .slideY(begin: 0.1, end: 0),
                   const SizedBox(height: 20),
                   Text(
@@ -210,7 +210,7 @@ class ClassListView extends GetView<ClassListController> {
                         style: const TextStyle(fontSize: 20),
                       )
                       .animate()
-                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                      .fadeIn(delay: 50.ms, duration: 300.ms)
                       .slideY(begin: 0.1, end: 0),
                 ],
               ),
@@ -436,7 +436,7 @@ class ClassListView extends GetView<ClassListController> {
           ),
         )
         .animate()
-        .fadeIn(delay: (100 * index).ms, duration: 600.ms)
+        .fadeIn(delay: (100 * index).ms, duration: 250.ms)
         .slideX(begin: 0.2, end: 0);
   }
 

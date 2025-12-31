@@ -59,8 +59,8 @@ class NotificationsView extends GetView<NotificationsController> {
                             ),
                           )
                               .animate()
-                              .fadeIn(delay: 200.ms, duration: 800.ms)
-                              .slideY(begin: 0.1, end: 0),
+                              .fadeIn(delay: 50.ms, duration: 300.ms)
+                              .slideY(begin: 0.05, end: 0),
                         ],
                       ),
                       // Mark all as read - only for parents on notifications tab
@@ -332,8 +332,8 @@ class NotificationsView extends GetView<NotificationsController> {
             color: AppColors.gray500,
           )
               .animate()
-              .fadeIn(delay: 200.ms, duration: 800.ms)
-              .slideY(begin: 0.1, end: 0),
+              .fadeIn(delay: 50.ms, duration: 300.ms)
+              .slideY(begin: 0.05, end: 0),
           const SizedBox(height: 20),
           Text(
             message,
@@ -344,8 +344,8 @@ class NotificationsView extends GetView<NotificationsController> {
             ),
           )
               .animate()
-              .fadeIn(delay: 300.ms, duration: 800.ms)
-              .slideY(begin: 0.1, end: 0),
+              .fadeIn(delay: 100.ms, duration: 300.ms)
+              .slideY(begin: 0.05, end: 0),
         ],
       ),
     );
@@ -499,8 +499,8 @@ class NotificationsView extends GetView<NotificationsController> {
         ),
       )
           .animate()
-          .fadeIn(delay: (50 * index).ms, duration: 400.ms)
-          .slideX(begin: 0.1, end: 0),
+          .fadeIn(delay: (25 * index).ms, duration: 200.ms)
+          .slideX(begin: 0.05, end: 0),
     );
   }
 

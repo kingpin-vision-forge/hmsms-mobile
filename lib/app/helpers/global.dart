@@ -108,8 +108,17 @@ String capitalize(String text) {
 }
 
 String getFseFullName(Map<String, dynamic> userData) {
-  final fullName = (userData['username'] ?? '').toString().trim();
-  return fullName.isNotEmpty ? fullName : 'N/A';
+  final firstName = (userData['firstName'] ?? '').toString().trim();
+  final lastName = (userData['lastName'] ?? '').toString().trim();
+  final fullName = '$firstName $lastName'.trim();
+  
+  // Fallback to username if firstName/lastName not available
+  if (fullName.isEmpty) {
+    final username = (userData['username'] ?? '').toString().trim();
+    return username.isNotEmpty ? username : 'N/A';
+  }
+  
+  return fullName;
 }
 
 String getPhoneNumber(Map<String, dynamic> userData) {
