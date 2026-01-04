@@ -48,7 +48,7 @@ class NotificationsView extends GetView<NotificationsController> {
                               size: 36,
                               color: AppColors.secondaryColor,
                             ),
-                            onPressed: () => Get.back(),
+                            onPressed: () => Navigator.of(context).pop(),
                           ),
                           Text(
                             'Notifications',

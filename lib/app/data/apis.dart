@@ -83,6 +83,23 @@ abstract class ApiService extends ChopperService {
   @GET(path: '/students/by-parent/{parentId}')
   Future<Response> fetchStudentsByParent(@Path('parentId') String parentId);
 
+  // Student Rank endpoints
+  @GET(path: '/students/rank/{studentId}')
+  Future<Response> fetchStudentRank(
+    @Path('studentId') String studentId, {
+    @Query('examId') String? examId,
+    @Query('term') String? term,
+  });
+
+  @GET(path: '/students/rank/class/{classId}')
+  Future<Response> fetchClassRankings(
+    @Path('classId') String classId, {
+    @Query('sectionId') String? sectionId,
+    @Query('examId') String? examId,
+    @Query('term') String? term,
+    @Query('limit') int? limit,
+  });
+
   @GET(path: '/parents')
   Future<Response> fetchParents();
 
@@ -257,6 +274,45 @@ abstract class ApiService extends ChopperService {
   // Fees Summary endpoint
   @GET(path: '/fees/summary')
   Future<Response> fetchFeesSummary();
+
+  // Admin Dashboard endpoints
+  @GET(path: '/dashboard/admin/stats')
+  Future<Response> fetchAdminStats({@Query('schoolId') String? schoolId});
+
+  @GET(path: '/dashboard/admin/student-distribution')
+  Future<Response> fetchStudentDistribution({@Query('schoolId') String? schoolId});
+
+  @GET(path: '/dashboard/admin/fees-collection')
+  Future<Response> fetchFeesCollection({
+    @Query('schoolId') String? schoolId,
+    @Query('year') int? year,
+    @Query('months') int? months,
+  });
+
+  @GET(path: '/dashboard/admin/class-performance')
+  Future<Response> fetchClassPerformance({
+    @Query('schoolId') String? schoolId,
+    @Query('year') int? year,
+  });
+
+  // Attendance report endpoints
+  @GET(path: '/attendance/report')
+  Future<Response> fetchAttendanceReport({
+    @Query('classId') String? classId,
+    @Query('sectionId') String? sectionId,
+    @Query('studentId') String? studentId,
+    @Query('from') required String from,
+    @Query('to') required String to,
+  });
+
+  @GET(path: '/attendance/report/download')
+  Future<Response> downloadAttendanceReport({
+    @Query('classId') String? classId,
+    @Query('sectionId') String? sectionId,
+    @Query('from') required String from,
+    @Query('to') required String to,
+    @Query('format') String? format, // 'pdf' or 'csv'
+  });
 
   static ApiService create() {
     final authenticator = ApiAuthenticator(baseUrl: apiBaseUrl);

@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:student_management/app/data/apis.dart';
+import 'package:student_management/app/helpers/global.dart';
+import 'package:student_management/app/modules/home/models/rank_response.dart';
 
 /// Controller for Student Dashboard
 /// Fetches student-specific dashboard data from API
@@ -34,6 +37,10 @@ class StudentDashboardController extends GetxController {
 
   // Pending Fees
   final pendingFees = Rxn<Map<String, dynamic>>();
+
+  // Student Rank
+  final studentRank = Rxn<StudentRankData>();
+  final isLoadingRank = false.obs;
 
   @override
   void onInit() {
@@ -79,6 +86,9 @@ class StudentDashboardController extends GetxController {
 
         // Parse pending fees
         pendingFees.value = data['pendingFees'] as Map<String, dynamic>?;
+
+        // Fetch student rank
+        await fetchStudentRank();
       } else {
         hasError.value = true;
         errorMessage.value = 'Failed to load dashboard data';
@@ -88,6 +98,30 @@ class StudentDashboardController extends GetxController {
       errorMessage.value = e.toString();
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  /// Fetch student rank from API
+  Future<void> fetchStudentRank() async {
+    // Get studentId from global userData
+    final studentId = userData['studentId'] ?? userData['id'];
+    if (studentId == null) return;
+
+    isLoadingRank.value = true;
+    try {
+      final response = await _apiService.fetchStudentRank(studentId);
+
+      if (response.isSuccessful && response.body != null) {
+        final rankResponse = StudentRankResponse.fromJson(response.body);
+        if (rankResponse.success && rankResponse.data != null) {
+          studentRank.value = rankResponse.data;
+        }
+      }
+    } catch (e) {
+      // Silently fail for rank - it's supplementary info
+      debugPrint('Failed to fetch student rank: $e');
+    } finally {
+      isLoadingRank.value = false;
     }
   }
 

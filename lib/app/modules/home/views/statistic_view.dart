@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:get/get.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/widget/dashboard_calendar.dart';
+import 'package:student_management/app/modules/home/controllers/admin_dashboard_controller.dart';
 
 class DashboardStatistics extends StatefulWidget {
   const DashboardStatistics({super.key});
@@ -17,10 +19,17 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
   late AnimationController _animationController;
   late Animation<double> _animation;
   late Animation<double> _statAnimation;
+  
+  // Admin Dashboard Controller
+  late final AdminDashboardController _controller;
 
   @override
   void initState() {
     super.initState();
+    
+    // Initialize or find the controller
+    _controller = Get.put(AdminDashboardController());
+    
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 3000),
       vsync: this,
@@ -46,39 +55,49 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Calendar Widget
-        const DashboardCalendar(),
-        
-        const SizedBox(height: 8),
-        
-        // Quick Stats Cards
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Expanded(
-                child: _buildStatCard(
-                  'Total Students',
-                  '1,248',
-                  Icons.school,
-                  const Color(0xFF6C5CE7),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildStatCard(
-                  'Total Staffs',
-                  '86',
-                  Icons.people,
-                  const Color(0xFF00B894),
-                ),
-              ),
-            ],
+    return Obx(() {
+      if (_controller.isLoading.value) {
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.all(50),
+            child: CircularProgressIndicator(),
           ),
-        ),
-        const SizedBox(height: 10),
+        );
+      }
+
+      return Column(
+        children: [
+          // Calendar Widget
+          const DashboardCalendar(),
+          
+          const SizedBox(height: 8),
+          
+          // Quick Stats Cards
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    'Total Students',
+                    _controller.totalStudents.value.toString(),
+                    Icons.school,
+                    const Color(0xFF6C5CE7),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildStatCard(
+                    'Total Staff',
+                    _controller.totalStaff.value.toString(),
+                    Icons.people,
+                    const Color(0xFF00B894),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
         // Pie Chart Section
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -161,27 +180,7 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _buildCenterLegendItem(
-                                  'Class 1st',
-                                  AppColors.primaryColor,
-                                ),
-                                const SizedBox(height: 8),
-                                _buildCenterLegendItem(
-                                  'Class 2nd',
-                                  AppColors.green500,
-                                ),
-                                const SizedBox(height: 8),
-                                _buildCenterLegendItem(
-                                  'Class 3rd',
-                                  const Color(0xFFFD79A8),
-                                ),
-                                const SizedBox(height: 8),
-                                _buildCenterLegendItem(
-                                  'Others',
-                                  AppColors.yellow,
-                                ),
-                              ],
+                              children: _buildDynamicLegend(),
                             ),
                           ),
                         ],
@@ -235,9 +234,9 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
                         color: AppColors.green500.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Text(
-                        '₹8.2L',
-                        style: TextStyle(
+                      child: Text(
+                        _controller.formatLakhAmount(_controller.feesCollected.value),
+                        style: const TextStyle(
                           color: Color(0xFF00B894),
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -248,7 +247,7 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '+12.5% from last month',
+                  '${_controller.growthPercentage.value >= 0 ? '+' : ''}${_controller.growthPercentage.value.toStringAsFixed(1)}% from last month',
                   style: TextStyle(color: AppColors.gray500, fontSize: 13),
                 ),
                 const SizedBox(height: 24),
@@ -486,48 +485,7 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
                               ),
                             ),
                           ),
-                          lineBarsData: [
-                            // Current Year trend
-                            LineChartBarData(
-                              spots: [
-                                FlSpot(0, 75 * _animation.value),
-                                FlSpot(1, 82 * _animation.value),
-                                FlSpot(2, 90 * _animation.value),
-                                FlSpot(3, 68 * _animation.value),
-                              ],
-                              isCurved: true,
-                              color: AppColors.primaryColor,
-                              barWidth: 3,
-                              belowBarData: BarAreaData(
-                                show: true,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    AppColors.primaryColor.withOpacity(0.3),
-                                    Colors.transparent,
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                              ),
-                              dotData: FlDotData(show: true),
-                            ),
-
-                            // Last Year trend (comparison)
-                            LineChartBarData(
-                              spots: [
-                                FlSpot(0, 70 * _animation.value),
-                                FlSpot(1, 78 * _animation.value),
-                                FlSpot(2, 83 * _animation.value),
-                                FlSpot(3, 65 * _animation.value),
-                              ],
-                              isCurved: true,
-                              color: AppColors.green500,
-                              barWidth: 3,
-                              dashArray: [6, 4], // dashed line for distinction
-                              belowBarData: BarAreaData(show: false),
-                              dotData: FlDotData(show: true),
-                            ),
-                          ],
+                          lineBarsData: _getLineChartData(),
                         ),
                       );
                     },
@@ -537,9 +495,10 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
             ),
           ),
         ),
-        SizedBox(height: 100),
+        const SizedBox(height: 100),
       ],
     );
+    });
   }
 
   Widget _buildStatCard(
@@ -615,6 +574,42 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
   }
 
   List<PieChartSectionData> _getPieSections() {
+    // Default colors for pie chart if not provided by API
+    final defaultColors = [
+      AppColors.primaryColor,
+      AppColors.green500,
+      const Color(0xFFFD79A8),
+      AppColors.yellow,
+      const Color(0xFF74B9FF),
+      const Color(0xFFA29BFE),
+    ];
+
+    // Use live data if available, otherwise use defaults
+    if (_controller.studentDistribution.isNotEmpty) {
+      return _controller.studentDistribution.asMap().entries.map((entry) {
+        final index = entry.key;
+        final data = entry.value;
+        final percentage = (data['percentage'] ?? 0.0).toDouble();
+        final color = data['color'] != null 
+            ? _controller.getColorFromHex(data['color']) 
+            : defaultColors[index % defaultColors.length];
+        
+        return PieChartSectionData(
+          color: color,
+          value: percentage,
+          title: '${percentage.toStringAsFixed(0)}%',
+          radius: touchedIndex == index ? 75 : 65,
+          titleStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+          badgePositionPercentageOffset: 1.2,
+        );
+      }).toList();
+    }
+
+    // Fallback: Default sections if no API data
     return [
       PieChartSectionData(
         color: AppColors.primaryColor,
@@ -638,7 +633,6 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-
         badgePositionPercentageOffset: 1.2,
       ),
       PieChartSectionData(
@@ -651,7 +645,6 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-
         badgePositionPercentageOffset: 1.2,
       ),
       PieChartSectionData(
@@ -664,9 +657,51 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-
         badgePositionPercentageOffset: 1.2,
       ),
+    ];
+  }
+
+  /// Build dynamic legend from API data
+  List<Widget> _buildDynamicLegend() {
+    final defaultColors = [
+      AppColors.primaryColor,
+      AppColors.green500,
+      const Color(0xFFFD79A8),
+      AppColors.yellow,
+      const Color(0xFF74B9FF),
+      const Color(0xFFA29BFE),
+    ];
+
+    if (_controller.studentDistribution.isNotEmpty) {
+      // Show max 4 items to fit in the center circle
+      final items = _controller.studentDistribution.take(4).toList();
+      final widgets = <Widget>[];
+      
+      for (var i = 0; i < items.length; i++) {
+        final data = items[i];
+        final label = data['className'] ?? data['name'] ?? 'Class ${i + 1}';
+        final color = data['color'] != null
+            ? _controller.getColorFromHex(data['color'])
+            : defaultColors[i % defaultColors.length];
+        
+        widgets.add(_buildCenterLegendItem(label, color));
+        if (i < items.length - 1) {
+          widgets.add(const SizedBox(height: 8));
+        }
+      }
+      return widgets;
+    }
+
+    // Fallback: Default legend items
+    return [
+      _buildCenterLegendItem('Class 1st', AppColors.primaryColor),
+      const SizedBox(height: 8),
+      _buildCenterLegendItem('Class 2nd', AppColors.green500),
+      const SizedBox(height: 8),
+      _buildCenterLegendItem('Class 3rd', const Color(0xFFFD79A8)),
+      const SizedBox(height: 8),
+      _buildCenterLegendItem('Others', AppColors.yellow),
     ];
   }
 
@@ -693,6 +728,18 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
   }
 
   List<BarChartGroupData> _getBarGroups() {
+    // Use live data if available, otherwise use defaults
+    if (_controller.monthlyFees.isNotEmpty) {
+      return _controller.monthlyFees.asMap().entries.map((entry) {
+        final index = entry.key;
+        final data = entry.value;
+        // Convert to K (thousands) for display - divide by 1000
+        final collected = ((data['collected'] ?? 0) / 1000).toDouble();
+        return _createBarGroup(index, collected);
+      }).toList();
+    }
+
+    // Fallback: Default bar groups if no API data
     return [
       _createBarGroup(0, 65),
       _createBarGroup(1, 58),
@@ -724,5 +771,50 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
         ),
       ],
     );
+  }
+
+  /// Build dynamic line chart data from controller
+  List<LineChartBarData> _getLineChartData() {
+    final currentSpots = _controller.getCurrentYearSpots();
+    final previousSpots = _controller.getPreviousYearSpots();
+
+    return [
+      // Current Year trend
+      LineChartBarData(
+        spots: List.generate(
+          currentSpots.length,
+          (i) => FlSpot(i.toDouble(), currentSpots[i] * _animation.value),
+        ),
+        isCurved: true,
+        color: AppColors.primaryColor,
+        barWidth: 3,
+        belowBarData: BarAreaData(
+          show: true,
+          gradient: LinearGradient(
+            colors: [
+              AppColors.primaryColor.withOpacity(0.3),
+              Colors.transparent,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        dotData: FlDotData(show: true),
+      ),
+
+      // Last Year trend (comparison)
+      LineChartBarData(
+        spots: List.generate(
+          previousSpots.length,
+          (i) => FlSpot(i.toDouble(), previousSpots[i] * _animation.value),
+        ),
+        isCurved: true,
+        color: AppColors.green500,
+        barWidth: 3,
+        dashArray: [6, 4], // dashed line for distinction
+        belowBarData: BarAreaData(show: false),
+        dotData: FlDotData(show: true),
+      ),
+    ];
   }
 }

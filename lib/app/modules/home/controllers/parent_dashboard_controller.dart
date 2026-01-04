@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:student_management/app/data/apis.dart';
+import 'package:student_management/app/modules/home/models/rank_response.dart';
 
 /// Controller for Parent Dashboard
 /// Fetches parent-specific dashboard data from API
@@ -21,6 +23,9 @@ class ParentDashboardController extends GetxController {
   final averageAttendance = 0.0.obs;
   final upcomingEvents = 0.obs;
   final unreadNotifications = 0.obs;
+
+  // Children ranks - map of studentId to StudentRankData
+  final childrenRanks = <String, StudentRankData>{}.obs;
 
   @override
   void onInit() {
@@ -51,6 +56,9 @@ class ParentDashboardController extends GetxController {
         averageAttendance.value = (summary['averageAttendance'] ?? 0).toDouble();
         upcomingEvents.value = summary['upcomingEvents'] ?? 0;
         unreadNotifications.value = summary['unreadNotifications'] ?? 0;
+
+        // Fetch ranks for all children
+        await fetchChildrenRanks();
       } else {
         hasError.value = true;
         errorMessage.value = 'Failed to load dashboard data';
@@ -61,6 +69,36 @@ class ParentDashboardController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  /// Fetch ranks for all children
+  Future<void> fetchChildrenRanks() async {
+    final ranks = <String, StudentRankData>{};
+    
+    for (final child in children) {
+      final studentId = child['studentId'] ?? child['id'];
+      if (studentId == null) continue;
+
+      try {
+        final response = await _apiService.fetchStudentRank(studentId);
+        if (response.isSuccessful && response.body != null) {
+          final rankResponse = StudentRankResponse.fromJson(response.body);
+          if (rankResponse.success && rankResponse.data != null) {
+            ranks[studentId] = rankResponse.data!;
+          }
+        }
+      } catch (e) {
+        // Silently ignore rank fetch errors for individual children
+        debugPrint('Failed to fetch rank for $studentId: $e');
+      }
+    }
+    
+    childrenRanks.value = ranks;
+  }
+
+  /// Get rank for a specific child
+  StudentRankData? getChildRank(String studentId) {
+    return childrenRanks[studentId];
   }
 
   void refresh() {

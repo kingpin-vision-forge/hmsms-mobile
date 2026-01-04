@@ -63,6 +63,21 @@ class AttendanceView extends GetView<AttendanceController> {
                     .slideY(begin: 0.1, end: 0),
               ],
             ),
+            actions: [
+              // Download Report Button
+              Builder(
+                builder: (context) => IconButton(
+                  icon: const HugeIcon(
+                    icon: HugeIcons.strokeRoundedDownload04,
+                    color: AppColors.secondaryColor,
+                    size: 26,
+                  ),
+                  tooltip: 'Download Report',
+                  onPressed: () => _showDownloadReportSheet(context),
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
             foregroundColor: AppColors.secondaryColor,
             automaticallyImplyLeading: false,
           ),
@@ -435,6 +450,240 @@ class AttendanceView extends GetView<AttendanceController> {
                       color: AppColors.secondaryColor,
                     ),
                   ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Show bottom sheet for downloading attendance report
+  void _showDownloadReportSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.secondaryColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: const EdgeInsets.all(24),
+        child: Obx(() => Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Handle bar
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.gray500.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Title
+            Row(
+              children: [
+                HugeIcon(
+                  icon: HugeIcons.strokeRoundedDownload04,
+                  color: AppColors.callBtn,
+                  size: 28,
+                ),
+                const SizedBox(width: 12),
+                const Text(
+                  'Download Attendance Report',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.black,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            // Date Range Section
+            const Text(
+              'Select Date Range',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.gray500,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                // From Date
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => controller.pickReportFromDate(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.grayBorder),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.calendar_today, size: 18, color: AppColors.callBtn),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'From',
+                                style: TextStyle(fontSize: 10, color: AppColors.gray500),
+                              ),
+                              Text(
+                                '${controller.reportFromDate.value.day}/${controller.reportFromDate.value.month}/${controller.reportFromDate.value.year}',
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text('—', style: TextStyle(color: AppColors.gray500)),
+                ),
+                // To Date
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => controller.pickReportToDate(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.grayBorder),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.calendar_today, size: 18, color: AppColors.callBtn),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'To',
+                                style: TextStyle(fontSize: 10, color: AppColors.gray500),
+                              ),
+                              Text(
+                                '${controller.reportToDate.value.day}/${controller.reportToDate.value.month}/${controller.reportToDate.value.year}',
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            // Format Selection
+            const Text(
+              'Report Format',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.gray500,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                _buildFormatOption('PDF', 'pdf', Icons.picture_as_pdf),
+                const SizedBox(width: 16),
+                _buildFormatOption('CSV', 'csv', Icons.table_chart),
+              ],
+            ),
+            const SizedBox(height: 24),
+            // Download Button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: controller.isDownloadingReport.value
+                    ? null
+                    : () {
+                        Navigator.pop(context);
+                        controller.downloadAttendanceReport();
+                      },
+                icon: controller.isDownloadingReport.value
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.secondaryColor,
+                        ),
+                      )
+                    : const Icon(Icons.download, color: AppColors.secondaryColor),
+                label: Text(
+                  controller.isDownloadingReport.value ? 'Generating...' : 'Download Report',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.callBtn,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        )),
+      ),
+    );
+  }
+
+  /// Build format option button (PDF/CSV)
+  Widget _buildFormatOption(String label, String value, IconData icon) {
+    final isSelected = controller.selectedReportFormat.value == value;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => controller.selectedReportFormat.value = value,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.callBtn.withOpacity(0.1) : Colors.transparent,
+            border: Border.all(
+              color: isSelected ? AppColors.callBtn : AppColors.grayBorder,
+              width: isSelected ? 2 : 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: isSelected ? AppColors.callBtn : AppColors.gray500,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected ? AppColors.callBtn : AppColors.gray500,
+                ),
+              ),
+            ],
           ),
         ),
       ),

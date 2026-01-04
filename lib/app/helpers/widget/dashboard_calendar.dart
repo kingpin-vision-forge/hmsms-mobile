@@ -6,6 +6,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/global.dart';
 import 'package:student_management/app/helpers/rbac/rbac.dart';
+import 'package:student_management/app/helpers/widget/add_event_modal.dart';
 
 /// Event model for calendar
 class CalendarEvent {
@@ -136,9 +137,24 @@ class _DashboardCalendarState extends State<DashboardCalendar> {
         canManage: _canManageEvents,
         onEdit: widget.onEditEvent,
         onDelete: widget.onDeleteEvent,
-        onAdd: widget.onAddEvent,
+        onAdd: () => _showAddEventModal(context, selectedDate: day),
       ),
     );
+  }
+
+  /// Show add event modal
+  void _showAddEventModal(BuildContext ctx, {DateTime? selectedDate}) async {
+    final result = await AddEventModal.show(
+      context: ctx,
+      selectedDate: selectedDate ?? _selectedDay ?? DateTime.now(),
+    );
+    
+    if (result != null) {
+      // Event was created - notify parent or show success
+      botToastSuccess('Event "${result.title}" created successfully');
+      // TODO: Call API to save event
+      debugPrint('Event data: ${result.toJson()}');
+    }
   }
 
   @override
@@ -221,9 +237,7 @@ class _DashboardCalendarState extends State<DashboardCalendar> {
                     ),
                     if (_canManageEvents)
                       GestureDetector(
-                        onTap: widget.onAddEvent ?? () {
-                          botToastSuccess('Event creation coming soon');
-                        },
+                        onTap: () => _showAddEventModal(context),
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(

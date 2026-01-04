@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:student_management/app/data/apis.dart';
 import 'package:student_management/app/helpers/global.dart';
 import 'package:student_management/app/modules/attendance/models/attendance_response.dart';
@@ -156,12 +157,18 @@ class AttendanceController extends GetxController {
       // Submit attendance for each student
       int successCount = 0;
       for (var student in students) {
+        // Capture current time in HH:mm format
+        final now = DateTime.now();
+        final timeStr = '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+        
         final body = {
           'date': dateStr,
+          'time': timeStr, // Time when attendance was marked
           'studentId': student.studentId,
           'status': student.status,
           'remarks': student.remarks ?? '',
           'schoolId': schoolId,
+          'notifyParent': student.status == 'PRESENT', // Trigger parent notification for PRESENT
         };
 
         final res = await apiService.markAttendance(body);
@@ -194,6 +201,102 @@ class AttendanceController extends GetxController {
     );
     if (picked != null) {
       selectDate(picked);
+    }
+  }
+
+  // ============ Report Download ============
+  
+  // Report date range
+  final reportFromDate = Rx<DateTime>(DateTime.now().subtract(const Duration(days: 30)));
+  final reportToDate = Rx<DateTime>(DateTime.now());
+  final isDownloadingReport = false.obs;
+  final selectedReportFormat = 'pdf'.obs; // 'pdf' or 'csv'
+
+  /// Pick start date for report
+  Future<void> pickReportFromDate(BuildContext context) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: reportFromDate.value,
+      firstDate: DateTime(2020),
+      lastDate: reportToDate.value,
+    );
+    if (picked != null) {
+      reportFromDate.value = picked;
+    }
+  }
+
+  /// Pick end date for report
+  Future<void> pickReportToDate(BuildContext context) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: reportToDate.value,
+      firstDate: reportFromDate.value,
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      reportToDate.value = picked;
+    }
+  }
+
+  /// Format date as YYYY-MM-DD
+  String _formatDateForApi(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
+  /// Download attendance report
+  Future<void> downloadAttendanceReport() async {
+    if (selectedClassId.value.isEmpty) {
+      Get.snackbar('Error', 'Please select a class first',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return;
+    }
+
+    isDownloadingReport.value = true;
+
+    try {
+      final fromStr = _formatDateForApi(reportFromDate.value);
+      final toStr = _formatDateForApi(reportToDate.value);
+
+      final res = await apiService.downloadAttendanceReport(
+        classId: selectedClassId.value,
+        sectionId: selectedSectionId.value.isNotEmpty ? selectedSectionId.value : null,
+        from: fromStr,
+        to: toStr,
+        format: selectedReportFormat.value,
+      );
+
+      if (res.isSuccessful && res.body != null) {
+        // Handle the download URL from response
+        if (res.body['success'] == true && res.body['downloadUrl'] != null) {
+          final downloadUrl = res.body['downloadUrl'] as String;
+          final uri = Uri.parse(downloadUrl);
+          
+          // Open download URL in browser
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+            Get.snackbar(
+              'Success', 
+              'Report download started',
+              backgroundColor: Colors.green, 
+              colorText: Colors.white,
+            );
+          } else {
+            Get.snackbar('Error', 'Could not open download link',
+                backgroundColor: Colors.red, colorText: Colors.white);
+          }
+        } else {
+          Get.snackbar('Error', res.body['message'] ?? 'Failed to generate report',
+              backgroundColor: Colors.red, colorText: Colors.white);
+        }
+      } else {
+        Get.snackbar('Error', 'Failed to download report',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to download report: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
+    } finally {
+      isDownloadingReport.value = false;
     }
   }
 }

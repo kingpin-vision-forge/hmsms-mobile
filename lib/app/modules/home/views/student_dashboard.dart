@@ -152,6 +152,13 @@ class StudentDashboard extends StatelessWidget {
                 ),
               ),
 
+              // Rank Card
+              if (controller.studentRank.value != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  child: _buildRankCard(controller),
+                ).animate().fadeIn(duration: 300.ms).slideY(begin: 0.1, end: 0),
+
               const SizedBox(height: 20),
 
               // Today's Classes
@@ -469,6 +476,156 @@ class StudentDashboard extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  /// Build rank card widget showing class rank with progress
+  Widget _buildRankCard(StudentDashboardController controller) {
+    final rank = controller.studentRank.value!;
+    final rankColor = rank.rank <= 3 
+        ? const Color(0xFFFFD700) // Gold for top 3
+        : const Color(0xFF6C5CE7); // Purple for others
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            rankColor.withOpacity(0.1),
+            rankColor.withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: rankColor.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          // Trophy/Medal icon
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: rankColor.withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: rank.rank <= 3
+                  ? HugeIcon(
+                      icon: HugeIcons.strokeRoundedAward01,
+                      color: rankColor,
+                      size: 28,
+                    )
+                  : Text(
+                      '#${rank.rank}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: rankColor,
+                      ),
+                    ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          // Rank info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Class Rank: ',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.gray500,
+                      ),
+                    ),
+                    Text(
+                      rank.rankOrdinal,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: rankColor,
+                      ),
+                    ),
+                    Text(
+                      ' of ${rank.totalStudents}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.gray500,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                if (rank.examName != null)
+                  Text(
+                    rank.examName!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.gray500,
+                    ),
+                  ),
+                const SizedBox(height: 6),
+                // Rank change indicator
+                if (rank.rankChange != 0)
+                  Row(
+                    children: [
+                      Icon(
+                        rank.hasImproved 
+                            ? Icons.arrow_upward 
+                            : Icons.arrow_downward,
+                        size: 14,
+                        color: rank.hasImproved ? Colors.green : Colors.red,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        rank.hasImproved
+                            ? 'Up ${rank.rankChange} positions'
+                            : 'Down ${rank.rankChange.abs()} positions',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: rank.hasImproved ? Colors.green : Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+          // Percentage badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: rankColor.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  '${rank.percentage.toStringAsFixed(1)}%',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: rankColor,
+                  ),
+                ),
+                Text(
+                  rank.grade,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: rankColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

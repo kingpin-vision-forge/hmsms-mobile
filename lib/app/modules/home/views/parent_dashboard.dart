@@ -74,7 +74,7 @@ class ParentDashboard extends StatelessWidget {
                 ...controller.children.asMap().entries.map((entry) {
                   final index = entry.key;
                   final child = entry.value;
-                  return _buildChildCard(child, index);
+                  return _buildChildCard(child, index, controller);
                 }),
 
               const SizedBox(height: 20),
@@ -248,7 +248,7 @@ class ParentDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildChildCard(Map<String, dynamic> child, int index) {
+  Widget _buildChildCard(Map<String, dynamic> child, int index, ParentDashboardController controller) {
     final firstName = child['firstName'] ?? '';
     final lastName = child['lastName'] ?? '';
     final className = child['className'] ?? 'N/A';
@@ -256,6 +256,10 @@ class ParentDashboard extends StatelessWidget {
     final stats = child['stats'] as Map<String, dynamic>? ?? {};
     final attendancePercentage = (stats['attendancePercentage'] ?? 0).toDouble();
     final pendingFees = child['pendingFees'] as Map<String, dynamic>?;
+    
+    // Get child's rank
+    final studentId = child['studentId'] ?? child['id'];
+    final childRank = studentId != null ? controller.getChildRank(studentId) : null;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -362,6 +366,17 @@ class ParentDashboard extends StatelessWidget {
                           'Attendance',
                           '${attendancePercentage.toStringAsFixed(0)}%',
                           HugeIcons.strokeRoundedUserCheck01,
+                        ),
+                        Container(
+                          width: 1,
+                          height: 30,
+                          color: Colors.white.withOpacity(0.3),
+                        ),
+                        // Rank stat
+                        _buildMiniStat(
+                          'Rank',
+                          childRank != null ? childRank.rankOrdinal : '-',
+                          HugeIcons.strokeRoundedAward01,
                         ),
                         Container(
                           width: 1,

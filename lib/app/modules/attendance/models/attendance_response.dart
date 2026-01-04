@@ -18,6 +18,7 @@ class AttendanceResponse {
 class AttendanceRecord {
   final String id;
   final String date;
+  final String? time; // Time when marked (HH:mm format)
   final String status;
   final String? remarks;
   final AttendanceStudent? student;
@@ -26,6 +27,7 @@ class AttendanceRecord {
   AttendanceRecord({
     required this.id,
     required this.date,
+    this.time,
     required this.status,
     this.remarks,
     this.student,
@@ -36,6 +38,7 @@ class AttendanceRecord {
     return AttendanceRecord(
       id: json['id'] ?? '',
       date: json['date'] ?? '',
+      time: json['time'],
       status: json['status'] ?? 'ABSENT',
       remarks: json['remarks'],
       student: json['student'] != null
