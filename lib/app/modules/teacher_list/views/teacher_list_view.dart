@@ -9,6 +9,7 @@ import 'package:student_management/app/helpers/widget/global_fab.dart';
 import 'package:student_management/app/modules/teacher_list/controllers/teacher_list_controller.dart';
 import 'package:student_management/app/modules/teacher_list/views/teacher_card_view.dart';
 import 'package:student_management/app/helpers/widget/custom_drawer.dart';
+import 'package:student_management/app/routes/app_pages.dart';
 
 class TeacherListView extends GetView<TeacherListController> {
   const TeacherListView({super.key});
@@ -259,11 +260,19 @@ class TeacherListView extends GetView<TeacherListController> {
                         final teacher = controller.filteredTeacherList[index];
                         return Column(
                           children: [
-                            TeacherCardView(
-                              teacherName: teacher.fullName,
-                              teacherId: teacher.employeeCode ?? teacher.id ?? '',
-                              subject: '', // TODO: Add subject from teacher assignments
-                              status: 'Active',
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed(
+                                  Routes.TEACHER_DETAIL,
+                                  arguments: {'id': teacher.id},
+                                );
+                              },
+                              child: TeacherCardView(
+                                teacherName: teacher.fullName,
+                                teacherId: teacher.employeeCode ?? teacher.id ?? '',
+                                subject: '', // TODO: Add subject from teacher assignments
+                                status: 'Active',
+                              ),
                             ),
                             SizedBox(height: 12),
                           ],

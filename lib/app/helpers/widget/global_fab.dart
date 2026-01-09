@@ -114,7 +114,7 @@ class GlobalFAB extends StatelessWidget {
                 subtitle: "You can add new staff here",
                 onTap: () {
                   Get.back();
-                  Get.toNamed(Routes.TEACHERS);
+                  Get.toNamed(Routes.CREATE_TEACHER);
                 },
               ),
               //subject
