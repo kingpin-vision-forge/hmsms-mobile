@@ -108,8 +108,17 @@ String capitalize(String text) {
 }
 
 String getFseFullName(Map<String, dynamic> userData) {
-  final fullName = (userData['username'] ?? '').toString().trim();
-  return fullName.isNotEmpty ? fullName : 'N/A';
+  final firstName = (userData['firstName'] ?? '').toString().trim();
+  final lastName = (userData['lastName'] ?? '').toString().trim();
+  final fullName = '$firstName $lastName'.trim();
+  
+  // Fallback to username if firstName/lastName not available
+  if (fullName.isEmpty) {
+    final username = (userData['username'] ?? '').toString().trim();
+    return username.isNotEmpty ? username : 'N/A';
+  }
+  
+  return fullName;
 }
 
 String getPhoneNumber(Map<String, dynamic> userData) {
@@ -516,19 +525,11 @@ Future<void> fetchNotification({bool isLoadMore = false}) async {
 
 // SignOut function
 signOut() async {
-  // if (Platform.isIOS) {
-  //   device = 'ios';
-  // } else if (Platform.isAndroid) {
-  //   device = 'android';
-  // } else {
-  //   device = '';
-  // }
+  // Unregister device for push notifications first
+  await _unregisterDeviceForPush();
 
   Map<String, dynamic> payload = {
-    // 'accessToken':
-    //     await readFromStorage(Constants.STORAGE_KEYS['ACCESS_TOKEN']!),
     'identifier': await readFromStorage(Constants.STORAGE_KEYS['USERNAME']!),
-    // 'deviceId': await readFromStorage(Constants.STORAGE_KEYS['DEVICE_ID']!),
   };
   try {
     c.Response? res = await NetworkUtils.safeApiCall(
@@ -561,5 +562,19 @@ signOut() async {
     } else {
       botToastError(Constants.BOT_TOAST_MESSAGES['NO_INTERNET']!);
     }
+  }
+}
+
+/// Unregisters device from push notifications
+Future<void> _unregisterDeviceForPush() async {
+  try {
+    final fcmToken = await readFromStorage(Constants.STORAGE_KEYS['FCM_TOKEN']!);
+    if (fcmToken == null || fcmToken.toString().isEmpty) return;
+
+    await NetworkUtils.safeApiCall(
+      () => _apiService.unregisterDevice(fcmToken.toString()),
+    );
+  } catch (e) {
+    // Silently fail - don't block logout for push notification unregistration
   }
 }

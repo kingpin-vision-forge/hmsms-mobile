@@ -60,7 +60,7 @@ class FeesDetailView extends GetView<FeesDetailController> {
                       textAlign: TextAlign.left,
                     )
                     .animate()
-                    .fadeIn(delay: 200.ms, duration: 800.ms)
+                    .fadeIn(delay: 50.ms, duration: 300.ms)
                     .slideY(begin: 0.1, end: 0),
               ],
             ),
@@ -134,7 +134,7 @@ class FeesDetailView extends GetView<FeesDetailController> {
           ),
         ),
       ],
-    ).animate().fadeIn(duration: 400.ms, delay: 300.ms);
+    ).animate().fadeIn(duration: 400.ms, delay: 75.ms);
   }
 
   Widget _buildPendingFeeCard(Map<String, dynamic> fee, int index) {

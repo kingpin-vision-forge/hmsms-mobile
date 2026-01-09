@@ -64,7 +64,7 @@ class SectionDetailView extends GetView {
                           textAlign: TextAlign.left,
                         )
                         .animate()
-                        .fadeIn(delay: 200.ms, duration: 800.ms)
+                        .fadeIn(delay: 50.ms, duration: 300.ms)
                         .slideY(begin: 0.1, end: 0),
                   ],
                 ),
@@ -220,7 +220,7 @@ class SectionDetailView extends GetView {
                     ),
                   )
                   .animate()
-                  .fadeIn(delay: 100.ms, duration: 600.ms)
+                  .fadeIn(delay: 100.ms, duration: 250.ms)
                   .slideY(begin: 0.2, end: 0),
 
               // Students List Header
@@ -257,7 +257,7 @@ class SectionDetailView extends GetView {
                     ),
                   ],
                 ),
-              ).animate().fadeIn(delay: 200.ms, duration: 600.ms),
+              ).animate().fadeIn(delay: 50.ms, duration: 250.ms),
 
               // Students List
               if (students.isEmpty)
@@ -294,7 +294,7 @@ class SectionDetailView extends GetView {
                     return _buildStudentCard(student, index);
                   },
                 ),
-            ].animate(interval: 100.ms).fade(duration: 500.ms),
+            ].animate(interval: 30.ms).fade(duration: 200.ms),
           ),
         );
       }),
@@ -449,7 +449,7 @@ class SectionDetailView extends GetView {
           ),
         )
         .animate()
-        .fadeIn(delay: (300 + (index * 50)).ms, duration: 500.ms)
+        .fadeIn(delay: (300 + (index * 50)).ms, duration: 200.ms)
         .slideX(begin: 0.2, end: 0);
   }
 

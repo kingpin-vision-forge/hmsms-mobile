@@ -111,7 +111,7 @@ class CurrentFeeView extends StatelessWidget {
           ),
         )
         .animate()
-        .fadeIn(duration: 400.ms, delay: 200.ms)
+        .fadeIn(duration: 400.ms, delay: 50.ms)
         .slideY(begin: 0.1, end: 0);
   }
 }

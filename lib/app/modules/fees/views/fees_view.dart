@@ -6,8 +6,10 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/widget/download_bottom.dart';
 import 'package:student_management/app/helpers/widget/global_fab.dart';
+import 'package:student_management/app/helpers/rbac/rbac.dart';
 import 'package:student_management/app/modules/fees/controllers/fees_controller.dart';
 import 'package:student_management/app/modules/fees/views/fees_card_view.dart';
+import 'package:student_management/app/helpers/widget/custom_drawer.dart';
 
 class FeesView extends GetView<FeesController> {
   const FeesView({super.key});
@@ -16,6 +18,7 @@ class FeesView extends GetView<FeesController> {
     return Obx(
       () => Scaffold(
         backgroundColor: AppColors.gray50,
+        drawer: CustomDrawerMenu(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             controller.isSearching.value ? 140 : 60,
@@ -57,13 +60,17 @@ class FeesView extends GetView<FeesController> {
                             children: [
                               Row(
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.chevron_left,
-                                      size: 36,
-                                      color: AppColors.secondaryColor,
+                                  Builder(
+                                    builder: (context) => IconButton(
+                                      icon: const Icon(
+                                        Icons.menu,
+                                        size: 28,
+                                        color: AppColors.secondaryColor,
+                                      ),
+                                      onPressed: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
                                     ),
-                                    onPressed: () => Get.back(),
                                   ),
                                   Text(
                                         'Fees Overview',
@@ -73,7 +80,7 @@ class FeesView extends GetView<FeesController> {
                                         ),
                                       )
                                       .animate()
-                                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                                      .fadeIn(delay: 50.ms, duration: 300.ms)
                                       .slideY(begin: 0.1, end: 0),
                                 ],
                               ),
@@ -184,15 +191,15 @@ class FeesView extends GetView<FeesController> {
                   Row(
                     children: [
                       // download icon
-                      Text(
-                        '6 Items',
+                      Obx(() => Text(
+                        '${controller.feesList.length} Items',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                           height: 1.3,
                           color: AppColors.black,
                         ),
-                      ),
+                      )),
                       IconButton(
                         icon: HugeIcon(
                           icon: HugeIcons.strokeRoundedDownload04,
@@ -238,7 +245,10 @@ class FeesView extends GetView<FeesController> {
             ],
           ),
         ),
-        floatingActionButton: GlobalFAB(),
+        floatingActionButton: RoleWidget(
+          allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+          child: GlobalFAB(),
+        ),
       ),
     );
   }

@@ -21,7 +21,7 @@ class _CustomAnimatedIconState extends State<CustomAnimatedIcon>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 400),
     )..repeat(reverse: true);
   }
 

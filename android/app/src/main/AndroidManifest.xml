@@ -27,7 +27,7 @@
 <!-- END Permission for Downloading CSV -->
 
     <application
-        android:label="student_management"
+        android:label="Mangalore School MS"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

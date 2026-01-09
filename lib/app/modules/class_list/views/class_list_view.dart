@@ -7,6 +7,8 @@ import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/modules/class_list/controllers/class_list_controller.dart';
 import 'package:student_management/app/modules/class_list/models/class_list_response.dart';
 import 'package:student_management/app/routes/app_pages.dart';
+import 'package:student_management/app/helpers/widget/custom_drawer.dart';
+import 'package:student_management/app/helpers/widget/global_fab.dart';
 
 class ClassListView extends GetView<ClassListController> {
   const ClassListView({super.key});
@@ -15,6 +17,8 @@ class ClassListView extends GetView<ClassListController> {
     return Obx(
       () => Scaffold(
         backgroundColor: AppColors.gray50,
+        drawer: CustomDrawerMenu(),
+        floatingActionButton: GlobalFAB(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             controller.isSearching.value ? 140 : 60,
@@ -50,21 +54,23 @@ class ClassListView extends GetView<ClassListController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 🔹 Top bar with back and search icons
+                          // Top bar with menu and search icons
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.chevron_left,
-                                      size: 36,
-                                      color: AppColors.secondaryColor,
+                                  Builder(
+                                    builder: (context) => IconButton(
+                                      icon: const Icon(
+                                        Icons.menu,
+                                        size: 28,
+                                        color: AppColors.secondaryColor,
+                                      ),
+                                      onPressed: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
                                     ),
-                                    onPressed: () {
-                                      Get.offAllNamed(Routes.HOME);
-                                    },
                                   ),
                                   Text(
                                         'Classes',
@@ -74,7 +80,7 @@ class ClassListView extends GetView<ClassListController> {
                                         ),
                                       )
                                       .animate()
-                                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                                      .fadeIn(delay: 50.ms, duration: 300.ms)
                                       .slideY(begin: 0.1, end: 0),
                                 ],
                               ),
@@ -194,7 +200,7 @@ class ClassListView extends GetView<ClassListController> {
                         color: AppColors.primaryColor,
                       )
                       .animate()
-                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                      .fadeIn(delay: 50.ms, duration: 300.ms)
                       .slideY(begin: 0.1, end: 0),
                   const SizedBox(height: 20),
                   Text(
@@ -204,7 +210,7 @@ class ClassListView extends GetView<ClassListController> {
                         style: const TextStyle(fontSize: 20),
                       )
                       .animate()
-                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                      .fadeIn(delay: 50.ms, duration: 300.ms)
                       .slideY(begin: 0.1, end: 0),
                 ],
               ),
@@ -430,7 +436,7 @@ class ClassListView extends GetView<ClassListController> {
           ),
         )
         .animate()
-        .fadeIn(delay: (100 * index).ms, duration: 600.ms)
+        .fadeIn(delay: (100 * index).ms, duration: 250.ms)
         .slideX(begin: 0.2, end: 0);
   }
 

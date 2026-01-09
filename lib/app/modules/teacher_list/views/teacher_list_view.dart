@@ -8,6 +8,8 @@ import 'package:student_management/app/helpers/widget/download_bottom.dart';
 import 'package:student_management/app/helpers/widget/global_fab.dart';
 import 'package:student_management/app/modules/teacher_list/controllers/teacher_list_controller.dart';
 import 'package:student_management/app/modules/teacher_list/views/teacher_card_view.dart';
+import 'package:student_management/app/helpers/widget/custom_drawer.dart';
+import 'package:student_management/app/routes/app_pages.dart';
 
 class TeacherListView extends GetView<TeacherListController> {
   const TeacherListView({super.key});
@@ -16,6 +18,7 @@ class TeacherListView extends GetView<TeacherListController> {
     return Obx(
       () => Scaffold(
         backgroundColor: AppColors.gray50,
+        drawer: CustomDrawerMenu(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             controller.isSearching.value ? 140 : 60,
@@ -51,19 +54,23 @@ class TeacherListView extends GetView<TeacherListController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 🔹 Top bar with back and search icons
+                          // Top bar with menu and search icons
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.chevron_left,
-                                      size: 36,
-                                      color: AppColors.secondaryColor,
+                                  Builder(
+                                    builder: (context) => IconButton(
+                                      icon: const Icon(
+                                        Icons.menu,
+                                        size: 28,
+                                        color: AppColors.secondaryColor,
+                                      ),
+                                      onPressed: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
                                     ),
-                                    onPressed: () => Get.back(),
                                   ),
                                   Text(
                                         'Staffs',
@@ -73,7 +80,7 @@ class TeacherListView extends GetView<TeacherListController> {
                                         ),
                                       )
                                       .animate()
-                                      .fadeIn(delay: 200.ms, duration: 800.ms)
+                                      .fadeIn(delay: 50.ms, duration: 300.ms)
                                       .slideY(begin: 0.1, end: 0),
                                 ],
                               ),
@@ -179,14 +186,14 @@ class TeacherListView extends GetView<TeacherListController> {
           child: Container(
             child: Column(
               children: [
-                Row(
+                Obx(() => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         // download icon
                         Text(
-                          '4 Items',
+                          '${controller.filteredTeacherList.length} Items',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -223,25 +230,49 @@ class TeacherListView extends GetView<TeacherListController> {
                       ],
                     ),
                   ],
-                ),
+                )),
                 // teacher card
                 Expanded(
                   child: Obx(() {
-                    if (controller.teachers.isEmpty) {
+                    if (controller.isLoading.value) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
+                    if (controller.filteredTeacherList.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.person_off, size: 64, color: AppColors.gray500),
+                            const SizedBox(height: 16),
+                            Text(
+                              'No teachers found',
+                              style: TextStyle(color: AppColors.gray500, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
                     return ListView.builder(
-                      itemCount: controller.teachers.length,
+                      itemCount: controller.filteredTeacherList.length,
                       itemBuilder: (context, index) {
-                        final teacher = controller.teachers[index];
+                        final teacher = controller.filteredTeacherList[index];
                         return Column(
                           children: [
-                            TeacherCardView(
-                              teacherName: teacher['name'],
-                              teacherId: teacher['id'],
-                              subject: teacher['subject'],
-                              status: teacher['status'],
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed(
+                                  Routes.TEACHER_DETAIL,
+                                  arguments: {'id': teacher.id},
+                                );
+                              },
+                              child: TeacherCardView(
+                                teacherName: teacher.fullName,
+                                teacherId: teacher.employeeCode ?? teacher.id ?? '',
+                                subject: '', // TODO: Add subject from teacher assignments
+                                status: 'Active',
+                              ),
                             ),
                             SizedBox(height: 12),
                           ],
@@ -252,7 +283,7 @@ class TeacherListView extends GetView<TeacherListController> {
                 ),
               ],
             ),
-          ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0),
+          ).animate().fadeIn(duration: 250.ms).slideY(begin: 0.2, end: 0),
         ),
 
         floatingActionButton: GlobalFAB(),

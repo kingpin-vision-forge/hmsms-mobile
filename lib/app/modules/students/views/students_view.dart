@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/widget/global_fab.dart';
+import 'package:student_management/app/helpers/rbac/rbac.dart';
 import 'package:student_management/app/modules/students/controllers/students_controller.dart';
 
 class StudentsView extends GetView<StudentsController> {
@@ -58,7 +59,7 @@ class StudentsView extends GetView<StudentsController> {
                       textAlign: TextAlign.left,
                     )
                     .animate()
-                    .fadeIn(delay: 200.ms, duration: 800.ms)
+                    .fadeIn(delay: 50.ms, duration: 300.ms)
                     .slideY(begin: 0.1, end: 0),
               ],
             ),
@@ -397,11 +398,14 @@ class StudentsView extends GetView<StudentsController> {
                 ),
               ),
               const SizedBox(height: 16),
-            ].animate(interval: 100.ms).fade(duration: 500.ms),
+            ].animate(interval: 30.ms).fade(duration: 200.ms),
           ),
         ),
       ),
-      floatingActionButton: GlobalFAB(),
+      floatingActionButton: RoleWidget(
+        allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+        child: GlobalFAB(),
+      ),
     );
   }
 

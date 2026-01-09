@@ -63,8 +63,8 @@ class ClassDetailView extends GetView {
                           textAlign: TextAlign.left,
                         )
                         .animate()
-                        .fadeIn(delay: 200.ms, duration: 800.ms)
-                        .slideY(begin: 0.1, end: 0),
+                        .fadeIn(delay: 50.ms, duration: 300.ms)
+                        .slideY(begin: 0.05, end: 0),
                   ],
                 ),
                 IconButton(
@@ -401,7 +401,7 @@ class ClassDetailView extends GetView {
                     ),
                   ),
                 ),
-              ].animate(interval: 100.ms).fade(duration: 500.ms),
+              ].animate(interval: 50.ms).fade(duration: 200.ms),
             ),
           ),
         );

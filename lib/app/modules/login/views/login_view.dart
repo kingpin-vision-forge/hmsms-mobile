@@ -15,30 +15,29 @@ class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.gray50, AppColors.callBtn],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background image
+          Image.asset(
+            'assets/images/login_background.png',
+            fit: BoxFit.cover,
           ),
-        ),
-        child: SafeArea(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              SingleChildScrollView(
+          // Content
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(
-                      height: 0.4 * (MediaQuery.of(context).size.height) / 10,
-                    ),
-                    Image.asset(
-                      Constants.ASSETS['LOGIN_LOGO']!,
-                      width: 200,
-                      height: 100,
-                      fit: BoxFit.contain,
+                    Center(
+                      child: Image.asset(
+                        Constants.ASSETS['LOGIN_LOGO']!,
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                     SizedBox(height: 20),
                     Center(
@@ -94,241 +93,7 @@ class LoginView extends GetView<LoginController> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Text(
-                                  "Login as",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Obx(
-                                  () => Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: GestureDetector(
-                                              onTap: () =>
-                                                  controller
-                                                          .selectedRole
-                                                          .value =
-                                                      "Admin",
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      vertical: 8,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  gradient:
-                                                      controller
-                                                              .selectedRole
-                                                              .value ==
-                                                          "Admin"
-                                                      ? const LinearGradient(
-                                                          colors: [
-                                                            AppColors.callBtn,
-                                                            AppColors.callBtn,
-                                                          ],
-                                                          begin: Alignment
-                                                              .centerLeft,
-                                                          end: Alignment
-                                                              .centerRight,
-                                                        )
-                                                      : null, // no gradient if not Admin
-                                                  color:
-                                                      controller
-                                                              .selectedRole
-                                                              .value ==
-                                                          "Admin"
-                                                      ? null
-                                                      : AppColors.gray50,
-
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                        Radius.circular(20),
-                                                      ),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    "Admin",
-                                                    style: TextStyle(
-                                                      color:
-                                                          controller
-                                                                  .selectedRole
-                                                                  .value ==
-                                                              "Admin"
-                                                          ? AppColors
-                                                                .secondaryColor
-                                                          : AppColors.black,
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          controller
-                                                                  .selectedRole
-                                                                  .value ==
-                                                              "Admin"
-                                                          ? FontWeight.w700
-                                                          : FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            child: GestureDetector(
-                                              onTap: () =>
-                                                  controller
-                                                          .selectedRole
-                                                          .value =
-                                                      "Teacher",
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      vertical: 8,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  gradient:
-                                                      controller
-                                                              .selectedRole
-                                                              .value ==
-                                                          "Teacher"
-                                                      ? const LinearGradient(
-                                                          colors: [
-                                                            AppColors.callBtn,
-                                                            AppColors.callBtn,
-                                                          ],
-                                                          begin: Alignment
-                                                              .centerLeft,
-                                                          end: Alignment
-                                                              .centerRight,
-                                                        )
-                                                      : null, // no gradient if not Admin
-                                                  color:
-                                                      controller
-                                                              .selectedRole
-                                                              .value ==
-                                                          "Teacher"
-                                                      ? null
-                                                      : AppColors.gray50,
-
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                        Radius.circular(20),
-                                                      ),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    "Teacher",
-                                                    style: TextStyle(
-                                                      color:
-                                                          controller
-                                                                  .selectedRole
-                                                                  .value ==
-                                                              "Teacher"
-                                                          ? AppColors
-                                                                .secondaryColor
-                                                          : AppColors.black,
-                                                      fontWeight:
-                                                          controller
-                                                                  .selectedRole
-                                                                  .value ==
-                                                              "Teacher"
-                                                          ? FontWeight.w700
-                                                          : FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            child: GestureDetector(
-                                              onTap: () =>
-                                                  controller
-                                                          .selectedRole
-                                                          .value =
-                                                      "Parent",
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      vertical: 8,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  gradient:
-                                                      controller
-                                                              .selectedRole
-                                                              .value ==
-                                                          "Parent"
-                                                      ? const LinearGradient(
-                                                          colors: [
-                                                            AppColors.callBtn,
-                                                            AppColors.callBtn,
-                                                          ],
-                                                          begin: Alignment
-                                                              .centerLeft,
-                                                          end: Alignment
-                                                              .centerRight,
-                                                        )
-                                                      : null, // no gradient if not Admin
-                                                  color:
-                                                      controller
-                                                              .selectedRole
-                                                              .value ==
-                                                          "Parent"
-                                                      ? null
-                                                      : AppColors.gray50,
-
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                        Radius.circular(20),
-                                                      ),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    "Parent",
-                                                    style: TextStyle(
-                                                      color:
-                                                          controller
-                                                                  .selectedRole
-                                                                  .value ==
-                                                              "Parent"
-                                                          ? AppColors
-                                                                .secondaryColor
-                                                          : AppColors.black,
-                                                      fontWeight:
-                                                          controller
-                                                                  .selectedRole
-                                                                  .value ==
-                                                              "Parent"
-                                                          ? FontWeight.w700
-                                                          : FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-
-                                const Divider(
-                                  color: AppColors.grayBorder,
-                                  height: 1,
-                                ),
-                                const SizedBox(height: 10),
+                              // Email field starts here
                                 Text(
                                   'Email',
                                   style: TextStyle(
@@ -545,57 +310,40 @@ class LoginView extends GetView<LoginController> {
                                 // sign in button
                                 const SizedBox(height: 10),
                                 Obx(
-                                  () => Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          AppColors.callBtn,
-                                          AppColors.callBtn,
-                                        ],
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                      ),
-                                      borderRadius: BorderRadius.circular(30),
-                                      // Apply opacity to the entire container when terms not checked
-                                      color: controller.isTermsChecked.value
+                                  () => Material(
+                                    color: AppColors.callBtn,
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: InkWell(
+                                      onTap: controller.isLoading.value
                                           ? null
-                                          : Colors.grey,
-                                    ),
-                                    child: ElevatedButton(
-                                      onPressed: (!controller.isLoading.value)
-                                          ? () {
-                                              controller.signIn(formKey);
-                                            }
-                                          : null, // Button disabled when isTermsChecked is false or while loading
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors
-                                            .transparent, // Make the button background transparent
-                                        shadowColor: Colors
-                                            .transparent, // Remove shadow to avoid overlap
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                        ),
-                                        minimumSize: const Size(
-                                          double.infinity,
-                                          50,
-                                        ),
-                                      ),
-                                      child: controller.isLoading.value
-                                          ? const CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
+                                          : () => controller.signIn(formKey),
+                                      borderRadius: BorderRadius.circular(10),
+                                      splashColor: Colors.white.withOpacity(0.2),
+                                      highlightColor: Colors.white.withOpacity(0.1),
+                                      child: Container(
+                                        height: 50,
+                                        alignment: Alignment.center,
+                                        child: controller.isLoading.value
+                                            ? const SizedBox(
+                                                width: 24,
+                                                height: 24,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2.5,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<Color>(
                                                     Colors.white,
-                                                  ), // Loader color
-                                            )
-                                          : const Text(
-                                              'Sign in',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
+                                                  ),
+                                                ),
+                                              )
+                                            : const Text(
+                                                'Sign in',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
-                                            ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -649,12 +397,12 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ),
                     ),
-                  ].animate(interval: 500.ms).fade(duration: 1000.ms),
+                  ].animate(interval: 30.ms).fade(duration: 300.ms),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

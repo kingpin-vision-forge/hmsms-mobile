@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:student_management/app/helpers/constants.dart';
 
 class TeacherCardView extends StatelessWidget {

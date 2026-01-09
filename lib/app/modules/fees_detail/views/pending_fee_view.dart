@@ -47,7 +47,7 @@ class PendingFeeView extends StatelessWidget {
           ),
         ),
       ],
-    ).animate().fadeIn(duration: 400.ms, delay: 300.ms);
+    ).animate().fadeIn(duration: 400.ms, delay: 75.ms);
   }
 
   Widget _buildPendingFeeCard(Map<String, dynamic> fee, int index) {
