@@ -48,7 +48,7 @@ class CreateTeacherView extends GetView<CreateTeacherController> {
                 ),
                 Obx(
                   () => Text(
-                    controller.isEditMode.value ? 'Edit Teacher' : 'New Teacher',
+                    controller.isEditMode.value ? 'Edit Staff' : 'New Staff',
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
@@ -79,12 +79,12 @@ class CreateTeacherView extends GetView<CreateTeacherController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // First Name
-              _buildInputField(
+              Obx(() => _buildInputField(
                 hint: 'First Name',
                 controller: controller.firstNameController,
                 onChanged: controller.validateFirstName,
-                errorTextGetter: () => controller.firstNameError.value,
-              ),
+                errorText: controller.firstNameError.value,
+              )),
               const SizedBox(height: 16),
 
               // Middle Name (optional)
@@ -92,27 +92,27 @@ class CreateTeacherView extends GetView<CreateTeacherController> {
                 hint: 'Middle Name (Optional)',
                 controller: controller.middleNameController,
                 onChanged: () {},
-                errorTextGetter: () => null,
+                errorText: null,
               ),
               const SizedBox(height: 16),
 
               // Last Name
-              _buildInputField(
+              Obx(() => _buildInputField(
                 hint: 'Last Name',
                 controller: controller.lastNameController,
                 onChanged: controller.validateLastName,
-                errorTextGetter: () => controller.lastNameError.value,
-              ),
+                errorText: controller.lastNameError.value,
+              )),
               const SizedBox(height: 16),
 
               // Email
-              _buildInputField(
+              Obx(() => _buildInputField(
                 hint: 'Email',
                 controller: controller.emailController,
                 keyboardType: TextInputType.emailAddress,
                 onChanged: controller.validateEmail,
-                errorTextGetter: () => controller.emailError.value,
-              ),
+                errorText: controller.emailError.value,
+              )),
               const SizedBox(height: 16),
 
               // Password - only show in create mode
@@ -122,27 +122,27 @@ class CreateTeacherView extends GetView<CreateTeacherController> {
                 }
                 return Column(
                   children: [
-                    _buildInputField(
+                    Obx(() => _buildInputField(
                       hint: 'Password',
                       controller: controller.passwordController,
                       obscureText: true,
                       onChanged: controller.validatePassword,
-                      errorTextGetter: () => controller.passwordError.value,
-                    ),
+                      errorText: controller.passwordError.value,
+                    )),
                     const SizedBox(height: 16),
                   ],
                 );
               }),
 
               // Phone
-              _buildInputField(
+              Obx(() => _buildInputField(
                 hint: 'Phone',
                 controller: controller.phoneController,
                 maxLength: 20,
                 keyboardType: TextInputType.phone,
                 onChanged: controller.validatePhone,
-                errorTextGetter: () => controller.phoneError.value,
-              ),
+                errorText: controller.phoneError.value,
+              )),
               const SizedBox(height: 16),
 
               // Address
@@ -150,17 +150,17 @@ class CreateTeacherView extends GetView<CreateTeacherController> {
                 hint: 'Address',
                 controller: controller.addressController,
                 onChanged: () {},
-                errorTextGetter: () => null,
+                errorText: null,
               ),
               const SizedBox(height: 16),
 
               // Employee Code
-              _buildInputField(
+              Obx(() => _buildInputField(
                 hint: 'Employee Code',
                 controller: controller.employeeCodeController,
                 onChanged: controller.validateEmployeeCode,
-                errorTextGetter: () => controller.employeeCodeError.value,
-              ),
+                errorText: controller.employeeCodeError.value,
+              )),
               const SizedBox(height: 16),
 
               // Joined Date
@@ -231,7 +231,7 @@ class CreateTeacherView extends GetView<CreateTeacherController> {
                             color: AppColors.black,
                           )
                         : Text(
-                            controller.isEditMode.value ? 'Update Teacher' : 'Create Teacher',
+                            controller.isEditMode.value ? 'Update Staff' : 'Create Staff',
                             style: const TextStyle(
                               color: AppColors.secondaryColor,
                               fontSize: 16,
@@ -252,57 +252,55 @@ class CreateTeacherView extends GetView<CreateTeacherController> {
     required String hint,
     required TextEditingController controller,
     required VoidCallback onChanged,
-    required String? Function() errorTextGetter,
+    required String? errorText,
     int? maxLength,
     bool obscureText = false,
     TextInputType? keyboardType,
   }) {
-    return Obx(
-      () => TextField(
-        controller: controller,
-        maxLength: maxLength,
-        obscureText: obscureText,
-        keyboardType: keyboardType,
-        onChanged: (_) => onChanged(),
-        decoration: InputDecoration(
-          labelText: hint,
-          labelStyle: const TextStyle(
-            fontSize: 14,
-            color: AppColors.black,
-            fontWeight: FontWeight.w600,
-          ),
-          filled: true,
-          fillColor: AppColors.secondaryColor,
-          border: OutlineInputBorder(
-            borderRadius: _inputBorderRadius,
-            borderSide: const BorderSide(color: AppColors.black),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: _inputBorderRadius,
-            borderSide: const BorderSide(color: AppColors.black, width: 1.5),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: _inputBorderRadius,
-            borderSide: const BorderSide(color: AppColors.black),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: _inputBorderRadius,
-            borderSide: const BorderSide(color: AppColors.errorColor),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: _inputBorderRadius,
-            borderSide: const BorderSide(
-              color: AppColors.errorColor,
-              width: 1.5,
-            ),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 12,
-          ),
-          counterText: '',
-          errorText: errorTextGetter(),
+    return TextField(
+      controller: controller,
+      maxLength: maxLength,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      onChanged: (_) => onChanged(),
+      decoration: InputDecoration(
+        labelText: hint,
+        labelStyle: const TextStyle(
+          fontSize: 14,
+          color: AppColors.black,
+          fontWeight: FontWeight.w600,
         ),
+        filled: true,
+        fillColor: AppColors.secondaryColor,
+        border: OutlineInputBorder(
+          borderRadius: _inputBorderRadius,
+          borderSide: const BorderSide(color: AppColors.black),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: _inputBorderRadius,
+          borderSide: const BorderSide(color: AppColors.black, width: 1.5),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: _inputBorderRadius,
+          borderSide: const BorderSide(color: AppColors.black),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: _inputBorderRadius,
+          borderSide: const BorderSide(color: AppColors.errorColor),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: _inputBorderRadius,
+          borderSide: const BorderSide(
+            color: AppColors.errorColor,
+            width: 1.5,
+          ),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 12,
+        ),
+        counterText: '',
+        errorText: errorText,
       ),
     );
   }
