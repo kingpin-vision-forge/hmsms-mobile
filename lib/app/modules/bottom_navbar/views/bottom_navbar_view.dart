@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:student_management/app/modules/menu/views/menu_view.dart';
 import 'package:student_management/app/modules/students/views/students_view.dart';
-import 'package:student_management/app/modules/teachers/views/teachers_view.dart';
+import 'package:student_management/app/modules/teacher_list/views/teacher_list_view.dart';
 import '../controllers/bottom_navbar_controller.dart';
 
 class BottomNavbarView extends StatelessWidget {
@@ -40,7 +40,7 @@ class BottomNavbarView extends StatelessWidget {
               ),
               Obx(
                 () => controller.selectedIndex.value == 2
-                    ? TeachersView()
+                    ? TeacherListView()
                     : const SizedBox.shrink(),
               ),
               MenuView(),

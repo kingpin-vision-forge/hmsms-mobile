@@ -61,17 +61,15 @@ class SectionListView extends GetView<SectionListController> {
                             children: [
                               Row(
                                 children: [
-                                  Builder(
-                                    builder: (context) => IconButton(
-                                      icon: const Icon(
-                                        Icons.menu,
-                                        size: 28,
-                                        color: AppColors.secondaryColor,
-                                      ),
-                                      onPressed: () {
-                                        Scaffold.of(context).openDrawer();
-                                      },
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.chevron_left,
+                                      size: 36,
+                                      color: AppColors.secondaryColor,
                                     ),
+                                    onPressed: () {
+                                      Get.offAllNamed(Routes.HOME);
+                                    },
                                   ),
                                   Text(
                                         'Sections',
@@ -243,7 +241,7 @@ class SectionListView extends GetView<SectionListController> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     _buildSectionCard(
                       controller.filteredSectionList[index],
                       index,

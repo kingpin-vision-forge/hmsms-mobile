@@ -289,7 +289,6 @@ class LoginController extends GetxController with WidgetsBindingObserver {
       );
     } catch (e) {
       // Silently fail - don't block login for push notification registration
-      debugPrint('Failed to register device for push: $e');
     }
   }
 }

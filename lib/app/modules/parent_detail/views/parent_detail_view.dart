@@ -53,7 +53,7 @@ class ParentDetailView extends GetView {
                         color: AppColors.secondaryColor,
                       ),
                       onPressed: () {
-                        Get.offAllNamed(Routes.PARENT_LIST);
+                        Get.back();
                       },
                     ),
                     Text(

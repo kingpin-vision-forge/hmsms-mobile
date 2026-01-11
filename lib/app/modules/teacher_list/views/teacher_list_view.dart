@@ -9,6 +9,7 @@ import 'package:student_management/app/helpers/widget/global_fab.dart';
 import 'package:student_management/app/modules/teacher_list/controllers/teacher_list_controller.dart';
 import 'package:student_management/app/modules/teacher_list/views/teacher_card_view.dart';
 import 'package:student_management/app/helpers/widget/custom_drawer.dart';
+import 'package:student_management/app/routes/app_pages.dart';
 
 class TeacherListView extends GetView<TeacherListController> {
   const TeacherListView({super.key});
@@ -59,17 +60,15 @@ class TeacherListView extends GetView<TeacherListController> {
                             children: [
                               Row(
                                 children: [
-                                  Builder(
-                                    builder: (context) => IconButton(
-                                      icon: const Icon(
-                                        Icons.menu,
-                                        size: 28,
-                                        color: AppColors.secondaryColor,
-                                      ),
-                                      onPressed: () {
-                                        Scaffold.of(context).openDrawer();
-                                      },
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.chevron_left,
+                                      size: 36,
+                                      color: AppColors.secondaryColor,
                                     ),
+                                    onPressed: () {
+                                      Get.offAllNamed(Routes.HOME);
+                                    },
                                   ),
                                   Text(
                                         'Staffs',
@@ -185,51 +184,53 @@ class TeacherListView extends GetView<TeacherListController> {
           child: Container(
             child: Column(
               children: [
-                Obx(() => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        // download icon
-                        Text(
-                          '${controller.filteredTeacherList.length} Items',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            height: 1.3,
-                            color: AppColors.black,
+                Obx(
+                  () => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          // download icon
+                          Text(
+                            '${controller.filteredTeacherList.length} Items',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              height: 1.3,
+                              color: AppColors.black,
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          icon: HugeIcon(
-                            icon: HugeIcons.strokeRoundedDownload04,
-                            size: 28,
-                            color: AppColors.black,
+                          IconButton(
+                            icon: HugeIcon(
+                              icon: HugeIcons.strokeRoundedDownload04,
+                              size: 28,
+                              color: AppColors.black,
+                            ),
+                            onPressed: () {
+                              showDownloadBottomSheet(context);
+                            },
                           ),
-                          onPressed: () {
-                            showDownloadBottomSheet(context);
-                          },
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
 
-                    // filter dropdown
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.tune,
-                            size: 28,
-                            color: AppColors.black,
+                      // filter dropdown
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.tune,
+                              size: 28,
+                              color: AppColors.black,
+                            ),
+                            onPressed: () {
+                              _showSortBottomSheet(context);
+                            },
                           ),
-                          onPressed: () {
-                            _showSortBottomSheet(context);
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                )),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
                 // teacher card
                 Expanded(
                   child: Obx(() {
@@ -242,11 +243,18 @@ class TeacherListView extends GetView<TeacherListController> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.person_off, size: 64, color: AppColors.gray500),
+                            Icon(
+                              Icons.person_off,
+                              size: 64,
+                              color: AppColors.gray500,
+                            ),
                             const SizedBox(height: 16),
                             Text(
                               'No teachers found',
-                              style: TextStyle(color: AppColors.gray500, fontSize: 16),
+                              style: TextStyle(
+                                color: AppColors.gray500,
+                                fontSize: 16,
+                              ),
                             ),
                           ],
                         ),
@@ -261,8 +269,11 @@ class TeacherListView extends GetView<TeacherListController> {
                           children: [
                             TeacherCardView(
                               teacherName: teacher.fullName,
-                              teacherId: teacher.employeeCode ?? teacher.id ?? '',
-                              subject: '', // TODO: Add subject from teacher assignments
+                              teacherId:
+                                   teacher.id ?? '',
+                                   teacherEmail: teacher.email ?? '',
+                              subject:
+                                  '', // TODO: Add subject from teacher assignments
                               status: 'Active',
                             ),
                             SizedBox(height: 12),

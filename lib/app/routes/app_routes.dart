@@ -8,7 +8,6 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const BOTTOM_NAVBAR = _Paths.BOTTOM_NAVBAR;
   static const STUDENTS = _Paths.STUDENTS;
-  static const TEACHERS = _Paths.TEACHERS;
   static const MENU = _Paths.MENU;
   static const FEES = _Paths.FEES;
   static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
@@ -43,7 +42,6 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const BOTTOM_NAVBAR = '/bottom-navbar';
   static const STUDENTS = '/students';
-  static const TEACHERS = '/teachers';
   static const MENU = '/menu';
   static const FEES = '/fees';
   static const NOTIFICATIONS = '/notifications';

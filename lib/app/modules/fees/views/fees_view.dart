@@ -10,6 +10,7 @@ import 'package:student_management/app/helpers/rbac/rbac.dart';
 import 'package:student_management/app/modules/fees/controllers/fees_controller.dart';
 import 'package:student_management/app/modules/fees/views/fees_card_view.dart';
 import 'package:student_management/app/helpers/widget/custom_drawer.dart';
+import 'package:student_management/app/routes/app_pages.dart';
 
 class FeesView extends GetView<FeesController> {
   const FeesView({super.key});
@@ -60,17 +61,15 @@ class FeesView extends GetView<FeesController> {
                             children: [
                               Row(
                                 children: [
-                                  Builder(
-                                    builder: (context) => IconButton(
-                                      icon: const Icon(
-                                        Icons.menu,
-                                        size: 28,
-                                        color: AppColors.secondaryColor,
-                                      ),
-                                      onPressed: () {
-                                        Scaffold.of(context).openDrawer();
-                                      },
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.chevron_left,
+                                      size: 36,
+                                      color: AppColors.secondaryColor,
                                     ),
+                                    onPressed: () {
+                                      Get.offAllNamed(Routes.HOME);
+                                    },
                                   ),
                                   Text(
                                         'Fees Overview',
@@ -191,15 +190,17 @@ class FeesView extends GetView<FeesController> {
                   Row(
                     children: [
                       // download icon
-                      Obx(() => Text(
-                        '${controller.feesList.length} Items',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          height: 1.3,
-                          color: AppColors.black,
+                      Obx(
+                        () => Text(
+                          '${controller.feesList.length} Items',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            height: 1.3,
+                            color: AppColors.black,
+                          ),
                         ),
-                      )),
+                      ),
                       IconButton(
                         icon: HugeIcon(
                           icon: HugeIcons.strokeRoundedDownload04,
@@ -246,7 +247,11 @@ class FeesView extends GetView<FeesController> {
           ),
         ),
         floatingActionButton: RoleWidget(
-          allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+          allowedRoles: [
+            UserRole.SUPER_ADMIN,
+            UserRole.ADMIN,
+            UserRole.TEACHER,
+          ],
           child: GlobalFAB(),
         ),
       ),

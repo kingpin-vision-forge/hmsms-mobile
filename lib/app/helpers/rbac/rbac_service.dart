@@ -27,7 +27,6 @@ class RbacService extends GetxService {
       }
       _isInitialized.value = true;
     } catch (e) {
-      print('RBAC Service init error: $e');
       _isInitialized.value = true;
     }
     return this;

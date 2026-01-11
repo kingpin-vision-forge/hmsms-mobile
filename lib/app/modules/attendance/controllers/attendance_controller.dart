@@ -36,8 +36,7 @@ class AttendanceController extends GetxController {
         classes.value = List<Map<String, dynamic>>.from(res.body['data'] ?? []);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to load classes',
-          backgroundColor: Colors.red, colorText: Colors.white);
+      botToastError('Failed to load classes');
     } finally {
       isLoading.value = false;
     }
@@ -52,7 +51,9 @@ class AttendanceController extends GetxController {
     try {
       final res = await apiService.fetchSectionForClass(classId: classId);
       if (res.isSuccessful && res.body['success'] == true) {
-        sections.value = List<Map<String, dynamic>>.from(res.body['data'] ?? []);
+        sections.value = List<Map<String, dynamic>>.from(
+          res.body['data'] ?? [],
+        );
       }
     } catch (e) {
       // Handle silently
@@ -70,15 +71,16 @@ class AttendanceController extends GetxController {
       final res = await apiService.fetchStudentList();
       if (res.isSuccessful && res.body['success'] == true) {
         final studentList = res.body['data'] as List<dynamic>? ?? [];
-        
+
         // Filter by class and section
         final filtered = studentList.where((s) {
           final studentClassId = s['classId'] ?? s['class']?['id'];
           final studentSectionId = s['sectionId'] ?? s['section']?['id'];
-          
+
           if (studentClassId != selectedClassId.value) return false;
-          if (selectedSectionId.value.isNotEmpty && 
-              studentSectionId != selectedSectionId.value) return false;
+          if (selectedSectionId.value.isNotEmpty &&
+              studentSectionId != selectedSectionId.value)
+            return false;
           return true;
         }).toList();
 
@@ -86,11 +88,13 @@ class AttendanceController extends GetxController {
         students.value = filtered.map((s) {
           final user = s['user'] as Map<String, dynamic>?;
           final fullName = user != null
-              ? [user['firstName'], user['middleName'], user['lastName']]
-                  .where((n) => n != null && n.toString().isNotEmpty)
-                  .join(' ')
+              ? [
+                  user['firstName'],
+                  user['middleName'],
+                  user['lastName'],
+                ].where((n) => n != null && n.toString().isNotEmpty).join(' ')
               : 'Unknown';
-          
+
           return StudentAttendanceEntry(
             studentId: s['id'] ?? '',
             studentName: fullName,
@@ -100,8 +104,7 @@ class AttendanceController extends GetxController {
         }).toList();
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to load students',
-          backgroundColor: Colors.red, colorText: Colors.white);
+      botToastError('Failed to load students');
     } finally {
       isLoadingStudents.value = false;
     }
@@ -143,16 +146,16 @@ class AttendanceController extends GetxController {
 
   Future<void> submitAttendance() async {
     if (students.isEmpty) {
-      Get.snackbar('Error', 'No students to mark attendance for',
-          backgroundColor: Colors.red, colorText: Colors.white);
+      botToastError('No students to mark attendance for');
       return;
     }
 
     isSubmitting.value = true;
     try {
       // Format date as YYYY-MM-DD
-      final dateStr = '${selectedDate.value.year}-${selectedDate.value.month.toString().padLeft(2, '0')}-${selectedDate.value.day.toString().padLeft(2, '0')}';
-      
+      final dateStr =
+          '${selectedDate.value.year}-${selectedDate.value.month.toString().padLeft(2, '0')}-${selectedDate.value.day.toString().padLeft(2, '0')}';
+
       // Submit attendance for each student
       int successCount = 0;
       for (var student in students) {
@@ -171,15 +174,14 @@ class AttendanceController extends GetxController {
       }
 
       if (successCount == students.length) {
-        Get.snackbar('Success', 'Attendance marked successfully for all students',
-            backgroundColor: Colors.green, colorText: Colors.white);
+        botToastError('Attendance marked successfully for all students');
       } else {
-        Get.snackbar('Partial Success', 'Attendance marked for $successCount/${students.length} students',
-            backgroundColor: Colors.orange, colorText: Colors.white);
+        botToastError(
+          'Attendance marked for $successCount/${students.length} students',
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to submit attendance',
-          backgroundColor: Colors.red, colorText: Colors.white);
+      botToastError('Failed to submit attendance');
     } finally {
       isSubmitting.value = false;
     }

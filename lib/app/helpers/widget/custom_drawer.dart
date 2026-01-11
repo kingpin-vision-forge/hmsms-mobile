@@ -11,7 +11,7 @@ import 'package:student_management/app/routes/app_pages.dart';
 class CustomDrawerMenu extends StatelessWidget {
   CustomDrawerMenu({super.key});
 
-  final controller = Get.find<HomeController>();
+  final controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {

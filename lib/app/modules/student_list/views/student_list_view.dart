@@ -62,17 +62,15 @@ class StudentListView extends GetView<StudentListController> {
                             children: [
                               Row(
                                 children: [
-                                  Builder(
-                                    builder: (context) => IconButton(
-                                      icon: const Icon(
-                                        Icons.menu,
-                                        size: 28,
-                                        color: AppColors.secondaryColor,
-                                      ),
-                                      onPressed: () {
-                                        Scaffold.of(context).openDrawer();
-                                      },
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.chevron_left,
+                                      size: 36,
+                                      color: AppColors.secondaryColor,
                                     ),
+                                    onPressed: () {
+                                      Get.offAllNamed(Routes.HOME);
+                                    },
                                   ),
                                   Text(
                                         'Students',
@@ -245,7 +243,11 @@ class StudentListView extends GetView<StudentListController> {
           );
         }),
         floatingActionButton: RoleWidget(
-          allowedRoles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER],
+          allowedRoles: [
+            UserRole.SUPER_ADMIN,
+            UserRole.ADMIN,
+            UserRole.TEACHER,
+          ],
           child: GlobalFAB(),
         ),
       ),
@@ -280,7 +282,7 @@ class StudentListView extends GetView<StudentListController> {
               borderRadius: BorderRadius.circular(16),
               onTap: () {
                 // Navigate to student details (implement as needed)
-                Get.offAllNamed(
+                Get.toNamed(
                   Routes.STUDENT_DETAIL,
                   arguments: {'student_id': student.id},
                 );

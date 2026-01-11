@@ -60,17 +60,15 @@ class ClassListView extends GetView<ClassListController> {
                             children: [
                               Row(
                                 children: [
-                                  Builder(
-                                    builder: (context) => IconButton(
-                                      icon: const Icon(
-                                        Icons.menu,
-                                        size: 28,
-                                        color: AppColors.secondaryColor,
-                                      ),
-                                      onPressed: () {
-                                        Scaffold.of(context).openDrawer();
-                                      },
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.chevron_left,
+                                      size: 36,
+                                      color: AppColors.secondaryColor,
                                     ),
+                                    onPressed: () {
+                                      Get.offAllNamed(Routes.HOME);
+                                    },
                                   ),
                                   Text(
                                         'Classes',
@@ -291,7 +289,7 @@ class ClassListView extends GetView<ClassListController> {
               borderRadius: BorderRadius.circular(16),
               onTap: () {
                 // Navigate to class details
-                Get.offAllNamed(
+                Get.toNamed(
                   Routes.CLASS_DETAIL,
                   arguments: {'class_id': classData.id},
                 );

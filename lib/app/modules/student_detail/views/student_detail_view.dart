@@ -51,7 +51,7 @@ class StudentDetailView extends GetView {
                         color: AppColors.secondaryColor,
                       ),
                       onPressed: () {
-                        Get.offAllNamed(Routes.STUDENT_LIST);
+                        Get.back();
                       },
                     ),
                     Text(

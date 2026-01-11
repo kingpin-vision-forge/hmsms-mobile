@@ -288,6 +288,7 @@ class CreateParentController extends GetxController {
       }
     } catch (e) {
       // Handle unexpected errors
+      print(e);
       errorUtil.handleAppError(
         apiName: 'updateParent',
         error: e,

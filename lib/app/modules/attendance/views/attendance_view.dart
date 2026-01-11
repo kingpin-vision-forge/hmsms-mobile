@@ -6,6 +6,7 @@ import 'package:student_management/app/helpers/constants.dart';
 import 'package:student_management/app/helpers/widget/custom_drawer.dart';
 import 'package:student_management/app/helpers/widget/global_fab.dart';
 import 'package:student_management/app/modules/attendance/controllers/attendance_controller.dart';
+import 'package:student_management/app/routes/app_pages.dart';
 
 class AttendanceView extends GetView<AttendanceController> {
   const AttendanceView({super.key});
@@ -41,23 +42,23 @@ class AttendanceView extends GetView<AttendanceController> {
             leading: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Builder(
-                  builder: (context) => IconButton(
-                    icon: const Icon(
-                      Icons.menu,
-                      size: 28,
-                      color: AppColors.secondaryColor,
-                    ),
-                    onPressed: () => Scaffold.of(context).openDrawer(),
+                IconButton(
+                  icon: const Icon(
+                    Icons.chevron_left,
+                    size: 36,
+                    color: AppColors.secondaryColor,
                   ),
+                  onPressed: () {
+                    Get.offAllNamed(Routes.HOME);
+                  },
                 ),
                 Text(
-                  'Mark Attendance',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                )
+                      'Mark Attendance',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    )
                     .animate()
                     .fadeIn(delay: 50.ms, duration: 300.ms)
                     .slideY(begin: 0.1, end: 0),
@@ -80,9 +81,7 @@ class AttendanceView extends GetView<AttendanceController> {
             // Filters Section
             _buildFiltersSection(context),
             // Students List
-            Expanded(
-              child: _buildStudentsList(),
-            ),
+            Expanded(child: _buildStudentsList()),
             // Submit Button
             if (controller.students.isNotEmpty) _buildSubmitButton(),
           ],
@@ -151,10 +150,12 @@ class AttendanceView extends GetView<AttendanceController> {
                       ? null
                       : controller.selectedClassId.value,
                   items: controller.classes
-                      .map((c) => DropdownMenuItem<String>(
-                            value: c['id'] as String,
-                            child: Text(c['name'] as String),
-                          ))
+                      .map(
+                        (c) => DropdownMenuItem<String>(
+                          value: c['id'] as String,
+                          child: Text(c['name'] as String),
+                        ),
+                      )
                       .toList(),
                   onChanged: (value) {
                     if (value != null) controller.selectClass(value);
@@ -171,10 +172,12 @@ class AttendanceView extends GetView<AttendanceController> {
                       ? null
                       : controller.selectedSectionId.value,
                   items: controller.sections
-                      .map((s) => DropdownMenuItem<String>(
-                            value: s['id'] as String,
-                            child: Text(s['name'] as String),
-                          ))
+                      .map(
+                        (s) => DropdownMenuItem<String>(
+                          value: s['id'] as String,
+                          child: Text(s['name'] as String),
+                        ),
+                      )
                       .toList(),
                   onChanged: (value) {
                     controller.selectSection(value ?? '');
@@ -191,10 +194,15 @@ class AttendanceView extends GetView<AttendanceController> {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: controller.markAllPresent,
-                  icon: const Icon(Icons.check_circle_outline,
-                      color: Colors.green, size: 18),
-                  label: const Text('Mark All Present',
-                      style: TextStyle(color: Colors.green, fontSize: 12)),
+                  icon: const Icon(
+                    Icons.check_circle_outline,
+                    color: Colors.green,
+                    size: 18,
+                  ),
+                  label: const Text(
+                    'Mark All Present',
+                    style: TextStyle(color: Colors.green, fontSize: 12),
+                  ),
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.green),
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -205,10 +213,15 @@ class AttendanceView extends GetView<AttendanceController> {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: controller.markAllAbsent,
-                  icon: const Icon(Icons.cancel_outlined,
-                      color: Colors.red, size: 18),
-                  label: const Text('Mark All Absent',
-                      style: TextStyle(color: Colors.red, fontSize: 12)),
+                  icon: const Icon(
+                    Icons.cancel_outlined,
+                    color: Colors.red,
+                    size: 18,
+                  ),
+                  label: const Text(
+                    'Mark All Absent',
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.red),
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -311,66 +324,80 @@ class AttendanceView extends GetView<AttendanceController> {
   Widget _buildStudentCard(int index) {
     final student = controller.students[index];
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.grayBorder),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withOpacity(0.05),
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Student Info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  student.studentName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.black,
-                  ),
-                ),
-                if (student.admissionNumber != null)
-                  Text(
-                    student.admissionNumber!,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.gray500,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          // Status Toggles
-          Row(
-            children: [
-              _buildStatusButton(index, 'PRESENT', Colors.green, Icons.check),
-              const SizedBox(width: 8),
-              _buildStatusButton(index, 'LATE', Colors.orange, Icons.access_time),
-              const SizedBox(width: 8),
-              _buildStatusButton(index, 'ABSENT', Colors.red, Icons.close),
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.secondaryColor,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.grayBorder),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.black.withOpacity(0.05),
+                offset: const Offset(0, 2),
+                blurRadius: 4,
+              ),
             ],
           ),
-        ],
-      ),
-    )
+          child: Row(
+            children: [
+              // Student Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      student.studentName,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.black,
+                      ),
+                    ),
+                    if (student.admissionNumber != null)
+                      Text(
+                        student.admissionNumber!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.gray500,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              // Status Toggles
+              Row(
+                children: [
+                  _buildStatusButton(
+                    index,
+                    'PRESENT',
+                    Colors.green,
+                    Icons.check,
+                  ),
+                  const SizedBox(width: 8),
+                  _buildStatusButton(
+                    index,
+                    'LATE',
+                    Colors.orange,
+                    Icons.access_time,
+                  ),
+                  const SizedBox(width: 8),
+                  _buildStatusButton(index, 'ABSENT', Colors.red, Icons.close),
+                ],
+              ),
+            ],
+          ),
+        )
         .animate()
         .fadeIn(delay: (30 * index).ms, duration: 300.ms)
         .slideX(begin: 0.05, end: 0);
   }
 
   Widget _buildStatusButton(
-      int index, String status, Color color, IconData icon) {
+    int index,
+    String status,
+    Color color,
+    IconData icon,
+  ) {
     final isSelected = controller.students[index].status == status;
     return GestureDetector(
       onTap: () => controller.updateStudentStatus(index, status),
@@ -382,11 +409,7 @@ class AttendanceView extends GetView<AttendanceController> {
           border: Border.all(color: color),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: isSelected ? Colors.white : color,
-        ),
+        child: Icon(icon, size: 20, color: isSelected ? Colors.white : color),
       ),
     );
   }
@@ -409,8 +432,9 @@ class AttendanceView extends GetView<AttendanceController> {
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed:
-                controller.isSubmitting.value ? null : controller.submitAttendance,
+            onPressed: controller.isSubmitting.value
+                ? null
+                : controller.submitAttendance,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.callBtn,
               padding: const EdgeInsets.symmetric(vertical: 16),

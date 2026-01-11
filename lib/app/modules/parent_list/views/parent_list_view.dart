@@ -61,17 +61,15 @@ class ParentListView extends GetView<ParentListController> {
                             children: [
                               Row(
                                 children: [
-                                  Builder(
-                                    builder: (context) => IconButton(
-                                      icon: const Icon(
-                                        Icons.menu,
-                                        size: 28,
-                                        color: AppColors.secondaryColor,
-                                      ),
-                                      onPressed: () {
-                                        Scaffold.of(context).openDrawer();
-                                      },
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.chevron_left,
+                                      size: 36,
+                                      color: AppColors.secondaryColor,
                                     ),
+                                    onPressed: () {
+                                      Get.offAllNamed(Routes.HOME);
+                                    },
                                   ),
                                   Text(
                                         'Parents',
@@ -308,7 +306,7 @@ class ParentListView extends GetView<ParentListController> {
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
               onTap: () {
-                Get.offAllNamed(
+                Get.toNamed(
                   Routes.PARENT_DETAIL,
                   arguments: {'parent_id': parentData.id},
                 );

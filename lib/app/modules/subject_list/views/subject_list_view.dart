@@ -61,17 +61,15 @@ class SubjectListView extends GetView<SubjectListController> {
                             children: [
                               Row(
                                 children: [
-                                  Builder(
-                                    builder: (context) => IconButton(
-                                      icon: const Icon(
-                                        Icons.menu,
-                                        size: 28,
-                                        color: AppColors.secondaryColor,
-                                      ),
-                                      onPressed: () {
-                                        Scaffold.of(context).openDrawer();
-                                      },
+                                 IconButton(
+                                    icon: const Icon(
+                                      Icons.chevron_left,
+                                      size: 36,
+                                      color: AppColors.secondaryColor,
                                     ),
+                                    onPressed: () {
+                                      Get.offAllNamed(Routes.HOME);
+                                    },
                                   ),
                                   Text(
                                         'Subjects',
@@ -286,7 +284,7 @@ class SubjectListView extends GetView<SubjectListController> {
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
               onTap: () {
-                Get.offAllNamed(
+                Get.toNamed(
                   Routes.SUBJECT_DETAIL,
                   arguments: {'subject_id': subject.id},
                 );

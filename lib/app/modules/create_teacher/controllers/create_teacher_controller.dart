@@ -51,6 +51,15 @@ class CreateTeacherController extends GetxController {
       teacherId = args['teacherId'];
       _initializeEditMode(args);
     }
+
+    // Listen to all field changes for real-time validation
+    firstNameController.addListener(validateFirstName);
+    lastNameController.addListener(validateLastName);
+    emailController.addListener(validateEmail);
+    passwordController.addListener(validatePassword);
+    phoneController.addListener(validatePhone);
+    employeeCodeController.addListener(validateEmployeeCode);
+    joinedDateController.addListener(validateJoinedDate);
   }
 
   void _initializeEditMode(Map<String, dynamic> args) {
@@ -175,7 +184,8 @@ class CreateTeacherController extends GetxController {
     );
     if (picked != null) {
       selectedDate.value = picked;
-      joinedDateController.text = '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+      joinedDateController.text =
+          '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
       validateJoinedDate();
     }
   }
@@ -184,7 +194,7 @@ class CreateTeacherController extends GetxController {
   createTeacher() async {
     validateAllFields();
     validatePassword();
-    
+
     if (!isFormValid.value) {
       botToastError('Please correct the highlighted fields');
       return;
@@ -192,7 +202,7 @@ class CreateTeacherController extends GetxController {
 
     try {
       isLoading.value = true;
-      
+
       Map<String, dynamic> payload = {
         'schoolId': schoolId,
         'firstName': firstNameController.text.trim(),
@@ -215,7 +225,10 @@ class CreateTeacherController extends GetxController {
         if (res.body != null &&
             res.body['data'] != null &&
             res.body['success'] == true) {
-          botToastSuccess(Constants.BOT_TOAST_MESSAGES['TEACHER_CREATED'] ?? 'Teacher created successfully');
+          botToastSuccess(
+            Constants.BOT_TOAST_MESSAGES['TEACHER_CREATED'] ??
+                'Teacher created successfully',
+          );
           Get.offAllNamed(Routes.TEACHER_LIST);
         } else {
           serverError(res, () => createTeacher());
@@ -225,7 +238,9 @@ class CreateTeacherController extends GetxController {
       errorUtil.handleAppError(
         apiName: 'createTeacher',
         error: e,
-        displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_CREATE_TEACHER'] ?? 'Failed to create teacher',
+        displayMessage:
+            Constants.BOT_TOAST_MESSAGES['FAILED_CREATE_TEACHER'] ??
+            'Failed to create teacher',
       );
     } finally {
       isLoading.value = false;
@@ -235,7 +250,7 @@ class CreateTeacherController extends GetxController {
   // Update teacher
   void updateTeacher() async {
     validateAllFields();
-    
+
     if (!isFormValid.value) {
       botToastError('Please correct the highlighted fields');
       return;
@@ -255,7 +270,7 @@ class CreateTeacherController extends GetxController {
           'password': passwordController.text,
         'phone': phoneController.text.trim(),
         'address': addressController.text.trim(),
-        'employeeCode': employeeCodeController.text.trim(),
+        // 'employeeCode': employeeCodeController.text.trim(),
         'joinedDate': joinedDateController.text.trim(),
       };
 
@@ -268,8 +283,14 @@ class CreateTeacherController extends GetxController {
         if (res.body != null &&
             res.body['data'] != null &&
             res.body['success'] == true) {
-          botToastSuccess(Constants.BOT_TOAST_MESSAGES['TEACHER_UPDATED'] ?? 'Teacher updated successfully');
-          Get.offAllNamed(Routes.TEACHER_DETAIL, arguments: {'id': teacherId});
+          botToastSuccess(
+            Constants.BOT_TOAST_MESSAGES['TEACHER_UPDATED'] ??
+                'Teacher updated successfully',
+          );
+          Get.offAllNamed(
+            Routes.TEACHER_DETAIL,
+            arguments: {'teacher_id': teacherId},
+          );
         } else {
           serverError(res, () => updateTeacher());
         }
@@ -278,7 +299,9 @@ class CreateTeacherController extends GetxController {
       errorUtil.handleAppError(
         apiName: 'updateTeacher',
         error: e,
-        displayMessage: Constants.BOT_TOAST_MESSAGES['FAILED_UPDATE_TEACHER'] ?? 'Failed to update teacher',
+        displayMessage:
+            Constants.BOT_TOAST_MESSAGES['FAILED_UPDATE_TEACHER'] ??
+            'Failed to update teacher',
       );
     } finally {
       isLoading.value = false;
@@ -287,6 +310,14 @@ class CreateTeacherController extends GetxController {
 
   @override
   void onClose() {
+    firstNameController.removeListener(validateFirstName);
+    lastNameController.removeListener(validateLastName);
+    emailController.removeListener(validateEmail);
+    passwordController.removeListener(validatePassword);
+    phoneController.removeListener(validatePhone);
+    employeeCodeController.removeListener(validateEmployeeCode);
+    joinedDateController.removeListener(validateJoinedDate);
+
     firstNameController.dispose();
     middleNameController.dispose();
     lastNameController.dispose();
