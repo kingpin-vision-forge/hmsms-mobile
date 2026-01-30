@@ -608,6 +608,49 @@ final class _$ApiService extends ApiService {
   }
 
   @override
+  Future<Response<dynamic>> fetchAdminStats() {
+    final Uri $url = Uri.parse('api/dashboard/admin/stats');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchStudentDistribution() {
+    final Uri $url = Uri.parse('api/dashboard/admin/student-distribution');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchFeesCollection({int? year, int? months}) {
+    final Uri $url = Uri.parse('api/dashboard/admin/fees-collection');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'year': year,
+      'months': months,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> fetchClassPerformance({int? year}) {
+    final Uri $url = Uri.parse('api/dashboard/admin/class-performance');
+    final Map<String, dynamic> $params = <String, dynamic>{'year': year};
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<dynamic>> fetchTimetableByStudent(
     String studentId, {
     String? dayOfWeek,

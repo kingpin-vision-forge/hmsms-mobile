@@ -240,6 +240,22 @@ abstract class ApiService extends ChopperService {
   @GET(path: '/dashboard/parent')
   Future<Response> fetchParentDashboard();
 
+  // Admin Dashboard endpoints
+  @GET(path: '/dashboard/admin/stats')
+  Future<Response> fetchAdminStats();
+
+  @GET(path: '/dashboard/admin/student-distribution')
+  Future<Response> fetchStudentDistribution();
+
+  @GET(path: '/dashboard/admin/fees-collection')
+  Future<Response> fetchFeesCollection({
+    @Query('year') int? year,
+    @Query('months') int? months,
+  });
+
+  @GET(path: '/dashboard/admin/class-performance')
+  Future<Response> fetchClassPerformance({@Query('year') int? year});
+
   // Student Timetable endpoint
   @GET(path: '/timetable/by-student/{studentId}')
   Future<Response> fetchTimetableByStudent(
