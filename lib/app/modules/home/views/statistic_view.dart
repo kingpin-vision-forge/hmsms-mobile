@@ -65,60 +65,54 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
         return _buildErrorState();
       }
 
-      return RefreshIndicator(
-        onRefresh: () async => _controller.refresh(),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              // Calendar Widget
-              const DashboardCalendar(),
+      return Column(
+        children: [
+          // Calendar Widget
+          const DashboardCalendar(),
 
-              const SizedBox(height: 8),
+          const SizedBox(height: 8),
 
-              // Quick Stats Cards
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatCard(
-                        'Total Students',
-                        _controller.formattedTotalStudents,
-                        Icons.school,
-                        const Color(0xFF6C5CE7),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildStatCard(
-                        'Total Staff',
-                        _controller.formattedTotalStaff,
-                        Icons.people,
-                        const Color(0xFF00B894),
-                      ),
-                    ),
-                  ],
+          // Quick Stats Cards
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    'Total Students',
+                    _controller.formattedTotalStudents,
+                    Icons.school,
+                    const Color(0xFF6C5CE7),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              // Pie Chart Section
-              _buildPieChartSection(),
-
-              const SizedBox(height: 20),
-
-              // Bar Chart Section
-              _buildBarChartSection(),
-
-              const SizedBox(height: 20),
-
-              // Students Ranks Line Chart Section
-              _buildLineChartSection(),
-
-              const SizedBox(height: 100),
-            ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildStatCard(
+                    'Total Staff',
+                    _controller.formattedTotalStaff,
+                    Icons.people,
+                    const Color(0xFF00B894),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+          const SizedBox(height: 10),
+          // Pie Chart Section
+          _buildPieChartSection(),
+
+          const SizedBox(height: 20),
+
+          // Bar Chart Section
+          _buildBarChartSection(),
+
+          const SizedBox(height: 20),
+
+          // Students Ranks Line Chart Section
+          _buildLineChartSection(),
+
+          const SizedBox(height: 100),
+        ],
       );
     });
   }
@@ -432,7 +426,9 @@ class _DashboardStatisticsState extends State<DashboardStatistics>
                   gridData: FlGridData(
                     show: true,
                     drawVerticalLine: false,
-                    horizontalInterval: _getBarChartMaxY() / 5,
+                    horizontalInterval: _getBarChartMaxY() / 5 > 0 
+                        ? _getBarChartMaxY() / 5 
+                        : 20000, // Fallback to prevent zero
                     getDrawingHorizontalLine: (value) {
                       return FlLine(
                         color: Colors.grey[200],
