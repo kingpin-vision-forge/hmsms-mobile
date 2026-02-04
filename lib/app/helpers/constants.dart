@@ -354,7 +354,7 @@ class Constants {
     'ANDROID_DOWNLOAD_DIRECTORY': '/storage/emulated/0/Download',
     'START_TIME': const TimeOfDay(hour: 0, minute: 0),
     'END_TIME': const TimeOfDay(hour: 23, minute: 59),
-    'CONNECTION_TIMEOUT': const Duration(seconds: 10),
+    'CONNECTION_TIMEOUT': const Duration(seconds: 30),
     'DEFAULT_ACCESS_TOKEN_EXPIRY': 3600,
     'DEFAULT_ACCOUNT_TYPE': 'REVENUE',
   };
@@ -387,6 +387,9 @@ class Constants {
         'Location permission is denied, Please enable from device settings',
     'FAILED_FETCH_COORDINATES': 'Failed to fetch coordinates from address',
     "PLEASE_CHECK_INTERNET": "Please check your internet and try again",
+    "SLOW_NETWORK": "Network is slow. Please try again or switch to a better connection.",
+    "SERVER_ERROR": "Server is temporarily unavailable. Please try again later.",
+    "CONNECTION_FAILED": "Unable to connect. Please check your connection and try again.",
     'TO_FIELD_EDITING':
         'You are currently editing an email in the To field. Please complete or clear it before sending.',
     'TO_FIELD_FINISH_EDITING':
