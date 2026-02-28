@@ -194,7 +194,7 @@ class CreateParentView extends GetView<CreateParentController> {
                       items: controller.studentList
                           .map((s) => MultiSelectItem<String>(s.id, s.name))
                           .toList(),
-                      title: const Text('Select Students'),
+                      title: const Text('Select Students (Optional)'),
                       selectedColor: AppColors.callBtn,
                       decoration: BoxDecoration(
                         border: Border.all(color: AppColors.black),
@@ -205,7 +205,7 @@ class CreateParentView extends GetView<CreateParentController> {
                         color: AppColors.black,
                       ),
                       buttonText: const Text(
-                        'Select Students',
+                        'Select Students (Optional)',
                         style: TextStyle(color: AppColors.black, fontSize: 16),
                       ),
                       onConfirm: (values) {

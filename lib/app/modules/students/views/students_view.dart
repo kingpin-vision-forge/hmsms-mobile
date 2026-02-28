@@ -295,30 +295,51 @@ class StudentsView extends GetView<StudentsController> {
               const SizedBox(height: 16),
               // parent dropdown
               Obx(
-                () => _buildDropdownField(
-                  label: 'Parent',
-                  hint: 'Select parent',
-                  value: controller.selectedParentId.isEmpty
-                      ? null
-                      : controller.selectedParentId.value,
-                  items: controller.parentList
-                      .map(
-                        (c) =>
-                            DropdownMenuItem(value: c.id, child: Text(c.name)),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    controller.selectedParentId.value = value ?? '';
-                    controller.fetchParent();
-                    controller.checkFormValidity();
-                  },
-                  isLoading: controller.isParentLoading.value,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select a parent';
-                    }
-                    return null;
-                  },
+                () => Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: _buildDropdownField(
+                        label: 'Parent (Optional)',
+                        hint: 'Select parent',
+                        value: controller.selectedParentId.isEmpty
+                            ? null
+                            : controller.selectedParentId.value,
+                        items: controller.parentList
+                            .map(
+                              (c) => DropdownMenuItem(
+                                value: c.id,
+                                child: Text(c.name),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          controller.selectedParentId.value = value ?? '';
+                          controller.fetchParent();
+                          controller.checkFormValidity();
+                        },
+                        isLoading: controller.isParentLoading.value,
+                        validator: (value) {
+                          return null;
+                        },
+                      ),
+                    ),
+                    if (controller.selectedParentId.value.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0, top: 2.0),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.cancel,
+                            color: AppColors.errorColor,
+                            size: 28,
+                          ),
+                          onPressed: () {
+                            controller.selectedParentId.value = '';
+                            controller.checkFormValidity();
+                          },
+                        ),
+                      ),
+                  ],
                 ),
               ),
               const SizedBox(height: 16),

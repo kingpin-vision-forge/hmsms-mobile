@@ -104,7 +104,6 @@ class StudentsController extends GetxController {
         admissionNumberController.text.isNotEmpty &&
         selectedClassId.value.isNotEmpty &&
         selectedSectionId.value.isNotEmpty &&
-        selectedParentId.value.isNotEmpty &&
         selectedGender.value.isNotEmpty &&
         (isEdit.value || passwordController.text.isNotEmpty) &&
         emailController.text.isNotEmpty &&
@@ -133,7 +132,8 @@ class StudentsController extends GetxController {
         "sectionId": selectedSectionId.value,
         "dateOfBirth": dateOfBirth.value?.toIso8601String() ?? "",
         "gender": selectedGender.value,
-        "parentId": selectedParentId.value,
+        if (selectedParentId.value.isNotEmpty)
+          "parentId": selectedParentId.value,
         'phone': phoneController.text,
         'address': addressController.text,
         'email': emailController.text,
@@ -311,7 +311,9 @@ class StudentsController extends GetxController {
         "sectionId": selectedSectionId.value,
         "dateOfBirth": dateOfBirth.value?.toIso8601String() ?? "",
         "gender": selectedGender.value,
-        "parentId": selectedParentId.value,
+        "parentId": selectedParentId.value.isEmpty
+            ? null
+            : selectedParentId.value,
         'phone': phoneController.text,
         'address': addressController.text,
         'email': emailController.text,
@@ -334,7 +336,10 @@ class StudentsController extends GetxController {
             res.body['success'] == true) {
           // // Show success message and navigate to main app
           botToastSuccess(Constants.BOT_TOAST_MESSAGES['STUDENT_UPDATED']!);
-           Get.offAllNamed(Routes.STUDENT_DETAIL, arguments: {'student_id': studentId});
+          Get.offAllNamed(
+            Routes.STUDENT_DETAIL,
+            arguments: {'student_id': studentId},
+          );
         } else {
           // Handle API error responses
           serverError(res, () => updateStudent());

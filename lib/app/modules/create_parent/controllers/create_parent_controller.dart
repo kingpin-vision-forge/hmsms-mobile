@@ -163,9 +163,7 @@ class CreateParentController extends GetxController {
   }
 
   void validateStudentSelection() {
-    studentError.value = selectStudent.isEmpty
-        ? 'Please select at least one student'
-        : null;
+    studentError.value = null;
     updateFormValidity();
   }
 
